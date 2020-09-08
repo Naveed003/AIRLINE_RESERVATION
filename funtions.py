@@ -9,16 +9,16 @@ def main():
     print("OPTION 5: ABOUT")
 
 def NEW_BOOKING():
-    print("="*20, "NEW BOOKING", "="*20)
+    print("="*8, "NEW BOOKING", "="*8)
 
 def FLIGHT_STATUS():
-    print("="*20, "FLIGHT STATUS", "="*20)
+    print("="*8, "FLIGHT STATUS", "="*8)
 
 def MANAGE_BOOKINGS():
-    print("="*20, "MANAGE BOOKINGS", "="*20)
+    print("="*8, "MANAGE BOOKINGS", "="*8)
 
 def STAFF_LOGIN():
-    print("="*20, "STAFF LOGIN", "="*20)
+    print("="*8, "STAFF LOGIN", "="*8)
 
 def ABOUT():
-    print("="*20, "ABOUT", "="*20)
+    print("="*8, "ABOUT", "="*8)
