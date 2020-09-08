@@ -7,6 +7,7 @@ def main():
     print("OPTION 3: MANAGE BOOKINGS")
     print("OPTION 4: STAFF LOGIN")
     print("OPTION 5: ABOUT")
+    print("OPTION 6: EXIT")
 
 def NEW_BOOKING():
     print("="*8, "NEW BOOKING", "="*8)

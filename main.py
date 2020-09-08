@@ -12,14 +12,19 @@ from funtions import *
 
 
 main()
-response=input("ENTER OPTION NUMBER: ")
-if response=="1":
+while True:
+ response=input("ENTER OPTION NUMBER: ")
+ if response=="1":
     NEW_BOOKING()
-if response=="2":
+ elif response=="2":
     FLIGHT_STATUS()
-if response=="3":
+ elif response=="3":
     MANAGE_BOOKINGS()
-if response=="4":
+ elif response=="4":
     STAFF_LOGIN()
-if response=="5":
+ elif response=="5":
     ABOUT()
+ elif response=="6":
+    break
+ else:
+    print("="*20, "ENTER VALID OPTION", "="*20)
