@@ -6,5 +6,16 @@ import random
 from random import randint
 from datetime import datetime
 import mysql.connector
-mydb=mysql.connector.connect(host="remotemysql.com",user="QxKi8MQlUR",passwd="Kf0GcKV5sh",port=3306,database="QxKi8MQlUR")
-mycursor=mydb.cursor()
+from funtions import *
+
+
+
+
+main()
+response=input("ENTER OPTION NUMBER: ")
+if response=="1":
+    
+
+    
+
+    
