@@ -14,8 +14,12 @@ from funtions import *
 main()
 response=input("ENTER OPTION NUMBER: ")
 if response=="1":
-    pass
-
-    
-
-    
+    NEW_BOOKING()
+if response=="2":
+    FLIGHT_STATUS()
+if response=="3":
+    MANAGE_BOOKINGS()
+if response=="4":
+    STAFF_LOGIN()
+if response=="5":
+    ABOUT()
