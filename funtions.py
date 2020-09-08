@@ -1,4 +1,3 @@
-
 def main():
     print("="*20, "GIHS AIRLINE", "="*20)
     print("\n", "="*8, "MAIN MENU", "="*8, "\n")
