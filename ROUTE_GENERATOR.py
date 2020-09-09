@@ -22,3 +22,4 @@ list = [
 ]
 df = pd.DataFrame(list[1:], columns=list[0])
 print(df)
+
