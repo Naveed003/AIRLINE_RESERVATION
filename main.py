@@ -52,7 +52,7 @@ def NEW_BOOKING():
             print(p_command)
         count = 0
         No_of_locations=[]
-        for i in range(1,len(list)):
+        for i in range(1,len(list)+1):
             No_of_locations.append(str(i))
         while True:
             response = input("\nEnter Option Number: ")
@@ -143,7 +143,7 @@ def NEW_BOOKING():
                 print("TRY AGAIN")
                 main()
                 break
-        arrival()
+    arrival()
 
 def FLIGHT_STATUS():
     print("="*8, "FLIGHT STATUS", "="*8)
