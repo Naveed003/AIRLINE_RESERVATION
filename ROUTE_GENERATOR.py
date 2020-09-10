@@ -1,5 +1,9 @@
 import pandas as pd
 import random
+import mysql.connector
+import sqlite3
+mydb=mysql.connector.connect(host="remotemysql.com",user="QxKi8MQlUR",passwd="Kf0GcKV5sh",port=3306,database="QxKi8MQlUR")
+mycursor=mydb.cursor()
 
 def F_n():
     global B
@@ -42,3 +46,25 @@ list = [
 ]
 df = pd.DataFrame(list[1:], columns=list[0])
 print(df)
+
+def insertion():
+    columns=["FLIGHT_NO","ORIGIN","DESTINATION"]
+    for i,row in df.iterrows():
+        G=""
+        for a in range(len(row)):
+            B="'{}'".format(row[a])
+            G=G+","+B
+            G=G.lstrip(",")
+
+        
+        QUERY="INSERT INTO ROUTES (FLIGHT_NO,ORIGIN,DESTINATION) VALUES ({})".format(G)  
+        print(QUERY)
+        mycursor.execute(QUERY)
+        mydb.commit()
+
+insertion()
+    
+
+mydb.close()
+
+    
