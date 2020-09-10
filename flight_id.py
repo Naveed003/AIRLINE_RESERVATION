@@ -1,5 +1,3 @@
-
-
 def F_n():
     global B
     import random

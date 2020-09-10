@@ -62,7 +62,6 @@ def insertion():
         mycursor.execute(QUERY)
         mydb.commit()
 
-insertion()
     
 
 mydb.close()
