@@ -104,6 +104,7 @@ def NEW_BOOKING():
 
 
     def flights_extract():
+        pass
 
 
 
