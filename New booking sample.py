@@ -6,7 +6,7 @@ print("CODE LHR: Heathrow Airport")
 print("CODE BOM: Chhatrapati Shivaji Maharaj International Airport")
 print("CODE SYD: Sydney Airport")
 list=['DXB','JFK','LHR','BOM','SYD']
-global dep 
+global dep
 while True:
     global dep
     dep=input('\nEnter the Respective Code: ')
@@ -20,7 +20,6 @@ while True:
 
 index=list.index(dep)
 list.remove(dep)
-print(list)
 list2 = [
         "Dubai International Airport",
         "John F. Kennedy International Airport",
@@ -35,7 +34,7 @@ print("\n", "="*4, "ARRIVAL", "="*4)
 for i in range(0, len(list)):
     p_command = "CODE {}: {}".format(list[i], list2[i])
     print(p_command)
-global arr 
+global arr
 while True:
     arr=input('\nEnter the Respective Code: ')
     arr = arr.strip()
@@ -45,4 +44,3 @@ while True:
     else:
         print("\n", "="*4,'Please Enter a Valid code', "="*4)
         pass
-
