@@ -90,8 +90,24 @@ def NEW_BOOKING():
             else:
                 print("\n", "="*4,'Please Enter a Valid code', "="*4)
                 pass
+        date_input()
     def date_input():
-        pass
+        current_date=date.today()
+        while True:
+            depature_date=input("ENTER DEPATURE DATE (YYYY-MM-DD): ")
+            if str(current_date)<=depature_date:
+                dep_date=depature_date
+                break
+            else:
+                print("\n", "="*4,'Please Enter a Valid Date ', "="*4)
+
+
+    def flights_extract():
+        
+                
+
+
+
 
     dep_arrival_input()
 
