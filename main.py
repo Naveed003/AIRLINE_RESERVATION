@@ -6,7 +6,9 @@ import random
 from random import randint
 from datetime import datetime
 import mysql.connector
-
+mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
+                               passwd="Kf0GcKV5sh", port=3306, database="QxKi8MQlUR")
+mycursor = mydb.cursor()
 
 
 def main():
@@ -53,29 +55,32 @@ def NEW_BOOKING():
         print("CODE LHR: Heathrow Airport")
         print("CODE BOM: Chhatrapati Shivaji Maharaj International Airport")
         print("CODE SYD: Sydney Airport")
+<<<<<<< HEAD
         list=['DXB','JFK','LHR','BOM','SYD']
+=======
+        list = ['DXB', 'JFK', 'LHR', 'BOM', 'SYD']
+>>>>>>> 1463e88c9124f772355644cf12081bc63ff73bd6
         global dep
         while True:
-            dep=input('\nEnter the Respective Code: ')
+            dep = input('\nEnter the Respective Code: ')
             dep = dep.strip()
             dep = dep.upper()
             if dep in list:
                 break
             else:
-                print("\n", "="*4,'Please Enter a Valid code', "="*4)
+                print("\n", "="*4, 'Please Enter a Valid code', "="*4)
                 pass
 
-        index=list.index(dep)
+        index = list.index(dep)
         list.remove(dep)
         list2 = [
-                "Dubai International Airport",
-                "John F. Kennedy International Airport",
-                "Heathrow Airport",
-                "Chhatrapati Shivaji Maharaj International Airport",
-                "Sydney Airport"
-            ]
+            "Dubai International Airport",
+            "John F. Kennedy International Airport",
+            "Heathrow Airport",
+            "Chhatrapati Shivaji Maharaj International Airport",
+            "Sydney Airport"
+        ]
         list2.pop(index)
-
 
         print("\n", "="*4, "ARRIVAL", "="*4)
         for i in range(0, len(list)):
@@ -83,39 +88,57 @@ def NEW_BOOKING():
             print(p_command)
         global arr
         while True:
-            arr=input('\nEnter the Respective Code: ')
+            arr = input('\nEnter the Respective Code: ')
             arr = arr.strip()
             arr = arr.upper()
             if arr in list:
                 break
             else:
-                print("\n", "="*4,'Please Enter a Valid code', "="*4)
+                print("\n", "="*4, 'Please Enter a Valid code', "="*4)
                 pass
         date_input()
+    
+    def addYears(d,years):
+        global f_date
+        try:
+            f_date=d.replace(year=d.year+years)
+            print(f_date)
+        except ValueError:
+            f_date=d + (date(d.year+years,1,1)-date(d.year,1,1))
+            print(f_date)
+
+
+
     def date_input():
-        current_date=date.today()
+        current_date = date.today()
+        addYears(current_date,1)
         while True:
-            depature_date=input("ENTER DEPATURE DATE (YYYY-MM-DD): ")
-            if str(current_date)<=depature_date:
-                dep_date=depature_date
+            depature_date = input("ENTER DEPATURE DATE (YYYY-MM-DD): ")
+            if str(current_date) <= depature_date and str(current_date)<str(f_date):
+                dep_date = depature_date
                 break
             else:
-                print("\n", "="*4,'Please Enter a Valid Date ', "="*4)
-
+                print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
 
     def flights_extract():
         pass
+<<<<<<< HEAD
 
 
 
 
 
+=======
+>>>>>>> 1463e88c9124f772355644cf12081bc63ff73bd6
 
     dep_arrival_input()
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 1463e88c9124f772355644cf12081bc63ff73bd6
 def FLIGHT_STATUS():
     print("="*8, "FLIGHT STATUS", "="*8)
 
