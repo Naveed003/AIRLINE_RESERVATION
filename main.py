@@ -51,10 +51,13 @@ def NEW_BOOKING():
             p_command = "OPTION {}: {}".format(i+1, list[i])
             print(p_command)
         count = 0
+        No_of_locations=[]
+        for i in range(1,len(list)):
+            No_of_locations.append(str(i))
         while True:
             response = input("\nEnter Option Number: ")
             response.strip()
-            if response not in ["1", "2", "3", "4"]:
+            if response not in No_of_locations:
                 count += 1
                 if count > 3:
                     while True:
