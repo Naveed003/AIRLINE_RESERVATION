@@ -1,7 +1,6 @@
 
 
 def F_n():
-    print("hello")
     global B
     import random
     import json
