@@ -104,28 +104,23 @@ def NEW_BOOKING():
         if response == "1":
             dep = "DXB"
             list.remove("Dubai International Airport (DXB)")
-            arrival()
             break
         elif response == "2":
             dep = "JFK"
             list.remove("John F. Kennedy International Airport (JFK)")
-            arrival()
             break
         elif response == "3":
             dep = "LHR"
             list.remove("Heathrow Airport (LHR)")
-            arrival()
             break
         elif response == "4":
             dep = "BOM"
             list.remove(
                 "Chhatrapati Shivaji Maharaj International Airport (BOM)")
-            arrival()
             break
         elif response == "5":
             dep = "SYD"
             list.remove("Sydney Airport (SYD)")
-            arrival()
             break
         else:
             COUNT += 1
@@ -148,7 +143,7 @@ def NEW_BOOKING():
                 print("TRY AGAIN")
                 main()
                 break
-
+        arrival()
 
 def FLIGHT_STATUS():
     print("="*8, "FLIGHT STATUS", "="*8)
