@@ -7,6 +7,7 @@ print("OPTION BOM: Chhatrapati Shivaji Maharaj International Airport")
 print("OPTION SYD: Sydney Airport")
 list=['DXB','JFK','LHR','BOM','SYD']
 while True:
+    global dep
     dep=input('\nEnter the Respective Code: ')
     dep = dep.strip()
     dep = dep.upper()
@@ -16,6 +17,7 @@ while True:
         print("\n", "="*4,'Please Enter a Valid code', "="*4)
         pass
 list.remove(dep)
+print(list)
 list2 = [
         "Dubai International Airport",
         "John F. Kennedy International Airport",
