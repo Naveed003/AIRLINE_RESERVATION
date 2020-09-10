@@ -55,11 +55,7 @@ def NEW_BOOKING():
         print("CODE LHR: Heathrow Airport")
         print("CODE BOM: Chhatrapati Shivaji Maharaj International Airport")
         print("CODE SYD: Sydney Airport")
-<<<<<<< HEAD
-        list=['DXB','JFK','LHR','BOM','SYD']
-=======
         list = ['DXB', 'JFK', 'LHR', 'BOM', 'SYD']
->>>>>>> 1463e88c9124f772355644cf12081bc63ff73bd6
         global dep
         while True:
             dep = input('\nEnter the Respective Code: ')
@@ -97,7 +93,7 @@ def NEW_BOOKING():
                 print("\n", "="*4, 'Please Enter a Valid code', "="*4)
                 pass
         date_input()
-    
+
     def addYears(d,years):
         global f_date
         try:
@@ -114,7 +110,7 @@ def NEW_BOOKING():
         addYears(current_date,1)
         while True:
             depature_date = input("ENTER DEPATURE DATE (YYYY-MM-DD): ")
-            if str(current_date) <= depature_date and str(current_date)<str(f_date):
+            if str(current_date) <= depature_date and str(f_date)>depature_date:
                 dep_date = depature_date
                 break
             else:
@@ -122,23 +118,9 @@ def NEW_BOOKING():
 
     def flights_extract():
         pass
-<<<<<<< HEAD
-
-
-
-
-
-=======
->>>>>>> 1463e88c9124f772355644cf12081bc63ff73bd6
-
     dep_arrival_input()
 
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 1463e88c9124f772355644cf12081bc63ff73bd6
 def FLIGHT_STATUS():
     print("="*8, "FLIGHT STATUS", "="*8)
 
