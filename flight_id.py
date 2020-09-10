@@ -1,6 +1,7 @@
 
 
 def F_n():
+    print("hello")
     global B
     import random
     import json
@@ -38,7 +39,7 @@ def extract_flight_no():
 
 
     print(list)
-    
+
     mydb.close()
  
 
