@@ -6,7 +6,9 @@ import random
 from random import randint
 from datetime import datetime
 import mysql.connector
-
+mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
+                               passwd="Kf0GcKV5sh", port=3306, database="QxKi8MQlUR")
+mycursor = mydb.cursor()
 
 
 def main():
@@ -44,107 +46,79 @@ def main():
 
 
 def NEW_BOOKING():
-    def arrival():
-        print("\n", "="*4, "ARRIVAL", "="*4)
-        print("\n")
-        for i in range(0, len(list)):
-            p_command = "OPTION {}: {}".format(i+1, list[i])
-            print(p_command)
-        count = 0
+
+    def dep_arrival_input():
+        print("\n", "="*8, "NEW BOOKING", "="*8)
+        print("\n", "="*4, "DEPATURE", "="*4)
+        print("\nCODE DXB: Dubai International Airport")
+        print("CODE JFK: John F. Kennedy International Airport")
+        print("CODE LHR: Heathrow Airport")
+        print("CODE BOM: Chhatrapati Shivaji Maharaj International Airport")
+        print("CODE SYD: Sydney Airport")
+        list = ['DXB', 'JFK', 'LHR', 'BOM', 'SYD']
+        global dep
         while True:
-            response = input("\nEnter Option Number: ")
-            response.strip()
-            if response not in ["1", "2", "3", "4"]:
-                count += 1
-                if count > 3:
-                    while True:
-                        response = input("Do you want to try again (Y/N): ")
-                        if response.lower() == "y":
-                            break
-                        elif response.lower() == "n":
-                            main()
-                            break
-                        else:
-                            countt += 1
-                            if countt > 3:
-                                main()
-                                break
-
-                print("="*20, "ENTER VALID OPTION", "="*20)
-
-            else:
-                global arr
-                arr = list[int(response)-1]
-                arr = arr[-4:-1]
+            dep = input('\nEnter the Respective Code: ')
+            dep = dep.strip()
+            dep = dep.upper()
+            if dep in list:
                 break
-
-    print("\n", "="*8, "NEW BOOKING", "="*8)
-    print("\n", "="*4, "DEPATURE", "="*4)
-    print("\nOPTION 1: Dubai International Airport (DXB)")
-    print("OPTION 2: John F. Kennedy International Airport (JFK)")
-    print("OPTION 3: Heathrow Airport (LHR)")
-    print("OPTION 4: Chhatrapati Shivaji Maharaj International Airport (BOM)")
-    print("OPTION 5: Sydney Airport (SYD)")
-    global list
-    list = [
-        "Dubai International Airport (DXB)",
-        "John F. Kennedy International Airport (JFK)",
-        "Heathrow Airport (LHR)",
-        "Chhatrapati Shivaji Maharaj International Airport (BOM)",
-        "Sydney Airport (SYD)"
-    ]
-    COUNT = 0
-    global dep
-    while True:
-        response = input("\nEnter Option number: ")
-        response.strip()
-        if response == "1":
-            dep = "DXB"
-            list.remove("Dubai International Airport (DXB)")
-            arrival()
-            break
-        elif response == "2":
-            dep = "JFK"
-            list.remove("John F. Kennedy International Airport (JFK)")
-            arrival()
-            break
-        elif response == "3":
-            dep = "LHR"
-            list.remove("Heathrow Airport (LHR)")
-            arrival()
-            break
-        elif response == "4":
-            dep = "BOM"
-            list.remove(
-                "Chhatrapati Shivaji Maharaj International Airport (BOM)")
-            arrival()
-            break
-        elif response == "5":
-            dep = "SYD"
-            list.remove("Sydney Airport (SYD)")
-            arrival()
-            break
-        else:
-            COUNT += 1
-            countt = 0
-            if COUNT < 4:
-                while True:
-                    response = input("Do you want to try again (Y/N): ")
-                    if response.lower() == "y":
-                        break
-                    elif response.lower() == "n":
-                        main()
-                        break
-                    else:
-                        countt += 1
-                        if countt > 3:
-                            main()
-                            break
-                        print("\n", "="*4, "ENTER VALID OPTION", "="*4)
             else:
-                print("TRY AGAIN")
-                main()
+                print("\n", "="*4, 'Please Enter a Valid code', "="*4)
+                pass
+
+        index = list.index(dep)
+        list.remove(dep)
+        list2 = [
+            "Dubai International Airport",
+            "John F. Kennedy International Airport",
+            "Heathrow Airport",
+            "Chhatrapati Shivaji Maharaj International Airport",
+            "Sydney Airport"
+        ]
+        list2.pop(index)
+
+        print("\n", "="*4, "ARRIVAL", "="*4)
+        for i in range(0, len(list)):
+            p_command = "CODE {}: {}".format(list[i], list2[i])
+            print(p_command)
+        global arr
+        while True:
+            arr = input('\nEnter the Respective Code: ')
+            arr = arr.strip()
+            arr = arr.upper()
+            if arr in list:
                 break
+            else:
+                print("\n", "="*4, 'Please Enter a Valid code', "="*4)
+                pass
+        date_input()
+
+    def addYears(d,years):
+        global f_date
+        try:
+            f_date=d.replace(year=d.year+years)
+            print(f_date)
+        except ValueError:
+            f_date=d + (date(d.year+years,1,1)-date(d.year,1,1))
+            print(f_date)
+
+
+
+    def date_input():
+        current_date = date.today()
+        addYears(current_date,1)
+        while True:
+            depature_date = input("ENTER DEPATURE DATE (YYYY-MM-DD): ")
+            if str(current_date) <= depature_date and str(f_date)>depature_date:
+                dep_date = depature_date
+                break
+            else:
+                print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
+
+    def flights_extract():
+        pass
+    dep_arrival_input()
 
 
 def FLIGHT_STATUS():
