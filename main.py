@@ -182,6 +182,13 @@ def NEW_BOOKING():
                     else:
                         df = df.drop([i], axis=0)
 
+            dep_time=df.iat[0,3]
+            arr_time=df.iat[0,4]
+            a=arr_time-dep_time
+            print(type(a))
+            print(str(a))
+            print(a*-1)
+
     dep_arrival_input()
     date_input()
     flights_extract()
