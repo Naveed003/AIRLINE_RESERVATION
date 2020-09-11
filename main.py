@@ -155,8 +155,7 @@ def NEW_BOOKING():
             list = mycursor.fetchall()
             global df
             df = pd.DataFrame(
-                list, columns=["flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
-            indexs = []
+    
             for i in range(len(df["days"])):
                 if day_week in df["days"][i] or df["days"][i] == "DAILY":
                     pass
