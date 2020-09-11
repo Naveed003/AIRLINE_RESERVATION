@@ -13,8 +13,10 @@ for i in range(len(df["days"])):
     if "MON" in df["days"][i]:
         indexs.append(i)
         print(df["days"][i])
-#for i,column in df.iteritems():
-#   print(i)
+        df=df.drop([i],axis=0)
+
+print(df)
+
     
     
 mydb.close()

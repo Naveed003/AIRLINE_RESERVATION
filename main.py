@@ -93,7 +93,7 @@ def NEW_BOOKING():
             else:
                 print("\n", "="*4, 'Please Enter a Valid code', "="*4)
                 pass
-        date_input()
+
 
     def addYears(d, years):
         global f_date
@@ -126,7 +126,7 @@ def NEW_BOOKING():
         while True:
             depature_date = input("\nENTER DEPATURE DATE (YYYY-MM-DD): ")
             depature_date.strip()
-            if depature_date[4] != "-" or depature_date[7] != "-":
+            if depature_date[4] != "-" or depature_date[7] != "-" or len(depature_date)==10:
                 print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
             elif depature_date[5:7] > "12" or depature_date[-2:] > "31":
                 print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
@@ -143,12 +143,33 @@ def NEW_BOOKING():
                 print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
 
         string_to_date(depature_date)
-        print(depature_date, type(depature_date))
-        print(day_week, type(day_week))
+
 
     def flights_extract():
-        pass
+        query="select * from SCHEDULE"
+        mycursor.execute(query)
+        res=mycursor.fetchall()
+        print(res)
+        if res==[]:
+            print("hel")
+            query="select FLIGHT_NO,ORIGIN,DESTINATION,DAY from ROUTES where ORIGIN='{}' AND DESTINATION='{}'".format(dep,arr)
+            mycursor.execute(query)
+            list=mycursor.fetchall()
+            global df
+            df=pd.DataFrame(list,columns=["flight_no","origin","dest","days"])
+            indexs=[]
+            for i in range(len(df["days"])):
+                #if day_week in df["days"][i] or df["days"][i]=="DAILY":
+                #    pass
+                #else:    
+                #    df=df.drop([i],axis=0)
+                df=df.drop([i],axis0)
+
+    
+    dep_arrival_input()
     date_input()
+    flights_extract()
+    print(df)
 
 
 def FLIGHT_STATUS():
