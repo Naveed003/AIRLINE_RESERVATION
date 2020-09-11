@@ -95,51 +95,56 @@ def NEW_BOOKING():
                 pass
         date_input()
 
-    def addYears(d,years):
+    def addYears(d, years):
         global f_date
         try:
-            f_date=d.replace(year=d.year+years)
+            f_date = d.replace(year=d.year+years)
             print(f_date)
         except ValueError:
-            f_date=d + (date(d.year+years,1,1)-date(d.year,1,1))
+            f_date = d + (date(d.year+years, 1, 1)-date(d.year, 1, 1))
             print(f_date)
 
     def string_to_date(datee):
-        year=int(datee[0:4])
-        month=int(datee[5:7])
-        day=int(datee[8:])
+        year = int(datee[0:4])
+        month = int(datee[5:7])
+        day = int(datee[8:])
 
         global depature_date
         global day_week
-        depature_date=date(year,month,day)
-        day_week=depature_date.weekday()
-        day_week=calendar.day_name[day_week]
-        if day_week.upper()[0]=="T":
-            day_week=day_week.upper()[0:4]
+        depature_date = date(year, month, day)
+        day_week = depature_date.weekday()
+        day_week = calendar.day_name[day_week]
+        if day_week.upper()[0] == "T":
+            day_week = day_week.upper()[0:4]
         else:
-            day_week=day_week.upper()[0:3]
-
-
-
+            day_week = day_week.upper()[0:3]
 
     def date_input():
         current_date = date.today()
-        addYears(current_date,1)
+        addYears(current_date, 1)
         global depature_date
         while True:
             depature_date = input("\nENTER DEPATURE DATE (YYYY-MM-DD): ")
             depature_date.strip()
-            if depature_date[5:7]>"12" or depature_date[-2:]>31:
-                pass
-            elif  str(current_date) <= depature_date and str(f_date)>depature_date:
+            if depature_date[4] != "-" or depature_date[7] != "-":
+                print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
+            elif depature_date[5:7] > "12" or depature_date[-2:] > "31":
+                print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
+            elif depature_date[5:7] in ["04", "06", "09", "11"] and depature_date[-2:] > "30":
+                print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
+            elif depature_date[5:7] == "02" and int(depature_date[0:4]) % 4 != 0 and depature_date[-2:] > "28":
+                print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
+            elif depature_date[5:7] == "02" and int(depature_date[0:4]) % 4 == 0 and depature_date[-2:] > "29":
+                print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
+            elif str(current_date) <= depature_date and str(f_date) > depature_date:
                 dep_date = depature_date
                 break
             else:
                 print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
-        
+
         string_to_date(depature_date)
-        print(depature_date,type(depature_date))
-        print(day_week,type(day_week))
+        print(depature_date, type(depature_date))
+        print(day_week, type(day_week))
 
     def flights_extract():
         pass
@@ -163,7 +168,3 @@ def ABOUT():
 
 
 NEW_BOOKING()
-
-
-
-
