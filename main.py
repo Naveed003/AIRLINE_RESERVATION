@@ -6,6 +6,7 @@ import random
 from random import randint
 from datetime import datetime
 import mysql.connector
+import calendar
 mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
                                passwd="Kf0GcKV5sh", port=3306, database="QxKi8MQlUR")
 mycursor = mydb.cursor()
@@ -103,22 +104,46 @@ def NEW_BOOKING():
             f_date=d + (date(d.year+years,1,1)-date(d.year,1,1))
             print(f_date)
 
+    def string_to_date(datee):
+        year=int(datee[0:4])
+        month=int(datee[5:7])
+        day=int(datee[8:])
+
+        global depature_date
+        global day_week
+        depature_date=date(year,month,day)
+        day_week=depature_date.weekday()
+        day_week=calendar.day_name[day_week]
+        if day_week.upper()[0]=="T":
+            day_week=day_week.upper()[0:4]
+        else:
+            day_week=day_week.upper()[0:3]
+
+
 
 
     def date_input():
         current_date = date.today()
         addYears(current_date,1)
+        global depature_date
         while True:
-            depature_date = input("ENTER DEPATURE DATE (YYYY-MM-DD): ")
-            if str(current_date) <= depature_date and str(f_date)>depature_date:
+            depature_date = input("\nENTER DEPATURE DATE (YYYY-MM-DD): ")
+            depature_date.strip()
+            if depature_date[5:7]>"12" or depature_date[-2:]>31:
+                pass
+            elif  str(current_date) <= depature_date and str(f_date)>depature_date:
                 dep_date = depature_date
                 break
             else:
                 print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
+        
+        string_to_date(depature_date)
+        print(depature_date,type(depature_date))
+        print(day_week,type(day_week))
 
     def flights_extract():
         pass
-    dep_arrival_input()
+    date_input()
 
 
 def FLIGHT_STATUS():
@@ -137,8 +162,8 @@ def ABOUT():
     print("="*8, "ABOUT", "="*8)
 
 
-main()
-print(arr, dep)
+NEW_BOOKING()
+
 
 
 
