@@ -4,18 +4,15 @@ mydb=mysql.connector.connect(host="remotemysql.com",user="QxKi8MQlUR",passwd="Kf
 mycursor=mydb.cursor()
 
 
-query="select FLIGHT_NO,ORIGIN,DESTINATION,DAY from ROUTES where ORIGIN='DXB' AND DESTINATION='LHR'"
+query="select arrival_time from ROUTES"
 mycursor.execute(query)
 list=mycursor.fetchall()
-df=pd.DataFrame(list,columns=["flight_no","origin","dest","days"])
-indexs=[]
-for i in range(len(df["days"])):
-    if "MON" in df["days"][i]:
-        indexs.append(i)
-        print(df["days"][i])
-        df=df.drop([i],axis=0)
+df=pd.DataFrame(list,columns=["flight_no"])
+a=df.loc[1]
+b=df.loc[0]
+print(b)
+print(a-b)
 
-print(df)
 
     
     

@@ -94,7 +94,6 @@ def NEW_BOOKING():
                 print("\n", "="*4, 'Please Enter a Valid code', "="*4)
                 pass
 
-
     def addYears(d, years):
         global f_date
         try:
@@ -118,6 +117,7 @@ def NEW_BOOKING():
             day_week = day_week.upper()[0:4]
         else:
             day_week = day_week.upper()[0:3]
+        print(day_week)
 
     def date_input():
         current_date = date.today()
@@ -126,7 +126,7 @@ def NEW_BOOKING():
         while True:
             depature_date = input("\nENTER DEPATURE DATE (YYYY-MM-DD): ")
             depature_date.strip()
-            if depature_date[4] != "-" or depature_date[7] != "-" or len(depature_date)!=10:
+            if depature_date[4] != "-" or depature_date[7] != "-" or len(depature_date) != 10:
                 print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
             elif depature_date[5:7] > "12" or depature_date[-2:] > "31":
                 print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
@@ -144,43 +144,48 @@ def NEW_BOOKING():
 
         string_to_date(depature_date)
 
-
     def flights_extract():
-        query="select * from SCHEDULE"
+        query = "select * from SCHEDULE"
         mycursor.execute(query)
-        res=mycursor.fetchall()
-        if res==[]:
-            query="select FLIGHT_NO,ORIGIN,DESTINATION,DAY from ROUTES where ORIGIN='{}' AND DESTINATION='{}'".format(dep,arr)
+        res = mycursor.fetchall()
+        if res == []:
+            query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='{}' AND DESTINATION='{}'".format(
+                dep, arr)
             mycursor.execute(query)
-            list=mycursor.fetchall()
+            list = mycursor.fetchall()
             global df
-            df=pd.DataFrame(list,columns=["flight_no","origin","dest","days"])
-            indexs=[]
+            df = pd.DataFrame(
+                list, columns=["flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
+            indexs = []
             for i in range(len(df["days"])):
-                if day_week in df["days"][i] or df["days"][i]=="DAILY":
+                if day_week in df["days"][i] or df["days"][i] == "DAILY":
                     pass
-                else:    
-                    df=df.drop([i],axis=0)
-                
-
+                else:
+                    df = df.drop([i], axis=0)
+            
             if df.empty:
-                query="select FLIGHT_NO,ORIGIN,DESTINATION,DAY from ROUTES where ORIGIN='{}' AND DESTINATION='DXB'".format(dep)
+                query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='{}' AND DESTINATION='DXB'".format(
+                    dep)
                 mycursor.execute(query)
-                res=mycursor.fetchall()
-                query="select FLIGHT_NO,ORIGIN,DESTINATION,DAY from ROUTES where ORIGIN='DXB' AND DESTINATION='{}'".format(arr)
+                res = mycursor.fetchall()
+                query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='DXB' AND DESTINATION='{}'".format(
+                    arr)
                 mycursor.execute(query)
                 for i in mycursor.fetchall():
                     res.append(i)
-                
-                print(pd.DataFrame(res,columns=["flight_no","origin","dest","days"]))
 
+                df=pd.DataFrame(res, columns=[
+                      "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
+                for i in range(len(df["days"])):
+                    if day_week in df["days"][i] or df["days"][i] == "DAILY":
+                        pass
+                    else:
+                        df = df.drop([i], axis=0)
 
-    
     dep_arrival_input()
     date_input()
     flights_extract()
-
-
+    print(df)
 
 def FLIGHT_STATUS():
     print("="*8, "FLIGHT STATUS", "="*8)
