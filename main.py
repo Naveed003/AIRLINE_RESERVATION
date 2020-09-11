@@ -167,19 +167,4 @@ main()
 print(arr, dep)
 
 
-"""while True:
-    response = input("\nENTER OPTION NUMBER: ")
-    if response == "1":
-        NEW_BOOKING()
-    elif response == "2":
-        FLIGHT_STATUS()
-    elif response == "3":
-        MANAGE_BOOKINGS()
-    elif response == "4":
-        STAFF_LOGIN()
-    elif response == "5":
-        ABOUT()
-    elif response == "6":
-        break
-    else:
-        print("="*20, "ENTER VALID OPTION", "="*20)"""
+
