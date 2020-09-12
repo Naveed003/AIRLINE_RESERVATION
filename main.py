@@ -154,7 +154,7 @@ def NEW_BOOKING():
             mycursor.execute(query)
             list = mycursor.fetchall()
             global df
-            df = pd.DataFrame(
+            df = pd.DataFrame(list,columns=["flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
     
             for i in range(len(df["days"])):
                 if day_week in df["days"][i] or df["days"][i] == "DAILY":
@@ -175,18 +175,11 @@ def NEW_BOOKING():
 
                 df=pd.DataFrame(res, columns=[
                       "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
-                for i in range(len(df["days"])):
-                    if day_week in df["days"][i] or df["days"][i] == "DAILY":
-                        pass
-                    else:
-                        df = df.drop([i], axis=0)
 
             dep_time=df.iat[0,3]
             arr_time=df.iat[0,4]
             a=arr_time-dep_time
-            print(type(a))
-            print(str(a))
-            print(a*-1)
+
 
     dep_arrival_input()
     date_input()
