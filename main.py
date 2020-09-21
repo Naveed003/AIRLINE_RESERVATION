@@ -192,17 +192,22 @@ def NEW_BOOKING():
                             break
 
 
-                    else:
-                        query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='DXB' AND DESTINATION='{}'".format(
-                            arr)
-                        mycursor.execute(query)
-                        for i in mycursor.fetchall():
-                            res.append(i)
-                        
+
+                                        
+                    
+                    query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='DXB' AND DESTINATION='{}'".format(
+                        arr)
+                    mycursor.execute(query)
+                    res=mycursor.fetchall()
                         
 
-                        df=pd.DataFrame(res, columns=[
+                    df1=pd.DataFrame(res, columns=[
                             "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
+                    df=pd.concat([df,df1])
+            
+            print(df)
+            
+            break
 
 
 
@@ -230,3 +235,19 @@ def ABOUT():
 
 
 NEW_BOOKING()
+
+
+""" else:
+                        index=[]
+                        for i in range(len(res)):
+                            for j in range(len(res[i])):
+                                if j==5:
+                                    print(res[i][j])
+                                    if day_week in res[i][j]:
+                                        pass
+                                    else:
+                                        index.append(i)
+                            
+                        if index!=[]:
+                            for i in index:
+                                res.pop(i) """
