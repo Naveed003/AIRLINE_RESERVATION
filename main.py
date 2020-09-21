@@ -145,50 +145,67 @@ def NEW_BOOKING():
         string_to_date(depature_date)
 
     def flights_extract():
-        query = "select * from SCHEDULE"
-        mycursor.execute(query)
-        res = mycursor.fetchall()
-        if res == []:
-            query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='{}' AND DESTINATION='{}'".format(
-                dep, arr)
+        while True:
+            date_input()
+            query = "select * from SCHEDULE"
             mycursor.execute(query)
-            list = mycursor.fetchall()
-            global df
-
-            df = pd.DataFrame(list,columns=[
-                      "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
-
-    
-            for i in range(len(df["days"])):
-                if day_week in df["days"][i] or df["days"][i] == "DAILY":
-                    pass
-                else:
-                    df = df.drop([i], axis=0)
-            
-            if df.empty:
-                query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='{}' AND DESTINATION='DXB'".format(
-                    dep)
+            res = mycursor.fetchall()
+            if res == []:
+                query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='{}' AND DESTINATION='{}'".format(
+                    dep, arr)
                 mycursor.execute(query)
-                res = mycursor.fetchall()
-                query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='DXB' AND DESTINATION='{}'".format(
-                    arr)
-                mycursor.execute(query)
-                for i in mycursor.fetchall():
-                    res.append(i)
+                list = mycursor.fetchall()
+                global df
 
-                df=pd.DataFrame(res, columns=[
-                      "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
+                df = pd.DataFrame(list,columns=[
+                        "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
+
+        
+                for i in range(len(df["days"])):
+                    if day_week in df["days"][i] or df["days"][i] == "DAILY":
+                        pass
+                    else:
+                        df = df.drop([i], axis=0)
+                
+                
+                if df.empty:
+
+                    query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='{}' AND DESTINATION='DXB'".format(
+                        dep)
+                    mycursor.execute(query)
+                    res = mycursor.fetchall()
+                    df=pd.DataFrame(res, columns=[
+                        "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
+                    for i in range(len(df["days"])):
+                        if day_week in df["days"][i] or df["days"][i] == "DAILY":
+                            pass
+                        else:
+                            df = df.drop([i], axis=0)
+                    if df.empty:
+                        print("\n", "="*4, 'NO FLIGHTS AVAILABLE', "="*4,"\n")
+                        print()
+
+
+                    else:
+                        query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='DXB' AND DESTINATION='{}'".format(
+                            arr)
+                        mycursor.execute(query)
+                        for i in mycursor.fetchall():
+                            res.append(i)
+                        
+                        
+
+                        df=pd.DataFrame(res, columns=[
+                            "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
 
 
 
-            dep_time=df.iat[0,3]
-            arr_time=df.iat[0,4]
+            #dep_time=df.iat[0,3]
+            #arr_time=df.iat[0,4]
 
 
     dep_arrival_input()
-    date_input()
     flights_extract()
-    print(df)
 
 def FLIGHT_STATUS():
     print("="*8, "FLIGHT STATUS", "="*8)
