@@ -183,7 +183,13 @@ def NEW_BOOKING():
                             df = df.drop([i], axis=0)
                     if df.empty:
                         print("\n", "="*4, 'NO FLIGHTS AVAILABLE', "="*4,"\n")
-                        print()
+                        print("\n", "="*4, 'DO YOU WANT TO TRY AGAIN', "="*4,"\n")
+                        RESPONSE=input("ENTER (Y/N): ")
+                        if RESPONSE.lower()=="y":
+                            continue
+                        else:
+                            main()
+                            break
 
 
                     else:
