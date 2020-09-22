@@ -198,12 +198,10 @@ def NEW_BOOKING():
                         "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
                     df = pd.concat([df, df1])
 
-            print(df)
             if day_week in ["MON", "WED", "SAT", "FRI"] and dep == "DXB" and arr == "SYD":
                 query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='DXB' and flight_no='G799'"
                 mycursor.execute(query)
                 res=mycursor.fetchall()
-                print(res)
                 query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='BOM' AND DESTINATION='SYD' and flight_no='G799'"
                 mycursor.execute(query)
                 for i in mycursor.fetchall():
@@ -223,10 +221,31 @@ def NEW_BOOKING():
                 df1 = pd.DataFrame(res, columns=[
                         "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
                 df = pd.concat([df, df1])
-                print(df)
+                
 
-            elif day_week in ["TUES", "THURS", "SAT", "SUN"] and dep == "syd" and arr == "dxb":
-                print("hey")
+            elif day_week in ["TUES", "THUR", "SAT", "SUN"] and dep == "SYD" and arr == "DXB":
+                query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='SYD' and flight_no='G799'"
+                mycursor.execute(query)
+                res=mycursor.fetchall()
+                query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='BOM' AND DESTINATION='DXB' and flight_no='G799'"
+                mycursor.execute(query)
+                for i in mycursor.fetchall():
+                    res.append(i)
+
+                query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='SYD' and flight_no='G281'"
+                mycursor.execute(query)
+                for i in mycursor.fetchall():
+                    res.append(i)
+                query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='BOM' AND DESTINATION='DXB' and flight_no='G281'"
+                mycursor.execute(query)
+                for i in mycursor.fetchall():
+                    res.append(i)
+                
+                df1 = pd.DataFrame(res, columns=[
+                        "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
+                df = pd.concat([df, df1])
+            
+            print(df)
 
             break
 
