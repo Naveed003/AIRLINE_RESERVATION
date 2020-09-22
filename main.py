@@ -154,10 +154,10 @@ def NEW_BOOKING():
                 query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='{}' AND DESTINATION='{}'".format(
                     dep, arr)
                 mycursor.execute(query)
-                res = mycursor.fetchall()
+                list = mycursor.fetchall()
                 global df
 
-                df = pd.DataFrame(res, columns=[
+                df = pd.DataFrame(list, columns=[
                     "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
 
                 for i in range(len(df["days"])):
