@@ -167,7 +167,7 @@ def NEW_BOOKING():
                         df = df.drop([i], axis=0)
 
                 if df.empty:
-
+                    
                     query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='{}' AND DESTINATION='DXB'".format(
                         dep)
                     mycursor.execute(query)
