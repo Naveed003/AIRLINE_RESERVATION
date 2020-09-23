@@ -179,6 +179,7 @@ def NEW_BOOKING():
                             pass
                         else:
                             df = df.drop([i], axis=0)
+                      
                     if df.empty:
                         print("\n", "="*4, 'NO FLIGHTS AVAILABLE', "="*4, "\n")
                         print("\n", "="*4, 'DO YOU WANT TO TRY AGAIN', "="*4, "\n")
@@ -197,7 +198,6 @@ def NEW_BOOKING():
                     df1 = pd.DataFrame(res, columns=[
                         "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
                     df = pd.concat([df, df1])
-
             if day_week in ["MON", "WED", "SAT", "FRI"] and dep == "DXB" and arr == "SYD":
                 query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='DXB' and flight_no='G799'"
                 mycursor.execute(query)
