@@ -126,7 +126,9 @@ def NEW_BOOKING():
         while True:
             depature_date = input("\nENTER DEPATURE DATE (YYYY-MM-DD): ")
             depature_date.strip()
-            if depature_date[4] != "-" or depature_date[7] != "-" or len(depature_date) != 10:
+            if len(depature_date) != 10:
+                print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
+            elif depature_date[4] != "-" or depature_date[7] != "-" or len(depature_date) != 10:
                 print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
             elif depature_date[5:7] > "12" or depature_date[-2:] > "31":
                 print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
@@ -166,21 +168,21 @@ def NEW_BOOKING():
                     else:
                         df = df.drop([i], axis=0)
 
-                if df.empty:
-                    
-                    query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='{}' AND DESTINATION='DXB'".format(
+
+
+                query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='{}' AND DESTINATION='DXB'".format(
                         dep)
-                    mycursor.execute(query)
-                    res = mycursor.fetchall()
-                    df = pd.DataFrame(res, columns=[
+                mycursor.execute(query)
+                res = mycursor.fetchall()
+                df = pd.DataFrame(res, columns=[
                         "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
-                    for i in range(len(df["days"])):
-                        if day_week in df["days"][i] or df["days"][i] == "DAILY":
-                            pass
-                        else:
-                            df = df.drop([i], axis=0)
-                      
-                    if df.empty:
+                for i in range(len(df["days"])):
+                    if day_week in df["days"][i] or df["days"][i] == "DAILY":
+                        pass
+                    else:
+                        df = df.drop([i], axis=0)
+
+                if df.empty:
                         print("\n", "="*4, 'NO FLIGHTS AVAILABLE', "="*4, "\n")
                         print("\n", "="*4, 'DO YOU WANT TO TRY AGAIN', "="*4, "\n")
                         RESPONSE = input("ENTER (Y/N): ")
@@ -190,15 +192,15 @@ def NEW_BOOKING():
                             main()
                             break
 
-                    query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='DXB' AND DESTINATION='{}'".format(
+                query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='DXB' AND DESTINATION='{}'".format(
                         arr)
-                    mycursor.execute(query)
-                    res = mycursor.fetchall()
+                mycursor.execute(query)
+                res = mycursor.fetchall()
 
-                    df1 = pd.DataFrame(res, columns=[
+                df1 = pd.DataFrame(res, columns=[
                         "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
-                    df = pd.concat([df, df1])
-            if day_week in ["MON", "WED", "SAT", "FRI"] and dep == "DXB" and arr == "SYD":
+                df = pd.concat([df, df1])
+            """if day_week in ["MON", "WED", "SAT", "FRI"] and dep == "DXB" and arr == "SYD":
                 query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='DXB' and flight_no='G799'"
                 mycursor.execute(query)
                 res=mycursor.fetchall()
@@ -215,13 +217,13 @@ def NEW_BOOKING():
                 mycursor.execute(query)
                 for i in mycursor.fetchall():
                     res.append(i)
-                 
-                
+
+
 
                 df1 = pd.DataFrame(res, columns=[
                         "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
                 df = pd.concat([df, df1])
-                
+
 
             elif day_week in ["TUES", "THUR", "SAT", "SUN"] and dep == "SYD" and arr == "DXB":
                 query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='SYD' and flight_no='G799'"
@@ -240,11 +242,12 @@ def NEW_BOOKING():
                 mycursor.execute(query)
                 for i in mycursor.fetchall():
                     res.append(i)
-                
+
                 df1 = pd.DataFrame(res, columns=[
                         "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
                 df = pd.concat([df, df1])
-            
+                """
+
             print(df)
 
             break
@@ -285,7 +288,7 @@ NEW_BOOKING()
                                         pass
                                     else:
                                         index.append(i)
-                            
+
                         if index!=[]:
                             for i in index:
                                 res.pop(i) """
