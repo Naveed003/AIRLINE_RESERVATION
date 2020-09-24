@@ -147,44 +147,64 @@ def NEW_BOOKING():
         string_to_date(depature_date)
 
     def flights_extract():
-        if  arr == 'DXB':
-            arr_1="DXB_ARR"
-        elif  arr == 'BOM':
-            arr_1="BOM_ARR"
-        elif  arr == 'JFK':
-            arr_1="JFK_ARR"
-        elif  arr == 'SYD':
-            arr_1="SYD_ARR"
-        elif  arr == 'LHR':
-            arr_1="LHR_ARR"
-        if  dep == 'DXB':
-            dep_1="DXB_ARR"
-        elif  dep == 'BOM':
-            dep_1="BOM_DEP"
-        elif  dep == 'JFK':
-            dep_1="JFK_DEP"
-        elif  dep == 'SYD':
-            dep_1="SYD_DEP"
-        elif  dep == 'LHR':
-            dep_1="LHR_DEP"
+        if arr == 'DXB':
+            arr_1 = "DXB_ARR"
+        elif arr == 'BOM':
+            arr_1 = "BOM_ARR"
+        elif arr == 'JFK':
+            arr_1 = "JFK_ARR"
+        elif arr == 'SYD':
+            arr_1 = "SYD_ARR"
+        elif arr == 'LHR':
+            arr_1 = "LHR_ARR"
+        if dep == 'DXB':
+            dep_1 = "DXB_DEP"
+        elif dep == 'BOM':
+            dep_1 = "BOM_DEP"
+        elif dep == 'JFK':
+            dep_1 = "JFK_DEP"
+        elif dep == 'SYD':
+            dep_1 = "SYD_DEP"
+        elif dep == 'LHR':
+            dep_1 = "LHR_DEP"
         while True:
             date_input()
             query = "select * from SCHEDULE"
             mycursor.execute(query)
             res = mycursor.fetchall()
             if res == []:
-                query= 'select * from {},{} WHERE {}.DESTINATION = {}.ORIGIN'.format(dep_1,arr_1,dep_1,arr_1)
-                print(query)
+                query = 'select * from {},{} WHERE {}.DESTINATION = {}.ORIGIN'.format(
+                    dep_1, arr_1, dep_1, arr_1)
+
                 mycursor.execute(query)
                 list = mycursor.fetchall()
-
                 global df
-
                 df = pd.DataFrame(list, columns=[
-                    "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
+                    "flight_no", "origin", "dest", "dep_time", "arr_time", "days", "type", "duration", "flight_no1", "origin1", "dest1", "dep_time1", "arr_time1", "days1", "type1", "duration1"])
+
+                df1 = pd.concat([df["flight_no"], df["origin"], df["dest"],
+                                 df["dep_time"], df["arr_time"], df["days"]], axis=1)
+                df2 = pd.concat([df["flight_no1"], df["origin1"], df["dest1"],
+                                 df["dep_time1"], df["arr_time1"], df["days1"]], axis=1)
+                flight_no = []
+                for i in range(len(df1["flight_no"])):
+                    if df1["flight_no"][i] in flight_no:
+                        df1 = df1.drop([i], axis=0)
+                    else:
+                        flight_no.append(df1["flight_no"][i])
+
+                df3 = df2.rename(columns={'flight_no1': 'flight_no', 'origin1': 'origin', 'dest1': 'dest',
+                                          'dep_time1': 'dep_time', 'arr_time1': 'arr_time', 'days1': 'days'}, inplace=False)
+                flight_no = []
+
+                for i in range(len(df3["flight_no"])):
+                    if df3["flight_no"][i] in flight_no:
+                        df3 = df3.drop([i], axis=0)
+                    else:
+                        flight_no.append(df3["flight_no"][i])
+
+                df = pd.concat([df1, df3], axis=0)
                 print(df)
-
-
 
             break
 
