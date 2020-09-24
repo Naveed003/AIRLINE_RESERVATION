@@ -147,6 +147,7 @@ def NEW_BOOKING():
         string_to_date(depature_date)
 
     def flights_extract():
+
         if arr == 'DXB':
             arr_1 = "DXB_ARR"
         elif arr == 'BOM':
@@ -169,6 +170,8 @@ def NEW_BOOKING():
             dep_1 = "LHR_DEP"
         while True:
             date_input()
+            days = ["SUN", "MON", "TUES", "WED", "THUR", "FRI", "SAT"]
+            days_index = days.index(day_week)
             query = "select * from SCHEDULE"
             mycursor.execute(query)
             res = mycursor.fetchall()
@@ -202,6 +205,17 @@ def NEW_BOOKING():
                         df3 = df3.drop([i], axis=0)
                     else:
                         flight_no.append(df3["flight_no"][i])
+
+                for i in df1.index:
+                    if day_week in df1["days"][i] or df1["days"][i] == "DAILY":
+                        pass
+                    else:
+                        df1 = df1.drop([i], axis=0)
+                for i in df3.index:
+                    if day_week in df3["days"][i] or df3["days"][i] == "DAILY" or days[days_index+1] in df3["days"][i]:
+                        pass
+                    else:
+                        df3 = df3.drop([i], axis=0)
 
                 df = pd.concat([df1, df3], axis=0)
                 print(df)
