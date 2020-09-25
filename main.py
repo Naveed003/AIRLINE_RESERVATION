@@ -147,81 +147,135 @@ def NEW_BOOKING():
         string_to_date(depature_date)
 
     def flights_extract():
-
-        if arr == 'DXB':
-            arr_1 = "DXB_ARR"
-        elif arr == 'BOM':
-            arr_1 = "BOM_ARR"
-        elif arr == 'JFK':
-            arr_1 = "JFK_ARR"
-        elif arr == 'SYD':
-            arr_1 = "SYD_ARR"
-        elif arr == 'LHR':
-            arr_1 = "LHR_ARR"
-        if dep == 'DXB':
-            dep_1 = "DXB_DEP"
-        elif dep == 'BOM':
-            dep_1 = "BOM_DEP"
-        elif dep == 'JFK':
-            dep_1 = "JFK_DEP"
-        elif dep == 'SYD':
-            dep_1 = "SYD_DEP"
-        elif dep == 'LHR':
-            dep_1 = "LHR_DEP"
         while True:
             date_input()
-            days = ["SUN", "MON", "TUES", "WED", "THUR", "FRI", "SAT"]
-            days_index = days.index(day_week)
-            query = "select * from SCHEDULE"
-            mycursor.execute(query)
-            res = mycursor.fetchall()
-            if res == []:
-                query = 'select * from {},{} WHERE {}.DESTINATION = {}.ORIGIN'.format(
-                    dep_1, arr_1, dep_1, arr_1)
-
+            def dir():
+                query = "select * from SCHEDULE"
                 mycursor.execute(query)
-                list = mycursor.fetchall()
-                global df
-                df = pd.DataFrame(list, columns=[
-                    "flight_no", "origin", "dest", "dep_time", "arr_time", "days", "type", "duration", "flight_no1", "origin1", "dest1", "dep_time1", "arr_time1", "days1", "type1", "duration1"])
+                res = mycursor.fetchall()
+                if res == []:
+                    query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='{}' AND DESTINATION='{}'".format(
+                        dep, arr)
+                    mycursor.execute(query)
+                    list = mycursor.fetchall()
+                    global dirr
+                    if list!=[]:
+                        dirr = pd.DataFrame(list, columns=[
+                            "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
 
-                df1 = pd.concat([df["flight_no"], df["origin"], df["dest"],
-                                 df["dep_time"], df["arr_time"], df["days"]], axis=1)
-                df2 = pd.concat([df["flight_no1"], df["origin1"], df["dest1"],
-                                 df["dep_time1"], df["arr_time1"], df["days1"]], axis=1)
-                flight_no = []
-                for i in range(len(df1["flight_no"])):
-                    if df1["flight_no"][i] in flight_no:
-                        df1 = df1.drop([i], axis=0)
+                        for i in dirr.index:
+                            if day_week in dirr["days"][i] or dirr["days"][i] == "DAILY":
+                                pass
+                            else:
+                                dirr = dirr.drop([i], axis=0)
+                        
+
                     else:
-                        flight_no.append(df1["flight_no"][i])
+                        dirr=pd.DataFrame()
+            def con():
+                if arr == 'DXB':
+                    arr_1 = "DXB_ARR"
+                elif arr == 'BOM':
+                    arr_1 = "BOM_ARR"
+                elif arr == 'JFK':
+                    arr_1 = "JFK_ARR"
+                elif arr == 'SYD':
+                    arr_1 = "SYD_ARR"
+                elif arr == 'LHR':
+                    arr_1 = "LHR_ARR"
+                if dep == 'DXB':
+                    dep_1 = "DXB_DEP"
+                elif dep == 'BOM':
+                    dep_1 = "BOM_DEP"
+                elif dep == 'JFK':
+                    dep_1 = "JFK_DEP"
+                elif dep == 'SYD':
+                    dep_1 = "SYD_DEP"
+                elif dep == 'LHR':
+                    dep_1 = "LHR_DEP"
+                days = ["SUN", "MON", "TUES", "WED", "THUR", "FRI", "SAT"]
+                days_index = days.index(day_week)
+                query = "select * from SCHEDULE"
+                mycursor.execute(query)
+                res = mycursor.fetchall()
+                if res == []:
+                    query = 'select * from {},{} WHERE {}.DESTINATION = {}.ORIGIN'.format(
+                        dep_1, arr_1, dep_1, arr_1)
 
-                df3 = df2.rename(columns={'flight_no1': 'flight_no', 'origin1': 'origin', 'dest1': 'dest',
-                                          'dep_time1': 'dep_time', 'arr_time1': 'arr_time', 'days1': 'days'}, inplace=False)
-                flight_no = []
+                    mycursor.execute(query)
+                    list = mycursor.fetchall()
+                    global df
+                    df = pd.DataFrame(list, columns=[
+                        "flight_no", "origin", "dest", "dep_time", "arr_time", "days", "type", "duration", "flight_no1", "origin1", "dest1", "dep_time1", "arr_time1", "days1", "type1", "duration1"])
+                    global df1
+                    global df3
+                    df1 = pd.concat([df["flight_no"], df["origin"], df["dest"],
+                                    df["dep_time"], df["arr_time"], df["days"]], axis=1)
+                    df2 = pd.concat([df["flight_no1"], df["origin1"], df["dest1"],
+                                    df["dep_time1"], df["arr_time1"], df["days1"]], axis=1)
+                    flight_no = []
+                    for i in df1.index:
+                        if df1["flight_no"][i] in flight_no:
+                            df1 = df1.drop([i], axis=0)
+                        else:
+                            flight_no.append(df1["flight_no"][i])
 
-                for i in range(len(df3["flight_no"])):
-                    if df3["flight_no"][i] in flight_no:
-                        df3 = df3.drop([i], axis=0)
-                    else:
-                        flight_no.append(df3["flight_no"][i])
+                    df3 = df2.rename(columns={'flight_no1': 'flight_no', 'origin1': 'origin', 'dest1': 'dest',
+                                            'dep_time1': 'dep_time', 'arr_time1': 'arr_time', 'days1': 'days'}, inplace=False)
+                    flight_no = []
 
-                for i in df1.index:
-                    if day_week in df1["days"][i] or df1["days"][i] == "DAILY":
-                        pass
-                    else:
-                        df1 = df1.drop([i], axis=0)
-                for i in df3.index:
-                    if day_week in df3["days"][i] or df3["days"][i] == "DAILY" or days[days_index+1] in df3["days"][i]:
-                        pass
-                    else:
-                        df3 = df3.drop([i], axis=0)
+                    for i in df3.index:
+                        if df3["flight_no"][i] in flight_no:
+                            df3 = df3.drop([i], axis=0)
+                        else:
+                            flight_no.append(df3["flight_no"][i])
 
-                df = pd.concat([df1, df3], axis=0)
-                print(df)
+                    for i in df1.index:
+                        if day_week in df1["days"][i] or df1["days"][i] == "DAILY":
+                            pass
+                        else:
+                            df1 = df1.drop([i], axis=0)
+            
+                    for i in df3.index:
+                        if day_week in df3["days"][i] or df3["days"][i] == "DAILY" or days[days_index+1] in df3["days"][i]:
+                            pass
+                        else:
+                            df3 = df3.drop([i], axis=0)
+                    global conn
+                    conn = pd.concat([df1, df3], axis=0)
+  
+
+            dir()
+            con()
+            if dirr.empty and df1.empty or dirrr.empty:
+                print("\n", "="*4, 'NO FLIGHTS AVAILABLE', "="*4, "\n")
+                print("\n", "="*4, 'DO YOU WANT TO TRY AGAIN', "="*4, "\n")
+                RESPONSE = input("ENTER (Y/N): ")
+                if RESPONSE.lower() == "y":
+                    continue
+                else:
+                    main()
+                    break
+            elif df1.empty or df3.empty:
+                flights=dirr
+                break
+            
+            else:
+                dirr=dirr
+                conn=conn
+                break
+
+
+            
+
+
+            
+
+
+            
              
 
-            break
+         
 
             # dep_time=df.iat[0,3]
             # arr_time=df.iat[0,4]
