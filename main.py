@@ -201,8 +201,8 @@ def NEW_BOOKING():
                 mycursor.execute(query)
                 res = mycursor.fetchall()
                 if res == []:
-                    query = 'select * from {},{} WHERE {}.DESTINATION = {}.ORIGIN'.format(
-                        dep_1, arr_1, dep_1, arr_1)
+                    query = 'select * from {},{} WHERE {}.DESTINATION = {}.ORIGIN AND {}.DEPATURE_TIME>{}.ARRIVAL_TIME'.format(
+                        dep_1, arr_1, dep_1, arr_1, arr_1, dep_1)
 
                     mycursor.execute(query)
                     list = mycursor.fetchall()
@@ -274,7 +274,7 @@ def NEW_BOOKING():
     flights_extract()
     print("\n", "="*4, 'DIRECT FLIGHTS', "="*4, "\n")
     print(dirr)
-    print("\n", "="*4, 'cONNECTING FLIGHTS', "="*4, "\n")
+    print("\n", "="*4, 'CONNECTING FLIGHTS', "="*4, "\n")
     print(conn)
 
 
