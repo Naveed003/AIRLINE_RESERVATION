@@ -149,6 +149,7 @@ def NEW_BOOKING():
     def flights_extract():
         while True:
             date_input()
+
             def dir():
                 query = "select * from SCHEDULE"
                 mycursor.execute(query)
@@ -159,7 +160,7 @@ def NEW_BOOKING():
                     mycursor.execute(query)
                     list = mycursor.fetchall()
                     global dirr
-                    if list!=[]:
+                    if list != []:
                         dirr = pd.DataFrame(list, columns=[
                             "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
 
@@ -168,10 +169,11 @@ def NEW_BOOKING():
                                 pass
                             else:
                                 dirr = dirr.drop([i], axis=0)
-                        
 
                     else:
-                        dirr=pd.DataFrame()
+                        dirr = pd.DataFrame()
+                    return dirr
+
             def con():
                 if arr == 'DXB':
                     arr_1 = "DXB_ARR"
@@ -210,9 +212,9 @@ def NEW_BOOKING():
                     global df1
                     global df3
                     df1 = pd.concat([df["flight_no"], df["origin"], df["dest"],
-                                    df["dep_time"], df["arr_time"], df["days"]], axis=1)
+                                     df["dep_time"], df["arr_time"], df["days"]], axis=1)
                     df2 = pd.concat([df["flight_no1"], df["origin1"], df["dest1"],
-                                    df["dep_time1"], df["arr_time1"], df["days1"]], axis=1)
+                                     df["dep_time1"], df["arr_time1"], df["days1"]], axis=1)
                     flight_no = []
                     for i in df1.index:
                         if df1["flight_no"][i] in flight_no:
@@ -221,7 +223,7 @@ def NEW_BOOKING():
                             flight_no.append(df1["flight_no"][i])
 
                     df3 = df2.rename(columns={'flight_no1': 'flight_no', 'origin1': 'origin', 'dest1': 'dest',
-                                            'dep_time1': 'dep_time', 'arr_time1': 'arr_time', 'days1': 'days'}, inplace=False)
+                                              'dep_time1': 'dep_time', 'arr_time1': 'arr_time', 'days1': 'days'}, inplace=False)
                     flight_no = []
 
                     for i in df3.index:
@@ -235,7 +237,7 @@ def NEW_BOOKING():
                             pass
                         else:
                             df1 = df1.drop([i], axis=0)
-            
+
                     for i in df3.index:
                         if day_week in df3["days"][i] or df3["days"][i] == "DAILY" or days[days_index+1] in df3["days"][i]:
                             pass
@@ -243,11 +245,11 @@ def NEW_BOOKING():
                             df3 = df3.drop([i], axis=0)
                     global conn
                     conn = pd.concat([df1, df3], axis=0)
-  
+                    return conn
 
-            dir()
-            con()
-            if dirr.empty and df1.empty or dirrr.empty:
+            dirr = dir()
+            conn = con()
+            if dirr.empty and df1.empty:  # or dirrr.empty:
                 print("\n", "="*4, 'NO FLIGHTS AVAILABLE', "="*4, "\n")
                 print("\n", "="*4, 'DO YOU WANT TO TRY AGAIN', "="*4, "\n")
                 RESPONSE = input("ENTER (Y/N): ")
@@ -257,31 +259,21 @@ def NEW_BOOKING():
                     main()
                     break
             elif df1.empty or df3.empty:
-                flights=dirr
+                flights = dirr
                 break
-            
+
             else:
-                dirr=dirr
-                conn=conn
+                dirr = dirr
+                conn = conn
                 break
-
-
-            
-
-
-            
-
-
-            
-             
-
-         
 
             # dep_time=df.iat[0,3]
             # arr_time=df.iat[0,4]
 
     dep_arrival_input()
     flights_extract()
+    print(dirr)
+    print(conn)
 
 
 def FLIGHT_STATUS():
