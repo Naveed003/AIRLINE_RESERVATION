@@ -195,7 +195,7 @@ def NEW_BOOKING():
                     dep_1 = "SYD_DEP"
                 elif dep == 'LHR':
                     dep_1 = "LHR_DEP"
-                days = ["SUN", "MON", "TUES", "WED", "THUR", "FRI", "SAT"]
+                days = ["SUN", "MON", "TUES", "WED", "THUR", "FRI", "SAT","SUN"]
                 days_index = days.index(day_week)
                 query = "select * from SCHEDULE"
                 mycursor.execute(query)
