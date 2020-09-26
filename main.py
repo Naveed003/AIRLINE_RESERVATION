@@ -251,7 +251,7 @@ def NEW_BOOKING():
             conn = con()
             if dirr.empty and df1.empty:  # or dirrr.empty:
                 print("\n", "="*4, 'NO FLIGHTS AVAILABLE', "="*4, "\n")
-                print("\n", "="*4, 'DO YOU WANT TO TRY AGAIN', "="*4, "\n")
+                print("\n", "="*4, 'DO YOU WANT TO TRY A DIFFERENT DATE', "="*4, "\n")
                 RESPONSE = input("ENTER (Y/N): ")
                 if RESPONSE.lower() == "y":
                     continue
@@ -268,21 +268,20 @@ def NEW_BOOKING():
                 break
             
     def confirmation():
-        list=[]
-        print("\n", "="*4, 'DIRECT FLIGHTS', "="*4, "\n")
+        option=1
         print(dirr)
-        print("\n", "="*4, 'CONNECTING FLIGHTS', "="*4, "\n")
         CONN_FLIGHTS=[]
         for i in range(1,len(df1)+1):
             dep1=df1.iloc[i-1:i,:]
             for j in range(1,len(df3)+1):
                 arr1=df3.iloc[j-1:j,:]
-                MESSAGE="OPTION {}".format(i)
+                MESSAGE="OPTION {}".format(option)
                 print("\n", "="*4, MESSAGE, "="*4, "\n")
                 df=pd.concat([dep1,arr1],axis=0)
                 print(df)
                 CONN_FLIGHTS.append(df)
-            
+                option=option+1
+        
         
 
 
