@@ -272,7 +272,9 @@ def NEW_BOOKING():
 
     dep_arrival_input()
     flights_extract()
+    print("\n", "="*4, 'DIRECT FLIGHTS', "="*4, "\n")
     print(dirr)
+    print("\n", "="*4, 'cONNECTING FLIGHTS', "="*4, "\n")
     print(conn)
 
 
