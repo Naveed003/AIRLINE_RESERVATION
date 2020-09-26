@@ -266,17 +266,39 @@ def NEW_BOOKING():
                 dirr = dirr
                 conn = conn
                 break
+            
+    def confirmation():
+        list=[]
+        print("\n", "="*4, 'DIRECT FLIGHTS', "="*4, "\n")
+        print(dirr)
+        print("\n", "="*4, 'CONNECTING FLIGHTS', "="*4, "\n")
+        CONN_FLIGHTS=[]
+        for i in range(1,len(df1)+1):
+            dep1=df1.iloc[i-1:i,:]
+            for j in range(1,len(df3)+1):
+                arr1=df3.iloc[j-1:j,:]
+                MESSAGE="OPTION {}".format(i)
+                print("\n", "="*4, MESSAGE, "="*4, "\n")
+                df=pd.concat([dep1,arr1],axis=0)
+                print(df)
+                CONN_FLIGHTS.append(df)
+            
+        
 
-            # dep_time=df.iat[0,3]
-            # arr_time=df.iat[0,4]
+
+
+
+
 
     dep_arrival_input()
     flights_extract()
-    print("\n", "="*4, 'DIRECT FLIGHTS', "="*4, "\n")
+    confirmation()
+    """ print("\n", "="*4, 'DIRECT FLIGHTS', "="*4, "\n")
     print(dirr)
     print("\n", "="*4, 'CONNECTING FLIGHTS', "="*4, "\n")
     print(conn)
-
+    for i in range(1,len(conn)+1):
+        print(conn.iloc[i-1:i,:]) """
 
 def FLIGHT_STATUS():
     print("="*8, "FLIGHT STATUS", "="*8)
