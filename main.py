@@ -7,7 +7,8 @@ from random import randint
 from datetime import datetime
 import mysql.connector
 import calendar
-from FLIGHT_SEATS import flight_seat
+from FLIGHT_SEATS import *
+
 mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
                                passwd="Kf0GcKV5sh", port=3306, database="QxKi8MQlUR")
 mycursor = mydb.cursor()
@@ -363,15 +364,39 @@ def NEW_BOOKING():
                 if flight_booking not in OPTION:
                     print("\n", "="*4, 'ENTER A VALID OPTION', "="*4, "\n")
                 else:
-                    flight_seat()
+                    flight_seat(1)
+                    while True:
+                        COLUMN = input("ENTER THE COLUMN: ")
+                        COLUMN=COLUMN.strip()
+                        COLUMN=COLUMN.upper()
+                        if COLUMN in ["A", "B", "C", "D", "E", "F", "G", "H"]:
+                            while True:
+                                ROW = input("ENTER THE ROW NUMBER: ")
+                                if ROW in [str(i) for i in range(1, 39)]:
+                                    break
 
-                    continue
+                                else:
+                                    print("\n", "="*4,
+                                          'ENTER A VALID OPTION', "="*4, "\n")
+                                    continue
+
+                        else:
+                            print("\n", "="*4, 'ENTER A VALID OPTION', "="*4, "\n")
+                            continue
+
+                        break
+
+                    df = flight_seat(1)
+                    seat_id=flight_seat(2)
+                    print(seat_id)
+
+                    break
 
 
-a
+    dep_arrival_input()
+    flights_extract()
 
-dep_arrival_input()
-flights_extract()
+
 """ print("\n", "="*4, 'DIRECT FLIGHTS', "="*4, "\n")
     print(dirr)
     print("\n", "="*4, 'CONNECTING FLIGHTS', "="*4, "\n")
