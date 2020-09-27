@@ -364,11 +364,12 @@ def NEW_BOOKING():
                 if flight_booking not in OPTION:
                     print("\n", "="*4, 'ENTER A VALID OPTION', "="*4, "\n")
                 else:
-                    flight_seat(1)
+                    df = flight_seat(1)
                     while True:
+                        print(df)
                         COLUMN = input("ENTER THE COLUMN: ")
-                        COLUMN=COLUMN.strip()
-                        COLUMN=COLUMN.upper()
+                        COLUMN = COLUMN.strip()
+                        COLUMN = COLUMN.upper()
                         if COLUMN in ["A", "B", "C", "D", "E", "F", "G", "H"]:
                             while True:
                                 ROW = input("ENTER THE ROW NUMBER: ")
@@ -386,12 +387,10 @@ def NEW_BOOKING():
 
                         break
 
-                    df = flight_seat(1)
-                    seat_id=flight_seat(2)
+                    seat_id = flight_seat(2)
                     print(seat_id)
 
                     break
-
 
     dep_arrival_input()
     flights_extract()
