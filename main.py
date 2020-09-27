@@ -7,6 +7,7 @@ from random import randint
 from datetime import datetime
 import mysql.connector
 import calendar
+import os
 from FLIGHT_SEATS import *
 
 mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
@@ -380,15 +381,22 @@ def NEW_BOOKING():
                                     print("\n", "="*4,
                                           'ENTER A VALID OPTION', "="*4, "\n")
                                     continue
+                            seat_id = flight_seat(2)
+                            print(seat_id)
+                            if df.loc[ROW,COLUMN] == '0':
+                                df.loc[ROW,COLUMN] = "X"
+                                df.to_csv(os.getcwd()+r'/SEATS/{}.csv'.format(seat_id))
+                                print(df)
+                                break
+                            else:
+                                print("\n", "="*4, 'SEAT UNAVAILABLE', "="*4, "\n")
+                                continue
 
                         else:
                             print("\n", "="*4, 'ENTER A VALID OPTION', "="*4, "\n")
                             continue
 
                         break
-
-                    seat_id = flight_seat(2)
-                    print(seat_id)
 
                     break
 
