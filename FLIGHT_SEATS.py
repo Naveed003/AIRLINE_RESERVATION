@@ -22,11 +22,11 @@ def seat_ids():
 
 
 def flight_seat(x):
-    seatid = seat_ids()
     if x == 1:
         import os
         import pandas as pd
         import json
+        seatid = seat_ids()
         df1 = pd.DataFrame()
         list = [["0", "0", "", "", "0", "0", "0", "0", "", "", "0", "0"]]
         list1 = [["", "", "", "", "", "", "", "", "", "", "", ""]]
