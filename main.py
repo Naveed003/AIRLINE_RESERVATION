@@ -338,6 +338,8 @@ def NEW_BOOKING():
                     CONN_FLIGHTS.append(df)
                     option = option+1
 
+a
+
     dep_arrival_input()
     flights_extract()
     confirmation()
@@ -368,17 +370,4 @@ def ABOUT():
 NEW_BOOKING()
 
 
-""" else:
-                        index=[]
-                        for i in range(len(res)):
-                            for j in range(len(res[i])):
-                                if j==5:
-                                    print(res[i][j])
-                                    if day_week in res[i][j]:
-                                        pass
-                                    else:
-                                        index.append(i)
 
-                        if index!=[]:
-                            for i in index:
-                                res.pop(i) """
