@@ -7,6 +7,7 @@ from random import randint
 from datetime import datetime
 import mysql.connector
 import calendar
+from FLIGHT_SEATS import flight_seat
 mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
                                passwd="Kf0GcKV5sh", port=3306, database="QxKi8MQlUR")
 mycursor = mydb.cursor()
@@ -308,25 +309,35 @@ def NEW_BOOKING():
                     break
             elif df1.empty or df3.empty:
                 conn = pd.Dataframe()
+                confirmation()
                 break
 
             else:
                 dirr = dirr
                 conn = conn
+                confirmation()
                 break
 
     def confirmation():
         option = 1
+        FLIGHTS = []
+        OPTION = []
         if dirr.empty:
             print("\n", "="*8, 'NO DIRECT FLIGHTS', "="*8, "\n")
         else:
             print("\n", "="*8, 'DIRECT FLIGHTS', "="*8, "\n")
-            print(dirr)
+            for i in range(1, len(dirr)+1):
+                dep1 = dirr.iloc[i-1:i, :]
+                FLIGHTS.append(dep1)
+                MESSAGE = "OPTION {}".format(option)
+                print("\n", "="*4, MESSAGE, "="*4, "\n")
+                print(dep1)
+                option += 1
+                OPTION.append(str(option))
         if conn.empty:
             print("\n", "="*8, 'NO CONNECTING FLIGHTS AVAILABLE', "="*8, "\n")
         else:
             print("\n", "="*8, 'CONNECTING FLIGHTS', "="*8, "\n")
-            CONN_FLIGHTS = []
             for i in range(1, len(df1)+1):
                 dep1 = df1.iloc[i-1:i, :]
                 for j in range(1, len(df3)+1):
@@ -335,12 +346,29 @@ def NEW_BOOKING():
                     print("\n", "="*4, MESSAGE, "="*4, "\n")
                     df = pd.concat([dep1, arr1], axis=0)
                     print(df)
-                    CONN_FLIGHTS.append(df)
+                    FLIGHTS.append(df)
+                    OPTION.append(str(option))
                     option = option+1
+        if option > 1:
+            while True:
+                exit = input('DO YOU WANT TO CONTINUE BOOKING(Y/N): ')
+                exit = exit.strip()
+                exit = exit.upper()
+                if exit == "Y":
+                    pass
+                else:
+                    main()
+                    break
+                flight_booking = input('ENTER THE OPTION NO.: ')
+                if flight_booking not in OPTION:
+                    print("\n", "="*4, 'ENTER A VALID OPTION', "="*4, "\n")
+                else:
+                    flight_seat()
+
+                    continue
 
     dep_arrival_input()
     flights_extract()
-    confirmation()
     """ print("\n", "="*4, 'DIRECT FLIGHTS', "="*4, "\n")
     print(dirr)
     print("\n", "="*4, 'CONNECTING FLIGHTS', "="*4, "\n")
