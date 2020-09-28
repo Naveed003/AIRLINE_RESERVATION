@@ -266,7 +266,8 @@ def NEW_BOOKING():
                                 pass
                             else:
                                 df3 = df3.drop([i], axis=0)
-                        conn = pd.concat([df1, df3], axis=0)  # concatting all dataframes
+                        # concatting all dataframes
+                        conn = pd.concat([df1, df3], axis=0)
                         return conn
                     else:
                         query = 'select * from {},{} WHERE {}.DESTINATION = {}.ORIGIN '.format(
@@ -379,7 +380,8 @@ def NEW_BOOKING():
                 else:
                     main()
                     break
-                flight_booking = input('\nENTER THE OPTION NO.: ')  # asking for which flight
+                # asking for which flight
+                flight_booking = input('\nENTER THE OPTION NO.: ')
                 if flight_booking not in OPTION:
                     print("\n", "="*4, 'ENTER A VALID OPTION', "="*4, "\n")
                 else:
@@ -462,7 +464,7 @@ def NEW_BOOKING():
                             break
                     while True:  # taking input and valiation for DOB
                         import datetime
-                       
+
                         customer_dob = input(
                             "\nENTER DATE OF BIRTH (YYYY-MM-DD): ")
 
@@ -493,7 +495,8 @@ def NEW_BOOKING():
                             print("\n", "="*4, 'ENTER A VALID COUNTRY', "="*4, "\n")
                             continue
                     while True:
-                        customer_pp_num = input('ENTER PASSENGER PASSPORT NUMBER: ')
+                        customer_pp_num = input(
+                            'ENTER PASSENGER PASSPORT NUMBER: ')
                         if len(customer_pp_num) < 5:
                             print("\n", "="*4,
                                   'ENTER A VALID PASSPORT NUMBER', "="*4, "\n")
