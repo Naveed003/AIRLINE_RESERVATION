@@ -56,3 +56,6 @@ def flight_seat(x):
         return df
     if x == 2:
         return seat_id
+
+
+

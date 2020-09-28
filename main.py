@@ -14,6 +14,8 @@ import re
 from FLIGHT_SEATS import *
 import phonenumbers
 import pycountry
+# CHANGE DEFAULT CUSTOMER INFO
+
 
 # my sql connction
 mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
@@ -166,14 +168,16 @@ def NEW_BOOKING():
                 mycursor.execute(query)
                 res = mycursor.fetchall()
                 if res == []:
-                    query = "select FLIGHT_NO,ORIGIN,DESTINATION,DEPATURE_TIME,ARRIVAL_TIME,DAY from ROUTES where ORIGIN='{}' AND DESTINATION='{}'".format(
+                    query = "select * from ROUTES where ORIGIN='{}' AND DESTINATION='{}'".format(
                         dep, arr)
                     mycursor.execute(query)
                     list = mycursor.fetchall()
                     global dirr
                     if list != []:
                         dirr = pd.DataFrame(list, columns=[
-                            "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
+                            "flight_no", "origin", "dest", "dep_time", "arr_time", "days","TYPE","DURATION","PRICE (USD)"])
+                        dirr=pd.concat([dirr["flight_no"], dirr["origin"], dirr["dest"],
+                                         dirr["dep_time"], dirr["arr_time"], dirr["days"],dirr["DURATION"],dirr["PRICE (USD)"]], axis=1)
                         # removing unwanted flights
                         for i in dirr.index:
                             if day_week in dirr["days"][i] or dirr["days"][i] == "DAILY":
@@ -228,13 +232,16 @@ def NEW_BOOKING():
                         # convertting the sql list to dataframe
 
                         df = pd.DataFrame(list, columns=[
-                            "flight_no", "origin", "dest", "dep_time", "arr_time", "days", "type", "duration", "flight_no1", "origin1", "dest1", "dep_time1", "arr_time1", "days1", "type1", "duration1"])
+                            "flight_no", "origin", "dest", "dep_time", "arr_time", "days", "type", "duration","PRICE (USD)", "flight_no1", "origin1", "dest1", "dep_time1", "arr_time1", "days1", "type1", "duration1","PRICE (USD)1"])
                         # splitting df
+                       
 
                         df1 = pd.concat([df["flight_no"], df["origin"], df["dest"],
-                                         df["dep_time"], df["arr_time"], df["days"]], axis=1)
+                                         df["dep_time"], df["arr_time"], df["days"],df["duration"],df["PRICE (USD)"]], axis=1)
+           
                         df2 = pd.concat([df["flight_no1"], df["origin1"], df["dest1"],
-                                         df["dep_time1"], df["arr_time1"], df["days1"]], axis=1)
+                                         df["dep_time1"], df["arr_time1"], df["days1"],df["duration1"],df["PRICE (USD)1"]], axis=1)
+                     
 
                         flight_no = []
                         # removing unwanted flights
@@ -243,10 +250,11 @@ def NEW_BOOKING():
                                 df1 = df1.drop([i], axis=0)
                             else:
                                 flight_no.append(df1["flight_no"][i])
-
+                    
                         # renaming coloums and assinging it to new dataframe
                         df3 = df2.rename(columns={'flight_no1': 'flight_no', 'origin1': 'origin', 'dest1': 'dest',
-                                                  'dep_time1': 'dep_time', 'arr_time1': 'arr_time', 'days1': 'days'}, inplace=False)
+                                                  'dep_time1': 'dep_time', 'arr_time1': 'arr_time', 'days1': 'days',"duration1":"duration", "PRICE (USD)1":"PRICE (USD)"}, inplace=False)
+
                         flight_no = []
                         # removing unwanted flights
                         for i in df3.index:
@@ -266,6 +274,7 @@ def NEW_BOOKING():
                                 pass
                             else:
                                 df3 = df3.drop([i], axis=0)
+                      
                         # concatting all dataframes
                         conn = pd.concat([df1, df3], axis=0)
                         return conn
@@ -276,12 +285,12 @@ def NEW_BOOKING():
                         list = mycursor.fetchall()
 
                         df = pd.DataFrame(list, columns=[
-                            "flight_no", "origin", "dest", "dep_time", "arr_time", "days", "type", "duration", "flight_no1", "origin1", "dest1", "dep_time1", "arr_time1", "days1", "type1", "duration1"])
+                            "flight_no", "origin", "dest", "dep_time", "arr_time", "days", "type", "duration","PRICE (USD)", "flight_no1", "origin1", "dest1", "dep_time1", "arr_time1", "days1", "type1", "duration1","PRICE (USD)1"])
 
                         df1 = pd.concat([df["flight_no"], df["origin"], df["dest"],
-                                         df["dep_time"], df["arr_time"], df["days"]], axis=1)
+                                         df["dep_time"], df["arr_time"], df["days"],df["PRICE (USD)"]], axis=1)
                         df2 = pd.concat([df["flight_no1"], df["origin1"], df["dest1"],
-                                         df["dep_time1"], df["arr_time1"], df["days1"]], axis=1)
+                                         df["dep_time1"], df["arr_time1"], df["days1"],df["PRICE (USD)1"]], axis=1)
                         flight_no = []
                         for i in df1.index:
                             if df1["flight_no"][i] in flight_no:
@@ -290,7 +299,7 @@ def NEW_BOOKING():
                                 flight_no.append(df1["flight_no"][i])
 
                         df3 = df2.rename(columns={'flight_no1': 'flight_no', 'origin1': 'origin', 'dest1': 'dest',
-                                                  'dep_time1': 'dep_time', 'arr_time1': 'arr_time', 'days1': 'days'}, inplace=False)
+                                                  'dep_time1': 'dep_time', 'arr_time1': 'arr_time', 'days1': 'days',"PRICE (USD)1":"PRICE (USD)"}, inplace=False)
                         flight_no = []
 
                         for i in df3.index:
@@ -341,6 +350,9 @@ def NEW_BOOKING():
         option = 1
         FLIGHTS = []
         OPTION = []
+        del dirr["days"]
+        del df1["days"]
+        del df3["days"]
         if dirr.empty:
             print("\n", "="*8, 'NO DIRECT FLIGHTS', "="*8, "\n")
         else:  # printing direct flights along with option number and uppending it to flight list
@@ -368,8 +380,6 @@ def NEW_BOOKING():
                     FLIGHTS.append(df)
                     OPTION.append(str(option))
                     option = option+1
-                
-        print(OPTION)
 
         if option > 1:  # continue only if flights found
             while True:
@@ -419,7 +429,7 @@ def NEW_BOOKING():
                             break
 
                     while True:  # taking input for name
-                        customer_name = input("\nENTER PASSENGER NAME: ")
+                        customer_name = "NAVEED"
                         customer_name = customer_name.strip()
                         if customer_name == "":
                             print("\n", "="*4,
@@ -427,8 +437,7 @@ def NEW_BOOKING():
                             continue
                         break
                     while True:  # taking input and valiation for phone number
-                        customer_phone = input(
-                            "\nENTER PHONE NUMBER (+(COUNTRY CODE)-*********): ")
+                        customer_phone = "+971558004998"
                         try:
                             z = phonenumbers.parse(customer_phone)
                             if phonenumbers.is_valid_number(z) == False:
@@ -443,7 +452,7 @@ def NEW_BOOKING():
 
                             continue
                     while True:  # taking input and valiation for EMAIL
-                        customer_email = input("\nENTER EMAIL ID: ")
+                        customer_email = "imnaveed2003@gmail.com"
                         customer_email = customer_email.strip()
                         regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
                         if(re.search(regex, customer_email)):
@@ -455,7 +464,7 @@ def NEW_BOOKING():
                             continue
 
                     while True:  # taking input and valiation for SEX
-                        customer_sex = input("\nENTER SEX (M/F): ")
+                        customer_sex = "M"
                         customer_sex = customer_sex.strip()
                         customer_sex = customer_sex.upper()
                         if customer_sex.upper() not in ["M", "F"]:
@@ -467,8 +476,7 @@ def NEW_BOOKING():
                     while True:  # taking input and valiation for DOB
                         import datetime
 
-                        customer_dob = input(
-                            "\nENTER DATE OF BIRTH (YYYY-MM-DD): ")
+                        customer_dob = "2003-04-20"
 
                         if str(date.today()) > customer_dob:
                             try:
@@ -482,13 +490,12 @@ def NEW_BOOKING():
                                 continue
 
                         else:
-                            print("hdskjf")
                             print("\n", "="*4,
                                   'ENTER A VALID DATE OF BIRTH', "="*4, "\n")
                             continue
-                    while True:
+                    while True:  # taking input and valiation for Nationality
 
-                        a = input("\nENTER YOUR COUNTRY OF NATIONALITY: ")
+                        a = "INDIA"
                         b = list(pycountry.countries)
                         if pycountry.countries.get(name=a) != None:
                             break
@@ -497,50 +504,68 @@ def NEW_BOOKING():
                             print("\n", "="*4, 'ENTER A VALID COUNTRY', "="*4, "\n")
                             continue
                     while True:
-                        customer_pp_num = input(
-                            'ENTER PASSENGER PASSPORT NUMBER: ')
+                        customer_pp_num = "12345678"
                         if len(customer_pp_num) < 5:
                             print("\n", "="*4,
                                   'ENTER A VALID PASSPORT NUMBER', "="*4, "\n")
                             continue
                         else:
                             break
+                    if len(FLIGHTS[int(flight_booking)-1]) == 1:
+                        x = 1
+                    else:
+                        x = 2
 
-                    df = flight_seat(1)
-                    print(df)
-                    while True:
-                        COLUMN = input("ENTER THE COLUMN: ")
-                        COLUMN = COLUMN.strip()
-                        COLUMN = COLUMN.upper()
-                        if COLUMN in ["A", "B", "C", "D", "E", "F", "G", "H"]:
-                            while True:
-                                ROW = input("ENTER THE ROW NUMBER: ")
-                                if ROW in [str(i) for i in range(1, 39)]:
+                    list_seat = []
+                    list_seat_id = []
+                    for i in range(x):
+                        df = flight_seat(1)
+                        print(df)
+                        while True:
+                            COLUMN = input("ENTER THE COLUMN: ")
+                            COLUMN = COLUMN.strip()
+                            COLUMN = COLUMN.upper()
+                            if COLUMN in ["A", "B", "C", "D", "E", "F", "G", "H"]:
+                                while True:
+                                    ROW = input("ENTER THE ROW NUMBER: ")
+                                    if ROW in [str(i) for i in range(1, 39)]:
+                                        break
+
+                                    else:
+                                        print("\n", "="*4,
+                                              'ENTER A VALID OPTION', "="*4, "\n")
+                                        continue
+                                seat_id = flight_seat(2)
+                                print(seat_id)
+                                if df.loc[ROW, COLUMN] == '0':
+                                    df.loc[ROW, COLUMN] = "X"
+                                    df.to_csv(
+                                        os.getcwd()+r'/SEATS/{}.csv'.format(seat_id))
+                                    print(df)
+                                    list_seat_id.append(str(seat_id))
+                                    list_seat.append(COLUMN+ROW)
+                                    print(list_seat_id)
+                                    print(list_seat)
                                     break
-
                                 else:
-                                    print("\n", "="*4,
-                                          'ENTER A VALID OPTION', "="*4, "\n")
+                                    print("\n", "="*4, 'SEAT UNAVAILABLE', "="*4, "\n")
                                     continue
-                            seat_id = flight_seat(2)
-                            print(seat_id)
-                            if df.loc[ROW, COLUMN] == '0':
-                                df.loc[ROW, COLUMN] = "X"
-                                df.to_csv(
-                                    os.getcwd()+r'/SEATS/{}.csv'.format(seat_id))
-                                print(df)
-                                break
+
                             else:
-                                print("\n", "="*4, 'SEAT UNAVAILABLE', "="*4, "\n")
+                                print("\n", "="*4, 'ENTER A VALID OPTION', "="*4, "\n")
                                 continue
+                        
 
-                        else:
-                            print("\n", "="*4, 'ENTER A VALID OPTION', "="*4, "\n")
-                            continue
+                            break
+                    while True:
+                        response=input("\nDO YOU WANT TO CONFIRM (Y/N): ")
+                        response=response.strip()
+                        if response.upper()=="Y":
+                            pass
 
-                        break
 
-                    break
+
+                break
 
     dep_arrival_input()
     flights_extract()
