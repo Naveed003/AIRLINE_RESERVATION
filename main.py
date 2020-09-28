@@ -484,7 +484,7 @@ def NEW_BOOKING():
                             print("\n", "="*4,
                                   'ENTER A VALID DATE OF BIRTH', "="*4, "\n")
                             continue
-                    while True:
+                    while True:  # taking input and valiation for Nationality
 
                         a = input("\nENTER YOUR COUNTRY OF NATIONALITY: ")
                         b = list(pycountry.countries)
