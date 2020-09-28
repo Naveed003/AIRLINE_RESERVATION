@@ -14,7 +14,7 @@ import re
 from FLIGHT_SEATS import *
 import phonenumbers
 import pycountry
-
+print("hello")
 # my sql connction
 mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
                                passwd="Kf0GcKV5sh", port=3306, database="QxKi8MQlUR")
