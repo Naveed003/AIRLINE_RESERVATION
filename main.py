@@ -367,8 +367,6 @@ def NEW_BOOKING():
                     FLIGHTS.append(df)
                     OPTION.append(str(option))
                     option = option+1
-                
-        print(OPTION)
 
         if option > 1:  # continue only if flights found
             while True:
@@ -504,40 +502,51 @@ def NEW_BOOKING():
                             continue
                         else:
                             break
+                    if len(FLIGHTS[int(flight_booking)-1]) == 1:
+                        x = 1
+                    else:
+                        x = 2
 
-                    df = flight_seat(1)
-                    print(df)
-                    while True:
-                        COLUMN = input("ENTER THE COLUMN: ")
-                        COLUMN = COLUMN.strip()
-                        COLUMN = COLUMN.upper()
-                        if COLUMN in ["A", "B", "C", "D", "E", "F", "G", "H"]:
-                            while True:
-                                ROW = input("ENTER THE ROW NUMBER: ")
-                                if ROW in [str(i) for i in range(1, 39)]:
+                    list_seat = []
+                    list_seat_id = []
+                    for i in range(x):
+                        df = flight_seat(1)
+                        print(df)
+                        while True:
+                            COLUMN = input("ENTER THE COLUMN: ")
+                            COLUMN = COLUMN.strip()
+                            COLUMN = COLUMN.upper()
+                            if COLUMN in ["A", "B", "C", "D", "E", "F", "G", "H"]:
+                                while True:
+                                    ROW = input("ENTER THE ROW NUMBER: ")
+                                    if ROW in [str(i) for i in range(1, 39)]:
+                                        break
+
+                                    else:
+                                        print("\n", "="*4,
+                                              'ENTER A VALID OPTION', "="*4, "\n")
+                                        continue
+                                seat_id = flight_seat(2)
+                                print(seat_id)
+                                if df.loc[ROW, COLUMN] == '0':
+                                    df.loc[ROW, COLUMN] = "X"
+                                    df.to_csv(
+                                        os.getcwd()+r'/SEATS/{}.csv'.format(seat_id))
+                                    print(df)
+                                    list_seat_id.append(str(seat_id))
+                                    list_seat.append(COLUMN+ROW)
+                                    print(list_seat_id)
+                                    print(list_seat)
                                     break
-
                                 else:
-                                    print("\n", "="*4,
-                                          'ENTER A VALID OPTION', "="*4, "\n")
+                                    print("\n", "="*4, 'SEAT UNAVAILABLE', "="*4, "\n")
                                     continue
-                            seat_id = flight_seat(2)
-                            print(seat_id)
-                            if df.loc[ROW, COLUMN] == '0':
-                                df.loc[ROW, COLUMN] = "X"
-                                df.to_csv(
-                                    os.getcwd()+r'/SEATS/{}.csv'.format(seat_id))
-                                print(df)
-                                break
+
                             else:
-                                print("\n", "="*4, 'SEAT UNAVAILABLE', "="*4, "\n")
+                                print("\n", "="*4, 'ENTER A VALID OPTION', "="*4, "\n")
                                 continue
 
-                        else:
-                            print("\n", "="*4, 'ENTER A VALID OPTION', "="*4, "\n")
-                            continue
-
-                        break
+                            break
 
                     break
 
