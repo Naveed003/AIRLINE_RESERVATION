@@ -6,6 +6,7 @@ import random
 from random import randint
 import datetime
 from datetime import datetime
+from datetime import date
 import mysql.connector
 import calendar
 import os
@@ -414,7 +415,7 @@ def NEW_BOOKING():
                             break
 
                     while True:  # taking input for name
-                        customer_name = input("ENTER PASSENGER NAME: ")
+                        customer_name = input("\nENTER PASSENGER NAME: ")
                         customer_name = customer_name.strip()
                         if customer_name == "":
                             print("\n", "="*4,
@@ -423,7 +424,7 @@ def NEW_BOOKING():
                         break
                     while True:  # taking input and valiation for phone number
                         customer_phone = input(
-                            "ENTER PHONE NUMBER (+(COUNTRY CODE)-*********): ")
+                            "\nENTER PHONE NUMBER (+(COUNTRY CODE)-*********): ")
                         try:
                             z = phonenumbers.parse(customer_phone)
                             if phonenumbers.is_valid_number(z) == False:
@@ -438,7 +439,7 @@ def NEW_BOOKING():
 
                             continue
                     while True:  # taking input and valiation for EMAIL
-                        customer_email = input("ENTER EMAIL ID: ")
+                        customer_email = input("\nENTER EMAIL ID: ")
                         customer_email = customer_email.strip()
                         regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
                         if(re.search(regex, customer_email)):
@@ -450,7 +451,7 @@ def NEW_BOOKING():
                             continue
 
                     while True:  # taking input and valiation for SEX
-                        customer_sex = input("ENTER SEX (M/F): ")
+                        customer_sex = input("\nENTER SEX (M/F): ")
                         customer_sex = customer_sex.strip()
                         customer_sex = customer_sex.upper()
                         if customer_sex.upper() not in ["M", "F"]:
@@ -460,9 +461,10 @@ def NEW_BOOKING():
                         else:
                             break
                     while True:  # taking input and valiation for DOB
-
+                        import datetime
+                       
                         customer_dob = input(
-                            "ENTER DATE OF BIRTH (YYYY-MM-DD): ")
+                            "\nENTER DATE OF BIRTH (YYYY-MM-DD): ")
 
                         if str(date.today()) > customer_dob:
                             try:
@@ -476,12 +478,13 @@ def NEW_BOOKING():
                                 continue
 
                         else:
+                            print("hdskjf")
                             print("\n", "="*4,
                                   'ENTER A VALID DATE OF BIRTH', "="*4, "\n")
                             continue
                     while True:
 
-                        a = input("ENTER YOUR COUNTRY OF NATIONALITY: ")
+                        a = input("\nENTER YOUR COUNTRY OF NATIONALITY: ")
                         b = list(pycountry.countries)
                         if pycountry.countries.get(name=a) != None:
                             break
