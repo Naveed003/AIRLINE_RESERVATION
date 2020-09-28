@@ -167,7 +167,7 @@ def NEW_BOOKING():
                 query = "select * from SCHEDULE"
                 mycursor.execute(query)
                 res = mycursor.fetchall()
-                if res == []:
+                if res == [] or res!=[]:
                     query = "select * from ROUTES where ORIGIN='{}' AND DESTINATION='{}'".format(
                         dep, arr)
                     mycursor.execute(query)
@@ -217,7 +217,7 @@ def NEW_BOOKING():
                 query = "select * from SCHEDULE"
                 mycursor.execute(query)
                 res = mycursor.fetchall()
-                if res == []:
+                if res == [] or res!=[]:
                     # Query for joining two tables
                     query = 'select * from {},{} WHERE {}.DESTINATION = {}.ORIGIN AND {}.DEPATURE_TIME>{}.ARRIVAL_TIME'.format(
                         dep_1, arr_1, dep_1, arr_1, arr_1, dep_1)
@@ -234,14 +234,14 @@ def NEW_BOOKING():
                         df = pd.DataFrame(list, columns=[
                             "flight_no", "origin", "dest", "dep_time", "arr_time", "days", "type", "duration","PRICE (USD)", "flight_no1", "origin1", "dest1", "dep_time1", "arr_time1", "days1", "type1", "duration1","PRICE (USD)1"])
                         # splitting df
-                       
+
 
                         df1 = pd.concat([df["flight_no"], df["origin"], df["dest"],
                                          df["dep_time"], df["arr_time"], df["days"],df["duration"],df["PRICE (USD)"]], axis=1)
-           
+
                         df2 = pd.concat([df["flight_no1"], df["origin1"], df["dest1"],
                                          df["dep_time1"], df["arr_time1"], df["days1"],df["duration1"],df["PRICE (USD)1"]], axis=1)
-                     
+
 
                         flight_no = []
                         # removing unwanted flights
@@ -250,7 +250,7 @@ def NEW_BOOKING():
                                 df1 = df1.drop([i], axis=0)
                             else:
                                 flight_no.append(df1["flight_no"][i])
-                    
+
                         # renaming coloums and assinging it to new dataframe
                         df3 = df2.rename(columns={'flight_no1': 'flight_no', 'origin1': 'origin', 'dest1': 'dest',
                                                   'dep_time1': 'dep_time', 'arr_time1': 'arr_time', 'days1': 'days',"duration1":"duration", "PRICE (USD)1":"PRICE (USD)"}, inplace=False)
@@ -274,7 +274,7 @@ def NEW_BOOKING():
                                 pass
                             else:
                                 df3 = df3.drop([i], axis=0)
-                      
+
                         # concatting all dataframes
                         conn = pd.concat([df1, df3], axis=0)
                         return conn
@@ -394,8 +394,43 @@ def NEW_BOOKING():
                     break
                 # asking for which flight
                 flight_booking = input('\nENTER THE OPTION NO.: ')
+                selection=FLIGHTS[int(flight_booking)-1]
+                print(selection)
+                if len(selection)==1:
+                    flight_no=selection.iloc[0]["flight_no"]
+                    origin=selection.iloc[0]["origin"]
+                    destination=selection.iloc[0]["dest"]
+                    dep_time=str(depature_date)+" "+str(selection.iloc[0]["dep_time"])[-8:]
+                    print(str(flight_no))
+                    print(str(origin))
+                    print(str(destination))
+                    print(str(dep_time))
+                    query="select * from SCHEDULE WHERE FLIGHT_NO='{}' AND ORIGIN='{}' AND DESTINATION='{}' AND DEPATURE_TIME='{}'".format(flight_no,origin,destination,dep_time)
+                    mycursor.execute(query)
+                    res=mycursor.fetchall()
+                    print(res)
+                    listt=[]
+                    if res!=[]:
+                        for i in res:
+                            for j in i:
+                                listt.append(j)
+                    
+                else:
+                    index=selection.index
+                    print(index)
+                    selection=selection.rename(index={0:"a",0:"b"})
+                    print(selection.index)
+                    for i in index:
+                        print(selection.iloc[i])
+                        break
+
+                            
+
+                query="select * from SCHEDULE WHERE FLIGHT_NO='{}' and ORIGIN"
                 if flight_booking not in OPTION:
                     print("\n", "="*4, 'ENTER A VALID OPTION', "="*4, "\n")
+                elif flight_booking in OPTION:
+                    pass
                 else:
                     # coustomer id and booking id generation
                     query = "select CUSTOMER_ID FROM CUSTOMERS"
@@ -554,7 +589,7 @@ def NEW_BOOKING():
                             else:
                                 print("\n", "="*4, 'ENTER A VALID OPTION', "="*4, "\n")
                                 continue
-                        
+
 
                             break
                     while True:
