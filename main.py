@@ -4,11 +4,16 @@ import pandas as pd
 import time
 import random
 from random import randint
+import datetime
 from datetime import datetime
 import mysql.connector
 import calendar
 import os
+import re
 from FLIGHT_SEATS import *
+import phonenumbers
+import pycountry
+
 
 mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
                                passwd="Kf0GcKV5sh", port=3306, database="QxKi8MQlUR")
@@ -351,6 +356,7 @@ def NEW_BOOKING():
                     FLIGHTS.append(df)
                     OPTION.append(str(option))
                     option = option+1
+
         if option > 1:
             while True:
                 exit = input('DO YOU WANT TO CONTINUE BOOKING(Y/N): ')
@@ -365,9 +371,109 @@ def NEW_BOOKING():
                 if flight_booking not in OPTION:
                     print("\n", "="*4, 'ENTER A VALID OPTION', "="*4, "\n")
                 else:
-                    df = flight_seat(1)
+                    query = "select CUSTOMER_ID FROM CUSTOMERS"
+                    mycursor.execute(query)
+                    res = mycursor.fetchall()
+                    ids = []
+                    for i in res:
+                        for j in i:
+                            ids.append(j)
+
+                    query = "select BOOKING_ID FROM BOOKINGS"
+                    mycursor.execute(query)
+                    res = mycursor.fetchall()
+                    booking_ids = []
+                    for i in res:
+                        for j in i:
+                            bookin_ids.append(j)
+
                     while True:
-                        print(df)
+                        customer_id = random.randint(0-9999)
+                        if customer_id in ids:
+                            continue
+                        else:
+                            break
+
+                    while True:
+                        booking_id = random.randint(0-9999)
+                        if booking_id in booking_ids:
+                            continue
+                        else:
+                            break
+
+                    while True:
+                        customer_name = input("ENTER PASSENGER NAME: ")
+                        customer_name = customer_name.strip()
+                        if customer_name == "":
+                            print("\n", "="*4,
+                                  'PLEASE ENTER YOUR NAME', "="*4, "\n")
+                            continue
+                    while True:
+                        customer_phone = input(
+                            "ENTER PHONE NUMBER (+(COUNTRY CODE)-*********): ")
+                        try:
+                            z = phonenumbers.parse(customer_phone)
+                            if phonenumbers.is_valid_number(z) == False:
+                                print("\n", "="*4,
+                                      'PLEASE ENTER VALID NUMBER', "="*4, "\n")
+                                continue
+                            break
+
+                        except Exception:
+                            print("\n", "="*4,
+                                  'PLEASE ENTER VALID NUMBER', "="*4, "\n")
+
+                            continue
+                    while True:
+                        customer_email = input("ENTER EMAIL ID: ")
+                        customer_email = customer_email.strip()
+                        regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+                        if(re.search(regex, customer_email)):
+                            break
+
+                        else:
+                            print("\n", "="*4,
+                                  'PLEASE ENTER VALID EMAIL ID', "="*4, "\n")
+                            continue
+
+                    while True:
+                        customer_sex = input("ENTER SEX (M/F): ")
+                        customer_sex = customer_sex.strip()
+                        customer_sex = customer_se.upper()
+                        if customer_sex.upper() not in ["M", "F"]:
+                            print("\n", "="*4,
+                                  'PLEASE ENTER VALID SEX', "="*4, "\n")
+                            continue
+                        else:
+                            break
+                    while True:
+
+                        customer_dob = input(
+                            "ENTER DATE OF BIRTH (YYYY-MM-DD): ")
+
+                        if str(date.today()) > customer_dob:
+                            try:
+                                date_of_birth = datetime.datetime.strptime(
+                                    customer_dob, "%Y-%m-%d")
+                                customer_dob = str(date_of_birth)
+                                break
+                            except:
+                                print(
+                                    "\n", "="*4, 'ENTER A VALID DATE OF BIRTH', "="*4, "\n")
+                                continue
+
+                        else:
+                            print("\n", "="*4,
+                                  'ENTER A VALID DATE OF BIRTH', "="*4, "\n")
+                            continue
+                    while True:
+                        customer_nation =
+
+                    customer_pp_num =
+
+                    df = flight_seat(1)
+                    print(df)
+                    while True:
                         COLUMN = input("ENTER THE COLUMN: ")
                         COLUMN = COLUMN.strip()
                         COLUMN = COLUMN.upper()
@@ -383,9 +489,10 @@ def NEW_BOOKING():
                                     continue
                             seat_id = flight_seat(2)
                             print(seat_id)
-                            if df.loc[ROW,COLUMN] == '0':
-                                df.loc[ROW,COLUMN] = "X"
-                                df.to_csv(os.getcwd()+r'/SEATS/{}.csv'.format(seat_id))
+                            if df.loc[ROW, COLUMN] == '0':
+                                df.loc[ROW, COLUMN] = "X"
+                                df.to_csv(
+                                    os.getcwd()+r'/SEATS/{}.csv'.format(seat_id))
                                 print(df)
                                 break
                             else:
