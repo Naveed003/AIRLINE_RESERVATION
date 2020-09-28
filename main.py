@@ -14,10 +14,12 @@ from FLIGHT_SEATS import *
 import phonenumbers
 import pycountry
 
-
+# my sql connction
 mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
                                passwd="Kf0GcKV5sh", port=3306, database="QxKi8MQlUR")
 mycursor = mydb.cursor()
+
+# main menu
 
 
 def main():
@@ -30,7 +32,7 @@ def main():
     print("OPTION 4: STAFF LOGIN")
     print("OPTION 5: ABOUT")
     print("OPTION 6: EXIT")
-
+    # taking input from user for main menu selection
     while True:
         response = input("\nENTER OPTION NUMBER: ")
         if response == "1":
@@ -55,7 +57,7 @@ def main():
 
 
 def NEW_BOOKING():
-
+    # taking input for new booking
     def dep_arrival_input():
         print("\n", "="*8, "NEW BOOKING", "="*8)
         print("\n", "="*4, "DEPATURE", "="*4)
@@ -102,7 +104,7 @@ def NEW_BOOKING():
                 print("\n", "="*4, 'Please Enter a Valid code', "="*4)
                 pass
 
-    def addYears(d, years):
+    def addYears(d, years):  # adding one year to current date
         global f_date
         try:
             f_date = d.replace(year=d.year+years)
@@ -111,7 +113,7 @@ def NEW_BOOKING():
             f_date = d + (date(d.year+years, 1, 1)-date(d.year, 1, 1))
             print(f_date)
 
-    def string_to_date(datee):
+    def string_to_date(datee):  # convertting sting to date
         year = int(datee[0:4])
         month = int(datee[5:7])
         day = int(datee[8:])
@@ -127,7 +129,7 @@ def NEW_BOOKING():
             day_week = day_week.upper()[0:3]
         print(day_week)
 
-    def date_input():
+    def date_input():  # taking input for departure date and checking validity
         current_date = date.today()
         addYears(current_date, 1)
         global depature_date
@@ -154,11 +156,11 @@ def NEW_BOOKING():
 
         string_to_date(depature_date)
 
-    def flights_extract():
+    def flights_extract():  # extracting flights from database
         while True:
             date_input()
 
-            def dir():
+            def dir():  # extracting direct flights
                 query = "select * from SCHEDULE"
                 mycursor.execute(query)
                 res = mycursor.fetchall()
@@ -171,7 +173,7 @@ def NEW_BOOKING():
                     if list != []:
                         dirr = pd.DataFrame(list, columns=[
                             "flight_no", "origin", "dest", "dep_time", "arr_time", "days"])
-
+                        # removing unwanted flights
                         for i in dirr.index:
                             if day_week in dirr["days"][i] or dirr["days"][i] == "DAILY":
                                 pass
@@ -182,7 +184,8 @@ def NEW_BOOKING():
                         dirr = pd.DataFrame()
                     return dirr
 
-            def con():
+            def con():  # extracting connecting flights
+                # making variable for linking to mysql
                 if arr == 'DXB':
                     arr_1 = "DXB_ARR"
                 elif arr == 'BOM':
@@ -210,6 +213,7 @@ def NEW_BOOKING():
                 mycursor.execute(query)
                 res = mycursor.fetchall()
                 if res == []:
+                    # Query for joining two tables
                     query = 'select * from {},{} WHERE {}.DESTINATION = {}.ORIGIN AND {}.DEPATURE_TIME>{}.ARRIVAL_TIME'.format(
                         dep_1, arr_1, dep_1, arr_1, arr_1, dep_1)
 
@@ -220,25 +224,30 @@ def NEW_BOOKING():
                     global df3
                     global conn
                     if list != []:
+                        # convertting the sql list to dataframe
 
                         df = pd.DataFrame(list, columns=[
                             "flight_no", "origin", "dest", "dep_time", "arr_time", "days", "type", "duration", "flight_no1", "origin1", "dest1", "dep_time1", "arr_time1", "days1", "type1", "duration1"])
+                        # splitting df
 
                         df1 = pd.concat([df["flight_no"], df["origin"], df["dest"],
                                          df["dep_time"], df["arr_time"], df["days"]], axis=1)
                         df2 = pd.concat([df["flight_no1"], df["origin1"], df["dest1"],
                                          df["dep_time1"], df["arr_time1"], df["days1"]], axis=1)
+
                         flight_no = []
+                        # removing unwanted flights
                         for i in df1.index:
                             if df1["flight_no"][i] in flight_no:
                                 df1 = df1.drop([i], axis=0)
                             else:
                                 flight_no.append(df1["flight_no"][i])
 
+                        # renaming coloums and assinging it to new dataframe
                         df3 = df2.rename(columns={'flight_no1': 'flight_no', 'origin1': 'origin', 'dest1': 'dest',
                                                   'dep_time1': 'dep_time', 'arr_time1': 'arr_time', 'days1': 'days'}, inplace=False)
                         flight_no = []
-
+                        # removing unwanted flights
                         for i in df3.index:
                             if df3["flight_no"][i] in flight_no:
                                 df3 = df3.drop([i], axis=0)
@@ -256,11 +265,11 @@ def NEW_BOOKING():
                                 pass
                             else:
                                 df3 = df3.drop([i], axis=0)
-                        conn = pd.concat([df1, df3], axis=0)
+                        conn = pd.concat([df1, df3], axis=0)  # concatting all dataframes
                         return conn
                     else:
                         query = 'select * from {},{} WHERE {}.DESTINATION = {}.ORIGIN '.format(
-                            dep_1, arr_1, dep_1, arr_1)
+                            dep_1, arr_1, dep_1, arr_1)  # ignoring time constraint
                         mycursor.execute(query)
                         list = mycursor.fetchall()
 
@@ -303,9 +312,10 @@ def NEW_BOOKING():
                         conn = pd.concat([df1, df3], axis=0)
                         return conn
 
-            dirr = dir()
+            dirr = dir()  # assinging variables from func
             conn = con()
-            if dirr.empty and df1.empty:  # or dirrr.empty:
+            # checking if flights found
+            if dirr.empty and df1.empty:
                 print("\n", "="*4, 'NO FLIGHTS AVAILABLE', "="*4, "\n")
                 print("\n", "="*4, 'DO YOU WANT TO TRY A DIFFERENT DATE', "="*4, "\n")
                 RESPONSE = input("ENTER (Y/N): ")
@@ -325,13 +335,13 @@ def NEW_BOOKING():
                 confirmation()
                 break
 
-    def confirmation():
+    def confirmation():  # confirmation of flights and taking inputs from user
         option = 1
         FLIGHTS = []
         OPTION = []
         if dirr.empty:
             print("\n", "="*8, 'NO DIRECT FLIGHTS', "="*8, "\n")
-        else:
+        else:  # printing direct flights along with option number and uppending it to flight list
             print("\n", "="*8, 'DIRECT FLIGHTS', "="*8, "\n")
             for i in range(1, len(dirr)+1):
                 dep1 = dirr.iloc[i-1:i, :]
@@ -343,7 +353,7 @@ def NEW_BOOKING():
                 OPTION.append(str(option))
         if conn.empty:
             print("\n", "="*8, 'NO CONNECTING FLIGHTS AVAILABLE', "="*8, "\n")
-        else:
+        else:  # printing connecting flights along with option number and uppending it to flight list
             print("\n", "="*8, 'CONNECTING FLIGHTS', "="*8, "\n")
             for i in range(1, len(df1)+1):
                 dep1 = df1.iloc[i-1:i, :]
@@ -357,9 +367,10 @@ def NEW_BOOKING():
                     OPTION.append(str(option))
                     option = option+1
 
-        if option > 1:
+        if option > 1:  # continue only if flights found
             while True:
-                exit = input('DO YOU WANT TO CONTINUE BOOKING(Y/N): ')
+                # asking for confirmation to continue
+                exit = input('\nDO YOU WANT TO CONTINUE BOOKING(Y/N): ')
                 exit = exit.strip()
                 exit = exit.upper()
                 if exit == "Y":
@@ -367,10 +378,11 @@ def NEW_BOOKING():
                 else:
                     main()
                     break
-                flight_booking = input('ENTER THE OPTION NO.: ')
+                flight_booking = input('\nENTER THE OPTION NO.: ')  # asking for which flight
                 if flight_booking not in OPTION:
                     print("\n", "="*4, 'ENTER A VALID OPTION', "="*4, "\n")
                 else:
+                    # coustomer id and booking id generation
                     query = "select CUSTOMER_ID FROM CUSTOMERS"
                     mycursor.execute(query)
                     res = mycursor.fetchall()
@@ -401,14 +413,14 @@ def NEW_BOOKING():
                         else:
                             break
 
-                    while True:
+                    while True:  # taking input for name
                         customer_name = input("ENTER PASSENGER NAME: ")
                         customer_name = customer_name.strip()
                         if customer_name == "":
                             print("\n", "="*4,
                                   'PLEASE ENTER YOUR NAME', "="*4, "\n")
                             continue
-                    while True:
+                    while True:  # taking input and valiation for phone number
                         customer_phone = input(
                             "ENTER PHONE NUMBER (+(COUNTRY CODE)-*********): ")
                         try:
@@ -424,7 +436,7 @@ def NEW_BOOKING():
                                   'PLEASE ENTER VALID NUMBER', "="*4, "\n")
 
                             continue
-                    while True:
+                    while True:  # taking input and valiation for EMAIL
                         customer_email = input("ENTER EMAIL ID: ")
                         customer_email = customer_email.strip()
                         regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
@@ -436,7 +448,7 @@ def NEW_BOOKING():
                                   'PLEASE ENTER VALID EMAIL ID', "="*4, "\n")
                             continue
 
-                    while True:
+                    while True:  # taking input and valiation for SEX
                         customer_sex = input("ENTER SEX (M/F): ")
                         customer_sex = customer_sex.strip()
                         customer_sex = customer_se.upper()
@@ -446,7 +458,7 @@ def NEW_BOOKING():
                             continue
                         else:
                             break
-                    while True:
+                    while True:  # taking input and valiation for DOB
 
                         customer_dob = input(
                             "ENTER DATE OF BIRTH (YYYY-MM-DD): ")
@@ -467,9 +479,17 @@ def NEW_BOOKING():
                                   'ENTER A VALID DATE OF BIRTH', "="*4, "\n")
                             continue
                     while True:
-                        customer_nation =
 
-                    customer_pp_num =
+                        a = input("ENTER YOUR COUNTRY OF NATIONALITY: ")
+                        b = list(pycountry.countries)
+                        if pycountry.countries.get(name=a) != None:
+                            break
+
+                        else:
+                            print("\n", "="*4, 'ENTER A VALID COUNTRY', "="*4, "\n")
+                            continue
+
+                    customer_pp_num = 1
 
                     df = flight_seat(1)
                     print(df)
