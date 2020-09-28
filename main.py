@@ -400,14 +400,14 @@ def NEW_BOOKING():
                             bookin_ids.append(j)
 
                     while True:
-                        customer_id = random.randint(0-9999)
+                        customer_id = random.randint(0, 9999)
                         if customer_id in ids:
                             continue
                         else:
                             break
 
                     while True:
-                        booking_id = random.randint(0-9999)
+                        booking_id = random.randint(0, 9999)
                         if booking_id in booking_ids:
                             continue
                         else:
@@ -420,6 +420,7 @@ def NEW_BOOKING():
                             print("\n", "="*4,
                                   'PLEASE ENTER YOUR NAME', "="*4, "\n")
                             continue
+                        break
                     while True:  # taking input and valiation for phone number
                         customer_phone = input(
                             "ENTER PHONE NUMBER (+(COUNTRY CODE)-*********): ")
@@ -451,7 +452,7 @@ def NEW_BOOKING():
                     while True:  # taking input and valiation for SEX
                         customer_sex = input("ENTER SEX (M/F): ")
                         customer_sex = customer_sex.strip()
-                        customer_sex = customer_se.upper()
+                        customer_sex = customer_sex.upper()
                         if customer_sex.upper() not in ["M", "F"]:
                             print("\n", "="*4,
                                   'PLEASE ENTER VALID SEX', "="*4, "\n")
@@ -488,8 +489,14 @@ def NEW_BOOKING():
                         else:
                             print("\n", "="*4, 'ENTER A VALID COUNTRY', "="*4, "\n")
                             continue
-
-                    customer_pp_num = 1
+                    while True:
+                        customer_pp_num = input('ENTER PASSENGER PASSPORT NUMBER: ')
+                        if len(customer_pp_num) < 5:
+                            print("\n", "="*4,
+                                  'ENTER A VALID PASSPORT NUMBER', "="*4, "\n")
+                            continue
+                        else:
+                            break
 
                     df = flight_seat(1)
                     print(df)
