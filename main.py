@@ -350,8 +350,8 @@ def NEW_BOOKING():
                 MESSAGE = "OPTION {}".format(option)
                 print("\n", "="*4, MESSAGE, "="*4, "\n")
                 print(dep1)
-                option += 1
                 OPTION.append(str(option))
+                option += 1
         if conn.empty:
             print("\n", "="*8, 'NO CONNECTING FLIGHTS AVAILABLE', "="*8, "\n")
         else:  # printing connecting flights along with option number and uppending it to flight list
@@ -367,6 +367,8 @@ def NEW_BOOKING():
                     FLIGHTS.append(df)
                     OPTION.append(str(option))
                     option = option+1
+                
+        print(OPTION)
 
         if option > 1:  # continue only if flights found
             while True:
