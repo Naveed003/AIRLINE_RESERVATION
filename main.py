@@ -387,7 +387,7 @@ def NEW_BOOKING():
                 customer_name = customer_name.strip()
                 if customer_name == "":
                     print("\n", "="*4,
-                            'PLEASE ENTER YOUR NAME', "="*4, "\n")
+                          'PLEASE ENTER YOUR NAME', "="*4, "\n")
                     continue
                 break
             while True:  # taking input and valiation for phone number
@@ -396,13 +396,13 @@ def NEW_BOOKING():
                     z = phonenumbers.parse(customer_phone)
                     if phonenumbers.is_valid_number(z) == False:
                         print("\n", "="*4,
-                                'PLEASE ENTER VALID NUMBER', "="*4, "\n")
+                              'PLEASE ENTER VALID NUMBER', "="*4, "\n")
                         continue
                     break
 
                 except Exception:
                     print("\n", "="*4,
-                            'PLEASE ENTER VALID NUMBER', "="*4, "\n")
+                          'PLEASE ENTER VALID NUMBER', "="*4, "\n")
 
                     continue
             while True:  # taking input and valiation for EMAIL
@@ -414,7 +414,7 @@ def NEW_BOOKING():
 
                 else:
                     print("\n", "="*4,
-                            'PLEASE ENTER VALID EMAIL ID', "="*4, "\n")
+                          'PLEASE ENTER VALID EMAIL ID', "="*4, "\n")
                     continue
 
             while True:  # taking input and valiation for SEX
@@ -423,7 +423,7 @@ def NEW_BOOKING():
                 customer_sex = customer_sex.upper()
                 if customer_sex.upper() not in ["M", "F"]:
                     print("\n", "="*4,
-                            'PLEASE ENTER VALID SEX', "="*4, "\n")
+                          'PLEASE ENTER VALID SEX', "="*4, "\n")
                     continue
                 else:
                     break
@@ -446,7 +446,7 @@ def NEW_BOOKING():
 
                 else:
                     print("\n", "="*4,
-                            'ENTER A VALID DATE OF BIRTH', "="*4, "\n")
+                          'ENTER A VALID DATE OF BIRTH', "="*4, "\n")
                     continue
             while True:  # taking input and valiation for Nationality
 
@@ -462,13 +462,13 @@ def NEW_BOOKING():
                 customer_pp_num = "12345678"
                 if len(customer_pp_num) < 5:
                     print("\n", "="*4,
-                            'ENTER A VALID PASSPORT NUMBER', "="*4, "\n")
+                          'ENTER A VALID PASSPORT NUMBER', "="*4, "\n")
                     continue
                 else:
                     break
 
             details = [customer_id, booking_id, customer_name, customer_phone,
-                customer_email, customer_sex, customer_dob, customer_pp_num, a]
+                       customer_email, customer_sex, customer_dob, customer_pp_num, a]
             return details
         option = 1
         FLIGHTS = []
@@ -566,7 +566,9 @@ def NEW_BOOKING():
                 if res != []:
                     if len(res) == 1:
                         df = pd.DataFrame(res, columns=[
-                                            "FLIGHT NO", "ORIGIN", "DESTINATION", "DEPATURE_TIME", "ARRIVAL_TIME", "DURATION", "SEAT_ID"])
+                            "FLIGHT NO", "ORIGIN", "DESTINATION", "DEPATURE_TIME", "ARRIVAL_TIME", "DURATION", "SEAT_ID"])
+                        print(df)
+                        zz = df
                         seatid = df.iloc[0]["SEAT_ID"]
                         seatid = 1234
 
@@ -574,15 +576,15 @@ def NEW_BOOKING():
                             seat_list = json.loads(f.read())
 
                         df = pd.DataFrame(seat_list[1:], columns=seat_list[0])
-                        a=df.isin(["0"]).any()
-                        b=[]
+                        a = df.isin(["0"]).any()
+                        b = []
                         for i in a:
                             b.append(i)
 
                         if True not in b:
                             print("\n", "="*4,
                                   'NO SEATS AVAILABLE IN THE SELECTED FLIGHT', "="*4, "\n")
-                            a=input("DO YOU WANT TO CONTIUNE BOOKING(Y/N): ")
+                            a = input("DO YOU WANT TO CONTIUNE BOOKING(Y/N): ")
                             a.strip()
                             a.upper()
                             if a == "Y":
@@ -592,17 +594,17 @@ def NEW_BOOKING():
                                 time.sleep(5)
                                 sys.exit()
                         else:
-                            details=customer_input()
-                            print(df)
+                            details = customer_input()
                             print("\n", "="*4, 'SEAT SELECTION', "="*4, "\n")
                             print("\t0=AVAILABLE AND X=BOOKED\n")
+                            print(df)
                             while True:
-                                COLUMN=input("ENTER THE COLUMN: ")
-                                COLUMN=COLUMN.strip()
-                                COLUMN=COLUMN.upper()
+                                COLUMN = input("ENTER THE COLUMN: ")
+                                COLUMN = COLUMN.strip()
+                                COLUMN = COLUMN.upper()
                                 if COLUMN in ["A", "B", "C", "D", "E", "F", "G", "H"]:
                                     while True:
-                                        ROW=input("ENTER THE ROW NUMBER: ")
+                                        ROW = input("ENTER THE ROW NUMBER: ")
                                         if ROW in [str(i) for i in range(1, 39)]:
                                             break
 
@@ -610,11 +612,13 @@ def NEW_BOOKING():
                                             print("\n", "="*4,
                                                   'ENTER A VALID OPTION', "="*4, "\n")
                                             continue
-                                    if df.loc[ROW, COLUMN] == '0':
-                                        df.loc[ROW, COLUMN]="X"
+                                    if df.loc[int(ROW), COLUMN] == '0':
+                                        df.loc[int(ROW), COLUMN] = "X"
+                                        seats = [df.columns.values.tolist()] + \
+                                            df.values.tolist()
                                         with open('SEATS/{}.txt'.format(seatid), 'w') as f:
                                             f.write(json.dumps(seats))
-                                        seat=COLUMN+ROW
+                                        seat = COLUMN+ROW
                                         break
                                     else:
                                         print("\n", "="*4,
@@ -626,38 +630,32 @@ def NEW_BOOKING():
                                           'ENTER A VALID OPTION', "="*4, "\n")
                                     continue
 
-                            Flight_no=df.iloc[0]["FLIGHT NO"]
+                            Flight_no = zz.iloc[0]["FLIGHT NO"]
                             print(Flight_no)
-                            x=selection.index(Flight_no)
-                            selection.drop([x])
-
-
-
-
+                            x = selection[selection["flight_no"] == Flight_no].index.values
+                            selection = selection.drop(x, axis=0)
 
                     else:
-                        seatid=[res[0][-1], res[1][-1]]
+                        seatid = [res[0][-1], res[1][-1]]
                         with open(os.getcwd()+'/SEATS/{}.txt'.format(seatid[0]), 'r') as f:
                             seat1 = json.loads(f.read())
                         with open(os.getcwd()+'/SEATS/{}.txt'.format(seatid[1]), 'r') as f:
                             seat2 = json.loads(f.read())
-                        seat1=pd.DataFrame(seat1[1:],columns=seat1[0])
-                        seat2=pd.DataFrame(seat2[1:],columns=seat2[0])
-                        a=seat1.isin(["0"]).any()
-                        b=[]
+                        seat1 = pd.DataFrame(seat1[1:], columns=seat1[0])
+                        seat2 = pd.DataFrame(seat2[1:], columns=seat2[0])
+                        a = seat1.isin(["0"]).any()
+                        b = []
                         for i in a:
                             b.append(i)
-                        a=seat2.isin(["0"]).any()
-                        b1=[]
+                        a = seat2.isin(["0"]).any()
+                        b1 = []
                         for i in a:
                             b1.append(i)
-                        
-
 
                         if True not in b or True not in b1:
                             print("\n", "="*4,
                                   'NO SEATS AVAILABLE IN THE SELECTED FLIGHT', "="*4, "\n")
-                            a=input("DO YOU WANT TO CONTIUNE BOOKING(Y/N): ")
+                            a = input("DO YOU WANT TO CONTIUNE BOOKING(Y/N): ")
                             a.strip()
                             a.upper()
                             if a == "Y":
@@ -668,17 +666,18 @@ def NEW_BOOKING():
                                 time.sleep(5)
                                 sys.exit()
                         else:
-                            details=customer_input()
-                            print("\n", "="*4, 'SEAT SELECTION FOR {} TO {}'.format(dep,res[0][1]), "="*4, "\n")
+                            details = customer_input()
+                            print("\n", "="*4, 'SEAT SELECTION FOR {} TO {}'.format(dep,
+                                                                                    res[0][2]), "="*4, "\n")
                             print("\t0=AVAILABLE AND X=BOOKED\n")
                             print(seat1)
                             while True:
-                                COLUMN=input("ENTER THE COLUMN: ")
-                                COLUMN=COLUMN.strip()
-                                COLUMN=COLUMN.upper()
+                                COLUMN = input("ENTER THE COLUMN: ")
+                                COLUMN = COLUMN.strip()
+                                COLUMN = COLUMN.upper()
                                 if COLUMN in ["A", "B", "C", "D", "E", "F", "G", "H"]:
                                     while True:
-                                        ROW=input("ENTER THE ROW NUMBER: ")
+                                        ROW = input("ENTER THE ROW NUMBER: ")
                                         if ROW in [str(i) for i in range(1, 39)]:
                                             break
 
@@ -687,11 +686,12 @@ def NEW_BOOKING():
                                                   'ENTER A VALID OPTION', "="*4, "\n")
                                             continue
                                     if seat1.loc[int(ROW), COLUMN] == '0':
-                                        seat1.loc[int(ROW), COLUMN]="X"
-                                        seats = [seat1.columns.values.tolist()] + seat1.values.tolist()
+                                        seat1.loc[int(ROW), COLUMN] = "X"
+                                        seats = [seat1.columns.values.tolist()] + \
+                                            seat1.values.tolist()
                                         with open('SEATS/{}.txt'.format(seatid[0]), 'w') as f:
                                             f.write(json.dumps(seats))
-                                        seat=COLUMN+ROW
+                                        seat = COLUMN+ROW
                                         break
                                     else:
                                         print("\n", "="*4,
@@ -703,16 +703,17 @@ def NEW_BOOKING():
                                     print("\n", "="*4,
                                           'ENTER A VALID OPTION', "="*4, "\n")
                                     continue
-                            print("\n", "="*4, 'SEAT SELECTION FOR {} TO {}'.format(res[1][1],res[1][2]), "="*4, "\n")
+                            print(
+                                "\n", "="*4, 'SEAT SELECTION FOR {} TO {}'.format(res[1][1], res[1][2]), "="*4, "\n")
                             print("\t0=AVAILABLE AND X=BOOKED\n")
                             print(seat2)
                             while True:
-                                COLUMN=input("ENTER THE COLUMN: ")
-                                COLUMN=COLUMN.strip()
-                                COLUMN=COLUMN.upper()
+                                COLUMN = input("ENTER THE COLUMN: ")
+                                COLUMN = COLUMN.strip()
+                                COLUMN = COLUMN.upper()
                                 if COLUMN in ["A", "B", "C", "D", "E", "F", "G", "H"]:
                                     while True:
-                                        ROW=input("ENTER THE ROW NUMBER: ")
+                                        ROW = input("ENTER THE ROW NUMBER: ")
                                         if ROW in [str(i) for i in range(1, 39)]:
                                             break
 
@@ -721,11 +722,12 @@ def NEW_BOOKING():
                                                   'ENTER A VALID OPTION', "="*4, "\n")
                                             continue
                                     if seat2.loc[int(ROW), COLUMN] == '0':
-                                        seat2.loc[int(ROW), COLUMN]="X"
-                                        seats = [seat2.columns.values.tolist()] + seat2.values.tolist()
+                                        seat2.loc[int(ROW), COLUMN] = "X"
+                                        seats = [seat2.columns.values.tolist()] + \
+                                            seat2.values.tolist()
                                         with open('SEATS/{}.txt'.format(seatid[1]), 'w') as f:
                                             f.write(json.dumps(seats))
-                                        seat=COLUMN+ROW
+                                        seat = COLUMN+ROW
                                         break
                                     else:
                                         print("\n", "="*4,
@@ -737,35 +739,38 @@ def NEW_BOOKING():
                                     print("\n", "="*4,
                                           'ENTER A VALID OPTION', "="*4, "\n")
                                     continue
-                            
-                            selection=pd.DataFrame()
 
+                            selection = pd.DataFrame()
 
-
-
-
-
-
+                selection = selection.reset_index()
+                selection = selection.drop("index", axis=1)
 
                 if selection.empty == False:
-                    details=customer_input()
+                    print("abc")
+                    details = customer_input()
                     print(details)
-                    if len(FLIGHTS[int(flight_booking)-1]) == 1:
-                        x=1
+                    if len(selection) == 1:
+                        x = 1
                     else:
-                        x=2
-
+                        x = 2
 
                     for i in range(x):
-                        df=flight_seat(1)
+                        print(selection)
+                        if x == 1:
+                            print(
+                                "\n", "="*4, 'SEAT SELECTION FOR {} TO {}'.format(selection.iloc[0][1], selection.iloc[0][2]), "="*4, "\n")
+                        else:
+                            print(
+                                "\n", "="*4, 'SEAT SELECTION FOR {} TO {}'.format(selection.iloc[1][1], selection.iloc[1][2]), "="*4, "\n")
+                        df = flight_seat(1)
                         print(df)
                         while True:
-                            COLUMN=input("ENTER THE COLUMN: ")
-                            COLUMN=COLUMN.strip()
-                            COLUMN=COLUMN.upper()
+                            COLUMN = input("ENTER THE COLUMN: ")
+                            COLUMN = COLUMN.strip()
+                            COLUMN = COLUMN.upper()
                             if COLUMN in ["A", "B", "C", "D", "E", "F", "G", "H"]:
                                 while True:
-                                    ROW=input("ENTER THE ROW NUMBER: ")
+                                    ROW = input("ENTER THE ROW NUMBER: ")
                                     if ROW in [str(i) for i in range(1, 39)]:
                                         break
 
@@ -773,12 +778,13 @@ def NEW_BOOKING():
                                         print("\n", "="*4,
                                               'ENTER A VALID OPTION', "="*4, "\n")
                                         continue
-                                seat_id=flight_seat(2)
+                                seat_id = flight_seat(2)
                                 print(seat_id)
                                 if df.loc[ROW, COLUMN] == '0':
-                                    df.loc[ROW, COLUMN]="X"
-                                    df.to_csv(
-                                        os.getcwd()+r'/SEATS/{}.csv'.format(seat_id))
+                                    df.loc[ROW, COLUMN] = "X"
+                                    seats = [df.columns.values.tolist()] + df.values.tolist()
+                                    with open('seats/{}.txt'.format(seat_id), 'w') as f:
+                                        f.write(json.dumps(seats))
                                     print(df)
                                     list_seat_id.append(str(seat_id))
                                     list_seat.append(COLUMN+ROW)
@@ -797,17 +803,15 @@ def NEW_BOOKING():
 
                             break
                     while True:
-                        response=input("\nDO YOU WANT TO CONFIRM (Y/N): ")
-                        response=response.strip()
+                        response = input("\nDO YOU WANT TO CONFIRM (Y/N): ")
+                        response = response.strip()
                         if response.upper() == "Y":
 
                             pass
                 break
 
-
         def ins_schedule():
             pass
-
 
     dep_arrival_input()
     flights_extract()
