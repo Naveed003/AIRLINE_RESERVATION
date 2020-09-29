@@ -14,6 +14,7 @@ import re
 from FLIGHT_SEATS import *
 import phonenumbers
 import pycountry
+import sys
 # CHANGE DEFAULT CUSTOMER INFO
 
 
@@ -348,7 +349,7 @@ def NEW_BOOKING():
                 break
 
     def confirmation():  # confirmation of flights and taking inputs from user
-        def customer_input():    
+        def customer_input():
             # coustomer id and booking id generation
             query = "select CUSTOMER_ID FROM CUSTOMERS"
             mycursor.execute(query)
@@ -435,7 +436,7 @@ def NEW_BOOKING():
                         date_of_birth = datetime.datetime.strptime(
                             customer_dob, "%Y-%m-%d")
                         customer_dob = str(date_of_birth)
-                        customer_dob=customer_dob[0:10]
+                        customer_dob = customer_dob[0:10]
                         break
                     except:
                         print(
@@ -464,9 +465,10 @@ def NEW_BOOKING():
                     continue
                 else:
                     break
-            
-            details=[customer_id,booking_id,customer_name,customer_phone,customer_email,customer_sex,customer_dob,customer_pp_num,a]
-            return details 
+
+            details = [customer_id, booking_id, customer_name, customer_phone,
+                customer_email, customer_sex, customer_dob, customer_pp_num, a]
+            return details
         option = 1
         FLIGHTS = []
         OPTION = []
@@ -536,7 +538,7 @@ def NEW_BOOKING():
                                     listt.append(j)
 
                     else:
-                        
+
                         for i in range(2):
                             flight_no = selection.iloc[i]["flight_no"]
                             origin = selection.iloc[i]["origin"]
@@ -557,57 +559,115 @@ def NEW_BOOKING():
                 if flight_booking not in OPTION:
                     print("\n", "="*4, 'ENTER A VALID OPTION', "="*4, "\n")
                     continue
-                elif res != []:
+                selection = FLIGHTS[int(flight_booking)-1]
+                selection = selection.reset_index()
+                selection = selection.drop("index", axis=1)
+                if res != []:
                     if len(res) == 1:
                         df = pd.DataFrame(res, columns=[
                                             "FLIGHT NO", "ORIGIN", "DESTINATION", "DEPATURE_TIME", "ARRIVAL_TIME", "DURATION", "SEAT_ID"])
-                        seatid=df.iloc[0]["SEAT_ID"]
-                        seatid=1234
-                        
+                        seatid = df.iloc[0]["SEAT_ID"]
+                        seatid = 1234
+
                         with open(os.getcwd()+'/SEATS/{}.txt'.format(seatid), 'r') as f:
-                            seat_list= json.loads(f.read())
-                        details=customer_input()
-                        print(pd.DataFrame(seat_list[1:],columns=seat_list[0]))
-                        if len(selection)==2:
-                            for i in range(2):
-                                try:
-                                    with open(os.getcwd()+'/SEATS/{}.txt'.format(seatid[i]), 'r') as f:
-                                        seat_list= json.loads(f.read())
-                                except Exception:
-                                    
+                            seat_list = json.loads(f.read())
+
+                        df = pd.DataFrame(seat_list[1:], columns=seat_list[0]
+                        a=df.isin(["0"]).any()
+                        b=[]
+                        for i in a:
+                            b.append(i)
+
+                        if True not in b:
+                            print("\n", "="*4,
+                                  'NO SEATS AVAILABLE IN THE SELECTED FLIGHT', "="*4, "\n")
+                            a=input("DO YOU WANT TO CONTIUNE BOOKING(Y/N): ")
+                            a.strip()
+                            a.upper()
+                            if a == "Y":
+                                confirmation()
+                                sys.exit()
+                            else:
+                                time.sleep(5)
+                                sys.exit()
+                        else:
+                            details=customer_input()
+                            print(df)
+                            while True:
+                                COLUMN=input("ENTER THE COLUMN: ")
+                                COLUMN=COLUMN.strip()
+                                COLUMN=COLUMN.upper()
+                                if COLUMN in ["A", "B", "C", "D", "E", "F", "G", "H"]:
+                                    while True:
+                                        ROW=input("ENTER THE ROW NUMBER: ")
+                                        if ROW in [str(i) for i in range(1, 39)]:
+                                            break
+
+                                        else:
+                                            print("\n", "="*4,
+                                                  'ENTER A VALID OPTION', "="*4, "\n")
+                                            continue
+                                    seat_id=flight_seat(2)
+                                    print(seat_id)
+                                    if df.loc[ROW, COLUMN] == '0':
+                                        df.loc[ROW, COLUMN]="X"
+                                        df.to_csv(
+                                            os.getcwd()+r'/SEATS/{}.csv'.format(seat_id))
+                                        print(df)
+                                        list_seat_id.append(str(seat_id))
+                                        list_seat.append(COLUMN+ROW)
+                                        print(list_seat_id)
+                                        print(list_seat)
+                                        break
+                                    else:
+                                        print("\n", "="*4,
+                                              'SEAT UNAVAILABLE', "="*4, "\n")
+                                        continue
+
+                                else:
+                                    print("\n", "="*4,
+                                          'ENTER A VALID OPTION', "="*4, "\n")
+                                    continue
+
+                            Flight_no=df.iloc[0]["FLIGHT NO"]
+                            print(Flight_no)
+                            x=selection.index(Flight_no)
+                            selection.drop([x])
 
 
-                                    
+
+
+
                     else:
-                        seatid=[res[0][-1],res[1][-1]]
+                        seatid=[res[0][-1], res[1][-1]]
                         seatid[0]=1234
                         print(str(os.getcwd())+'/SEATS/{}.txt'.format(seatid[0]))
-                        
-                                
 
 
-                        
-    
-                    
-                else:
+
+
+
+
+
+                if selection.empty == False:
                     details=customer_input()
                     print(details)
                     if len(FLIGHTS[int(flight_booking)-1]) == 1:
-                        x = 1
+                        x=1
                     else:
-                        x = 2
+                        x=2
 
-                    
+
                     for i in range(x):
-                        df = flight_seat(1)
+                        df=flight_seat(1)
                         print(df)
                         while True:
-                            COLUMN = input("ENTER THE COLUMN: ")
-                            COLUMN = COLUMN.strip()
-                            COLUMN = COLUMN.upper()
+                            COLUMN=input("ENTER THE COLUMN: ")
+                            COLUMN=COLUMN.strip()
+                            COLUMN=COLUMN.upper()
                             if COLUMN in ["A", "B", "C", "D", "E", "F", "G", "H"]:
                                 while True:
-                                    ROW = input("ENTER THE ROW NUMBER: ")
+                                    ROW=input("ENTER THE ROW NUMBER: ")
                                     if ROW in [str(i) for i in range(1, 39)]:
                                         break
 
@@ -615,10 +675,10 @@ def NEW_BOOKING():
                                         print("\n", "="*4,
                                               'ENTER A VALID OPTION', "="*4, "\n")
                                         continue
-                                seat_id = flight_seat(2)
+                                seat_id=flight_seat(2)
                                 print(seat_id)
                                 if df.loc[ROW, COLUMN] == '0':
-                                    df.loc[ROW, COLUMN] = "X"
+                                    df.loc[ROW, COLUMN]="X"
                                     df.to_csv(
                                         os.getcwd()+r'/SEATS/{}.csv'.format(seat_id))
                                     print(df)
@@ -639,14 +699,14 @@ def NEW_BOOKING():
 
                             break
                     while True:
-                        response = input("\nDO YOU WANT TO CONFIRM (Y/N): ")
-                        response = response.strip()
+                        response=input("\nDO YOU WANT TO CONFIRM (Y/N): ")
+                        response=response.strip()
                         if response.upper() == "Y":
 
                             pass
                 break
 
-        
+
         def ins_schedule():
             pass
 
