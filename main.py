@@ -15,6 +15,7 @@ from FLIGHT_SEATS import *
 import phonenumbers
 import pycountry
 import sys
+import json
 # CHANGE DEFAULT CUSTOMER INFO
 
 
@@ -338,7 +339,7 @@ def NEW_BOOKING():
                     main()
                     break
             elif df1.empty or df3.empty:
-                conn = pd.Dataframe()
+                conn = pd.DataFrame()
                 confirmation()
                 break
 
@@ -572,7 +573,7 @@ def NEW_BOOKING():
                         with open(os.getcwd()+'/SEATS/{}.txt'.format(seatid), 'r') as f:
                             seat_list = json.loads(f.read())
 
-                        df = pd.DataFrame(seat_list[1:], columns=seat_list[0]
+                        df = pd.DataFrame(seat_list[1:], columns=seat_list[0])
                         a=df.isin(["0"]).any()
                         b=[]
                         for i in a:
@@ -593,6 +594,8 @@ def NEW_BOOKING():
                         else:
                             details=customer_input()
                             print(df)
+                            print("\n", "="*4, 'SEAT SELECTION', "="*4, "\n")
+                            print("\t0=AVAILABLE AND X=BOOKED\n")
                             while True:
                                 COLUMN=input("ENTER THE COLUMN: ")
                                 COLUMN=COLUMN.strip()
@@ -607,17 +610,11 @@ def NEW_BOOKING():
                                             print("\n", "="*4,
                                                   'ENTER A VALID OPTION', "="*4, "\n")
                                             continue
-                                    seat_id=flight_seat(2)
-                                    print(seat_id)
                                     if df.loc[ROW, COLUMN] == '0':
                                         df.loc[ROW, COLUMN]="X"
-                                        df.to_csv(
-                                            os.getcwd()+r'/SEATS/{}.csv'.format(seat_id))
-                                        print(df)
-                                        list_seat_id.append(str(seat_id))
-                                        list_seat.append(COLUMN+ROW)
-                                        print(list_seat_id)
-                                        print(list_seat)
+                                        with open('SEATS/{}.txt'.format(seatid), 'w') as f:
+                                            f.write(json.dumps(seats))
+                                        seat=COLUMN+ROW
                                         break
                                     else:
                                         print("\n", "="*4,
@@ -644,7 +641,104 @@ def NEW_BOOKING():
                             seat1 = json.loads(f.read())
                         with open(os.getcwd()+'/SEATS/{}.txt'.format(seatid[1]), 'r') as f:
                             seat2 = json.loads(f.read())
-                        seat1=
+                        seat1=pd.DataFrame(seat1[1:],columns=seat1[0])
+                        seat2=pd.DataFrame(seat2[1:],columns=seat2[0])
+                        a=seat1.isin(["0"]).any()
+                        b=[]
+                        for i in a:
+                            b.append(i)
+                        a=seat2.isin(["0"]).any()
+                        b1=[]
+                        for i in a:
+                            b1.append(i)
+                        
+
+
+                        if True not in b or True not in b1:
+                            print("\n", "="*4,
+                                  'NO SEATS AVAILABLE IN THE SELECTED FLIGHT', "="*4, "\n")
+                            a=input("DO YOU WANT TO CONTIUNE BOOKING(Y/N): ")
+                            a.strip()
+                            a.upper()
+                            if a == "Y":
+                                confirmation()
+                                time.sleep(2)
+                                sys.exit()
+                            else:
+                                time.sleep(5)
+                                sys.exit()
+                        else:
+                            details=customer_input()
+                            print("\n", "="*4, 'SEAT SELECTION FOR {} TO {}'.format(dep,res[0][1]), "="*4, "\n")
+                            print("\t0=AVAILABLE AND X=BOOKED\n")
+                            print(seat1)
+                            while True:
+                                COLUMN=input("ENTER THE COLUMN: ")
+                                COLUMN=COLUMN.strip()
+                                COLUMN=COLUMN.upper()
+                                if COLUMN in ["A", "B", "C", "D", "E", "F", "G", "H"]:
+                                    while True:
+                                        ROW=input("ENTER THE ROW NUMBER: ")
+                                        if ROW in [str(i) for i in range(1, 39)]:
+                                            break
+
+                                        else:
+                                            print("\n", "="*4,
+                                                  'ENTER A VALID OPTION', "="*4, "\n")
+                                            continue
+                                    if seat1.loc[int(ROW), COLUMN] == '0':
+                                        seat1.loc[int(ROW), COLUMN]="X"
+                                        seats = [seat1.columns.values.tolist()] + seat1.values.tolist()
+                                        with open('SEATS/{}.txt'.format(seatid[0]), 'w') as f:
+                                            f.write(json.dumps(seats))
+                                        seat=COLUMN+ROW
+                                        break
+                                    else:
+                                        print("\n", "="*4,
+                                              'SEAT UNAVAILABLE', "="*4, "\n")
+                                        continue
+                                    break
+
+                                else:
+                                    print("\n", "="*4,
+                                          'ENTER A VALID OPTION', "="*4, "\n")
+                                    continue
+                            print("\n", "="*4, 'SEAT SELECTION FOR {} TO {}'.format(res[1][1],res[1][2]), "="*4, "\n")
+                            print("\t0=AVAILABLE AND X=BOOKED\n")
+                            print(seat2)
+                            while True:
+                                COLUMN=input("ENTER THE COLUMN: ")
+                                COLUMN=COLUMN.strip()
+                                COLUMN=COLUMN.upper()
+                                if COLUMN in ["A", "B", "C", "D", "E", "F", "G", "H"]:
+                                    while True:
+                                        ROW=input("ENTER THE ROW NUMBER: ")
+                                        if ROW in [str(i) for i in range(1, 39)]:
+                                            break
+
+                                        else:
+                                            print("\n", "="*4,
+                                                  'ENTER A VALID OPTION', "="*4, "\n")
+                                            continue
+                                    if seat2.loc[int(ROW), COLUMN] == '0':
+                                        seat2.loc[int(ROW), COLUMN]="X"
+                                        seats = [seat2.columns.values.tolist()] + seat2.values.tolist()
+                                        with open('SEATS/{}.txt'.format(seatid[1]), 'w') as f:
+                                            f.write(json.dumps(seats))
+                                        seat=COLUMN+ROW
+                                        break
+                                    else:
+                                        print("\n", "="*4,
+                                              'SEAT UNAVAILABLE', "="*4, "\n")
+                                        continue
+                                    break
+
+                                else:
+                                    print("\n", "="*4,
+                                          'ENTER A VALID OPTION', "="*4, "\n")
+                                    continue
+                            
+                            selection=pd.DataFrame()
 
 
 
