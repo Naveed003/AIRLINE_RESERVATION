@@ -575,6 +575,9 @@ def NEW_BOOKING():
                                         seat_list= json.loads(f.read())
                                 except Exception:
                                     
+
+
+                                    
                     else:
                         seatid=[res[0][-1],res[1][-1]]
                         seatid[0]=1234
