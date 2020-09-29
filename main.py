@@ -574,7 +574,7 @@ def NEW_BOOKING():
                                     with open(os.getcwd()+'/SEATS/{}.txt'.format(seatid[i]), 'r') as f:
                                         seat_list= json.loads(f.read())
                                 except Exception:
-                                    
+                                    pass
 
 
                                     
