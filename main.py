@@ -640,8 +640,12 @@ def NEW_BOOKING():
 
                     else:
                         seatid=[res[0][-1], res[1][-1]]
-                        seatid[0]=1234
-                        print(str(os.getcwd())+'/SEATS/{}.txt'.format(seatid[0]))
+                        with open(os.getcwd()+'/SEATS/{}.txt'.format(seatid[0]), 'r') as f:
+                            seat1 = json.loads(f.read())
+                        with open(os.getcwd()+'/SEATS/{}.txt'.format(seatid[1]), 'r') as f:
+                            seat2 = json.loads(f.read())
+                        seat1=
+
 
 
 
