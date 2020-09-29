@@ -1,3 +1,5 @@
+import json
+
 def seat_ids():
     global seat_id
     import random
@@ -51,11 +53,19 @@ def flight_seat(x):
         print("\n", "="*4, 'SEAT SELECTION', "="*4, "\n")
 
         print("\t0=AVAILABLE AND X=BOOKED\n")
+        seats = [df.columns.values.tolist()] + df.values.tolist()
+        with open('SEATS/{}.txt'.format(seatid), 'w') as f:
+                f.write(json.dumps(seats))
 
-        df.to_csv(os.getcwd()+r'/SEATS/{}.csv'.format(seatid))
+
+
+        #df.to_csv(os.getcwd()+r'/SEATS/{}.csv'.format(seatid))
         return df
     if x == 2:
         return seat_id
+
+
+
 
 
 

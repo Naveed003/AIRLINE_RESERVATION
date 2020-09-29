@@ -167,7 +167,7 @@ def NEW_BOOKING():
                 query = "select * from SCHEDULE"
                 mycursor.execute(query)
                 res = mycursor.fetchall()
-                if res == [] or res!=[]:
+                if res == [] or res != []:
                     query = "select * from ROUTES where ORIGIN='{}' AND DESTINATION='{}'".format(
                         dep, arr)
                     mycursor.execute(query)
@@ -175,9 +175,9 @@ def NEW_BOOKING():
                     global dirr
                     if list != []:
                         dirr = pd.DataFrame(list, columns=[
-                            "flight_no", "origin", "dest", "dep_time", "arr_time", "days","TYPE","DURATION","PRICE (USD)"])
-                        dirr=pd.concat([dirr["flight_no"], dirr["origin"], dirr["dest"],
-                                         dirr["dep_time"], dirr["arr_time"], dirr["days"],dirr["DURATION"],dirr["PRICE (USD)"]], axis=1)
+                            "flight_no", "origin", "dest", "dep_time", "arr_time", "days", "TYPE", "DURATION", "PRICE (USD)"])
+                        dirr = pd.concat([dirr["flight_no"], dirr["origin"], dirr["dest"],
+                                          dirr["dep_time"], dirr["arr_time"], dirr["days"], dirr["DURATION"], dirr["PRICE (USD)"]], axis=1)
                         # removing unwanted flights
                         for i in dirr.index:
                             if day_week in dirr["days"][i] or dirr["days"][i] == "DAILY":
@@ -217,7 +217,7 @@ def NEW_BOOKING():
                 query = "select * from SCHEDULE"
                 mycursor.execute(query)
                 res = mycursor.fetchall()
-                if res == [] or res!=[]:
+                if res == [] or res != []:
                     # Query for joining two tables
                     query = 'select * from {},{} WHERE {}.DESTINATION = {}.ORIGIN AND {}.DEPATURE_TIME>{}.ARRIVAL_TIME'.format(
                         dep_1, arr_1, dep_1, arr_1, arr_1, dep_1)
@@ -228,20 +228,19 @@ def NEW_BOOKING():
                     global df1
                     global df3
                     global conn
+                    global err
                     if list != []:
                         # convertting the sql list to dataframe
-
+                        err = 0
                         df = pd.DataFrame(list, columns=[
-                            "flight_no", "origin", "dest", "dep_time", "arr_time", "days", "type", "duration","PRICE (USD)", "flight_no1", "origin1", "dest1", "dep_time1", "arr_time1", "days1", "type1", "duration1","PRICE (USD)1"])
+                            "flight_no", "origin", "dest", "dep_time", "arr_time", "days", "type", "duration", "PRICE (USD)", "flight_no1", "origin1", "dest1", "dep_time1", "arr_time1", "days1", "type1", "duration1", "PRICE (USD)1"])
                         # splitting df
 
-
                         df1 = pd.concat([df["flight_no"], df["origin"], df["dest"],
-                                         df["dep_time"], df["arr_time"], df["days"],df["duration"],df["PRICE (USD)"]], axis=1)
+                                         df["dep_time"], df["arr_time"], df["days"], df["duration"], df["PRICE (USD)"]], axis=1)
 
                         df2 = pd.concat([df["flight_no1"], df["origin1"], df["dest1"],
-                                         df["dep_time1"], df["arr_time1"], df["days1"],df["duration1"],df["PRICE (USD)1"]], axis=1)
-
+                                         df["dep_time1"], df["arr_time1"], df["days1"], df["duration1"], df["PRICE (USD)1"]], axis=1)
 
                         flight_no = []
                         # removing unwanted flights
@@ -253,7 +252,7 @@ def NEW_BOOKING():
 
                         # renaming coloums and assinging it to new dataframe
                         df3 = df2.rename(columns={'flight_no1': 'flight_no', 'origin1': 'origin', 'dest1': 'dest',
-                                                  'dep_time1': 'dep_time', 'arr_time1': 'arr_time', 'days1': 'days',"duration1":"duration", "PRICE (USD)1":"PRICE (USD)"}, inplace=False)
+                                                  'dep_time1': 'dep_time', 'arr_time1': 'arr_time', 'days1': 'days', "duration1": "duration", "PRICE (USD)1": "PRICE (USD)"}, inplace=False)
 
                         flight_no = []
                         # removing unwanted flights
@@ -279,18 +278,20 @@ def NEW_BOOKING():
                         conn = pd.concat([df1, df3], axis=0)
                         return conn
                     else:
+
+                        err = 1
                         query = 'select * from {},{} WHERE {}.DESTINATION = {}.ORIGIN '.format(
                             dep_1, arr_1, dep_1, arr_1)  # ignoring time constraint
                         mycursor.execute(query)
                         list = mycursor.fetchall()
 
                         df = pd.DataFrame(list, columns=[
-                            "flight_no", "origin", "dest", "dep_time", "arr_time", "days", "type", "duration","PRICE (USD)", "flight_no1", "origin1", "dest1", "dep_time1", "arr_time1", "days1", "type1", "duration1","PRICE (USD)1"])
+                            "flight_no", "origin", "dest", "dep_time", "arr_time", "days", "type", "duration", "PRICE (USD)", "flight_no1", "origin1", "dest1", "dep_time1", "arr_time1", "days1", "type1", "duration1", "PRICE (USD)1"])
 
                         df1 = pd.concat([df["flight_no"], df["origin"], df["dest"],
-                                         df["dep_time"], df["arr_time"], df["days"],df["PRICE (USD)"]], axis=1)
+                                         df["dep_time"], df["arr_time"], df["days"], df["PRICE (USD)"]], axis=1)
                         df2 = pd.concat([df["flight_no1"], df["origin1"], df["dest1"],
-                                         df["dep_time1"], df["arr_time1"], df["days1"],df["PRICE (USD)1"]], axis=1)
+                                         df["dep_time1"], df["arr_time1"], df["days1"], df["PRICE (USD)1"]], axis=1)
                         flight_no = []
                         for i in df1.index:
                             if df1["flight_no"][i] in flight_no:
@@ -299,7 +300,7 @@ def NEW_BOOKING():
                                 flight_no.append(df1["flight_no"][i])
 
                         df3 = df2.rename(columns={'flight_no1': 'flight_no', 'origin1': 'origin', 'dest1': 'dest',
-                                                  'dep_time1': 'dep_time', 'arr_time1': 'arr_time', 'days1': 'days',"PRICE (USD)1":"PRICE (USD)"}, inplace=False)
+                                                  'dep_time1': 'dep_time', 'arr_time1': 'arr_time', 'days1': 'days', "PRICE (USD)1": "PRICE (USD)"}, inplace=False)
                         flight_no = []
 
                         for i in df3.index:
@@ -347,16 +348,132 @@ def NEW_BOOKING():
                 break
 
     def confirmation():  # confirmation of flights and taking inputs from user
+        def customer_input():    
+            # coustomer id and booking id generation
+            query = "select CUSTOMER_ID FROM CUSTOMERS"
+            mycursor.execute(query)
+            res = mycursor.fetchall()
+            ids = []
+            for i in res:
+                for j in i:
+                    ids.append(j)
+
+            query = "select BOOKING_ID FROM BOOKINGS"
+            mycursor.execute(query)
+            res = mycursor.fetchall()
+            booking_ids = []
+            for i in res:
+                for j in i:
+                    bookin_ids.append(j)
+
+            while True:
+                customer_id = random.randint(0, 9999)
+                if customer_id in ids:
+                    continue
+                else:
+                    break
+
+            while True:
+                booking_id = random.randint(0, 9999)
+                if booking_id in booking_ids:
+                    continue
+                else:
+                    break
+
+            while True:  # taking input for name
+                customer_name = "NAVEED"
+                customer_name = customer_name.strip()
+                if customer_name == "":
+                    print("\n", "="*4,
+                            'PLEASE ENTER YOUR NAME', "="*4, "\n")
+                    continue
+                break
+            while True:  # taking input and valiation for phone number
+                customer_phone = "+971558004998"
+                try:
+                    z = phonenumbers.parse(customer_phone)
+                    if phonenumbers.is_valid_number(z) == False:
+                        print("\n", "="*4,
+                                'PLEASE ENTER VALID NUMBER', "="*4, "\n")
+                        continue
+                    break
+
+                except Exception:
+                    print("\n", "="*4,
+                            'PLEASE ENTER VALID NUMBER', "="*4, "\n")
+
+                    continue
+            while True:  # taking input and valiation for EMAIL
+                customer_email = "imnaveed2003@gmail.com"
+                customer_email = customer_email.strip()
+                regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+                if(re.search(regex, customer_email)):
+                    break
+
+                else:
+                    print("\n", "="*4,
+                            'PLEASE ENTER VALID EMAIL ID', "="*4, "\n")
+                    continue
+
+            while True:  # taking input and valiation for SEX
+                customer_sex = "M"
+                customer_sex = customer_sex.strip()
+                customer_sex = customer_sex.upper()
+                if customer_sex.upper() not in ["M", "F"]:
+                    print("\n", "="*4,
+                            'PLEASE ENTER VALID SEX', "="*4, "\n")
+                    continue
+                else:
+                    break
+            while True:  # taking input and valiation for DOB
+                import datetime
+
+                customer_dob = "2003-04-20"
+
+                if str(date.today()) > customer_dob:
+                    try:
+                        date_of_birth = datetime.datetime.strptime(
+                            customer_dob, "%Y-%m-%d")
+                        customer_dob = str(date_of_birth)
+                        customer_dob=customer_dob[0:10]
+                        break
+                    except:
+                        print(
+                            "\n", "="*4, 'ENTER A VALID DATE OF BIRTH', "="*4, "\n")
+                        continue
+
+                else:
+                    print("\n", "="*4,
+                            'ENTER A VALID DATE OF BIRTH', "="*4, "\n")
+                    continue
+            while True:  # taking input and valiation for Nationality
+
+                a = "INDIA"
+                b = list(pycountry.countries)
+                if pycountry.countries.get(name=a) != None:
+                    break
+
+                else:
+                    print("\n", "="*4, 'ENTER A VALID COUNTRY', "="*4, "\n")
+                    continue
+            while True:
+                customer_pp_num = "12345678"
+                if len(customer_pp_num) < 5:
+                    print("\n", "="*4,
+                            'ENTER A VALID PASSPORT NUMBER', "="*4, "\n")
+                    continue
+                else:
+                    break
+            
+            details=[customer_id,booking_id,customer_name,customer_phone,customer_email,customer_sex,customer_dob,customer_pp_num,a]
+            return details 
         option = 1
         FLIGHTS = []
         OPTION = []
-        del dirr["days"]
-        del df1["days"]
-        del df3["days"]
-
         if dirr.empty:
             print("\n", "="*8, 'NO DIRECT FLIGHTS', "="*8, "\n")
         else:  # printing direct flights along with option number and uppending it to flight list
+            del dirr["days"]
             print("\n", "="*8, 'DIRECT FLIGHTS', "="*8, "\n")
             for i in range(1, len(dirr)+1):
                 dep1 = dirr.iloc[i-1:i, :]
@@ -369,6 +486,8 @@ def NEW_BOOKING():
         if conn.empty:
             print("\n", "="*8, 'NO CONNECTING FLIGHTS AVAILABLE', "="*8, "\n")
         else:  # printing connecting flights along with option number and uppending it to flight list
+            del df1["days"]
+            del df3["days"]
             print("\n", "="*8, 'CONNECTING FLIGHTS', "="*8, "\n")
             for i in range(1, len(df1)+1):
                 dep1 = df1.iloc[i-1:i, :]
@@ -389,174 +508,93 @@ def NEW_BOOKING():
                 exit = exit.strip()
                 exit = exit.upper()
                 if exit == "Y":
-                    pass
+                    break
                 else:
                     main()
                     break
                 # asking for which flight
+            while True:
                 flight_booking = input('\nENTER THE OPTION NO.: ')
-                selection=FLIGHTS[int(flight_booking)-1]
-                print(selection)
-                if len(selection)==1:
-                    flight_no=selection.iloc[0]["flight_no"]
-                    origin=selection.iloc[0]["origin"]
-                    destination=selection.iloc[0]["dest"]
-                    dep_time=str(depature_date)+" "+str(selection.iloc[0]["dep_time"])[-8:]
-                    query="select * from SCHEDULE WHERE FLIGHT_NO='{}' AND ORIGIN='{}' AND DESTINATION='{}' AND DEPATURE_TIME='{}'".format(flight_no,origin,destination,dep_time)
-                    mycursor.execute(query)
-                    res=mycursor.fetchall()
-                    print(res)
-                    listt=[]
-                    if res!=[]:
-                        for i in res:
-                            for j in i:
-                                listt.append(j)
-        
-                    
-                else:
-                    res=[]
-                    for i in range(2):
-                        flight_no=selection.iloc[i]["flight_no"]
-                        origin=selection.iloc[i]["origin"]
-                        destination=selection.iloc[i]["dest"]
-                        dep_time=str(depature_date)+" "+str(selection.iloc[i]["dep_time"])[-8:]
-                        query="select * from SCHEDULE WHERE FLIGHT_NO='{}' AND ORIGIN='{}' AND DESTINATION='{}' AND DEPATURE_TIME='{}'".format(flight_no,origin,destination,dep_time)
+                res = []
+                try:
+                    selection = FLIGHTS[int(flight_booking)-1]
+                    if len(selection) == 1:
+                        flight_no = selection.iloc[0]["flight_no"]
+                        origin = selection.iloc[0]["origin"]
+                        destination = selection.iloc[0]["dest"]
+                        dep_time = str(depature_date)+" " + \
+                            str(selection.iloc[0]["dep_time"])[-8:]
+                        query = "select * from SCHEDULE WHERE FLIGHT_NO='{}' AND ORIGIN='{}' AND DESTINATION='{}' AND DEPATURE_TIME='{}'".format(
+                            flight_no, origin, destination, dep_time)
                         mycursor.execute(query)
-                        
-                        for i in mycursor.fetchall():
-                            res.append(i)
-                    print(res)
+                        res = mycursor.fetchall()
+                        print(res)
+                        listt = []
+                        if res != []:
+                            for i in res:
+                                for j in i:
+                                    listt.append(j)
 
+                    else:
                         
-                            
+                        for i in range(2):
+                            flight_no = selection.iloc[i]["flight_no"]
+                            origin = selection.iloc[i]["origin"]
+                            destination = selection.iloc[i]["dest"]
+                            dep_time = str(depature_date)+" " + \
+                                str(selection.iloc[i]["dep_time"])[-8:]
+                            query = "select * from SCHEDULE WHERE FLIGHT_NO='{}' AND ORIGIN='{}' AND DESTINATION='{}' AND DEPATURE_TIME='{}'".format(
+                                flight_no, origin, destination, dep_time)
+                            mycursor.execute(query)
 
-                query="select * from SCHEDULE WHERE FLIGHT_NO='{}' and ORIGIN"
+                            for i in mycursor.fetchall():
+                                res.append(i)
+                except Exception:
+                    pass
+                list_seat = []
+                list_seat_id = []
+                query = "select * from SCHEDULE WHERE FLIGHT_NO='{}' and ORIGIN"
                 if flight_booking not in OPTION:
                     print("\n", "="*4, 'ENTER A VALID OPTION', "="*4, "\n")
-                elif flight_booking in OPTION:
-                    pass
+                    continue
+                elif res != []:
+                    if len(res) == 1:
+                        df = pd.DataFrame(res, columns=[
+                                            "FLIGHT NO", "ORIGIN", "DESTINATION", "DEPATURE_TIME", "ARRIVAL_TIME", "DURATION", "SEAT_ID"])
+                        seatid=df.iloc[0]["SEAT_ID"]
+                        seatid=1234
+                        
+                        with open(os.getcwd()+'/SEATS/{}.txt'.format(seatid), 'r') as f:
+                            seat_list= json.loads(f.read())
+                        details=customer_input()
+                        print(pd.DataFrame(seat_list[1:],columns=seat_list[0]))
+                        if len(selection)==2:
+                            for i in range(2):
+                                try:
+                                    with open(os.getcwd()+'/SEATS/{}.txt'.format(seatid[i]), 'r') as f:
+                                        seat_list= json.loads(f.read())
+                                except Exception:
+                                    
+                    else:
+                        seatid=[res[0][-1],res[1][-1]]
+                        seatid[0]=1234
+                        print(str(os.getcwd())+'/SEATS/{}.txt'.format(seatid[0]))
+                        
+                                
+
+
+                        
+    
+                    
                 else:
-                    # coustomer id and booking id generation
-                    query = "select CUSTOMER_ID FROM CUSTOMERS"
-                    mycursor.execute(query)
-                    res = mycursor.fetchall()
-                    ids = []
-                    for i in res:
-                        for j in i:
-                            ids.append(j)
-
-                    query = "select BOOKING_ID FROM BOOKINGS"
-                    mycursor.execute(query)
-                    res = mycursor.fetchall()
-                    booking_ids = []
-                    for i in res:
-                        for j in i:
-                            bookin_ids.append(j)
-
-                    while True:
-                        customer_id = random.randint(0, 9999)
-                        if customer_id in ids:
-                            continue
-                        else:
-                            break
-
-                    while True:
-                        booking_id = random.randint(0, 9999)
-                        if booking_id in booking_ids:
-                            continue
-                        else:
-                            break
-
-                    while True:  # taking input for name
-                        customer_name = "NAVEED"
-                        customer_name = customer_name.strip()
-                        if customer_name == "":
-                            print("\n", "="*4,
-                                  'PLEASE ENTER YOUR NAME', "="*4, "\n")
-                            continue
-                        break
-                    while True:  # taking input and valiation for phone number
-                        customer_phone = "+971558004998"
-                        try:
-                            z = phonenumbers.parse(customer_phone)
-                            if phonenumbers.is_valid_number(z) == False:
-                                print("\n", "="*4,
-                                      'PLEASE ENTER VALID NUMBER', "="*4, "\n")
-                                continue
-                            break
-
-                        except Exception:
-                            print("\n", "="*4,
-                                  'PLEASE ENTER VALID NUMBER', "="*4, "\n")
-
-                            continue
-                    while True:  # taking input and valiation for EMAIL
-                        customer_email = "imnaveed2003@gmail.com"
-                        customer_email = customer_email.strip()
-                        regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
-                        if(re.search(regex, customer_email)):
-                            break
-
-                        else:
-                            print("\n", "="*4,
-                                  'PLEASE ENTER VALID EMAIL ID', "="*4, "\n")
-                            continue
-
-                    while True:  # taking input and valiation for SEX
-                        customer_sex = "M"
-                        customer_sex = customer_sex.strip()
-                        customer_sex = customer_sex.upper()
-                        if customer_sex.upper() not in ["M", "F"]:
-                            print("\n", "="*4,
-                                  'PLEASE ENTER VALID SEX', "="*4, "\n")
-                            continue
-                        else:
-                            break
-                    while True:  # taking input and valiation for DOB
-                        import datetime
-
-                        customer_dob = "2003-04-20"
-
-                        if str(date.today()) > customer_dob:
-                            try:
-                                date_of_birth = datetime.datetime.strptime(
-                                    customer_dob, "%Y-%m-%d")
-                                customer_dob = str(date_of_birth)
-                                break
-                            except:
-                                print(
-                                    "\n", "="*4, 'ENTER A VALID DATE OF BIRTH', "="*4, "\n")
-                                continue
-
-                        else:
-                            print("\n", "="*4,
-                                  'ENTER A VALID DATE OF BIRTH', "="*4, "\n")
-                            continue
-                    while True:  # taking input and valiation for Nationality
-
-                        a = "INDIA"
-                        b = list(pycountry.countries)
-                        if pycountry.countries.get(name=a) != None:
-                            break
-
-                        else:
-                            print("\n", "="*4, 'ENTER A VALID COUNTRY', "="*4, "\n")
-                            continue
-                    while True:
-                        customer_pp_num = "12345678"
-                        if len(customer_pp_num) < 5:
-                            print("\n", "="*4,
-                                  'ENTER A VALID PASSPORT NUMBER', "="*4, "\n")
-                            continue
-                        else:
-                            break
+                    details=customer_input()
+                    print(details)
                     if len(FLIGHTS[int(flight_booking)-1]) == 1:
                         x = 1
                     else:
                         x = 2
 
-                    list_seat = []
-                    list_seat_id = []
+                    
                     for i in range(x):
                         df = flight_seat(1)
                         print(df)
@@ -587,24 +625,28 @@ def NEW_BOOKING():
                                     print(list_seat)
                                     break
                                 else:
-                                    print("\n", "="*4, 'SEAT UNAVAILABLE', "="*4, "\n")
+                                    print("\n", "="*4,
+                                          'SEAT UNAVAILABLE', "="*4, "\n")
                                     continue
 
                             else:
-                                print("\n", "="*4, 'ENTER A VALID OPTION', "="*4, "\n")
+                                print("\n", "="*4,
+                                      'ENTER A VALID OPTION', "="*4, "\n")
                                 continue
-
 
                             break
                     while True:
-                        response=input("\nDO YOU WANT TO CONFIRM (Y/N): ")
-                        response=response.strip()
-                        if response.upper()=="Y":
+                        response = input("\nDO YOU WANT TO CONFIRM (Y/N): ")
+                        response = response.strip()
+                        if response.upper() == "Y":
+
                             pass
-
-
-
                 break
+
+        
+        def ins_schedule():
+            pass
+
 
     dep_arrival_input()
     flights_extract()
