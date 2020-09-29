@@ -353,6 +353,7 @@ def NEW_BOOKING():
         del dirr["days"]
         del df1["days"]
         del df3["days"]
+
         if dirr.empty:
             print("\n", "="*8, 'NO DIRECT FLIGHTS', "="*8, "\n")
         else:  # printing direct flights along with option number and uppending it to flight list
@@ -401,10 +402,6 @@ def NEW_BOOKING():
                     origin=selection.iloc[0]["origin"]
                     destination=selection.iloc[0]["dest"]
                     dep_time=str(depature_date)+" "+str(selection.iloc[0]["dep_time"])[-8:]
-                    print(str(flight_no))
-                    print(str(origin))
-                    print(str(destination))
-                    print(str(dep_time))
                     query="select * from SCHEDULE WHERE FLIGHT_NO='{}' AND ORIGIN='{}' AND DESTINATION='{}' AND DEPATURE_TIME='{}'".format(flight_no,origin,destination,dep_time)
                     mycursor.execute(query)
                     res=mycursor.fetchall()
@@ -414,16 +411,23 @@ def NEW_BOOKING():
                         for i in res:
                             for j in i:
                                 listt.append(j)
+        
                     
                 else:
-                    index=selection.index
-                    print(index)
-                    selection=selection.rename(index={0:"a",0:"b"})
-                    print(selection.index)
-                    for i in index:
-                        print(selection.iloc[i])
-                        break
+                    res=[]
+                    for i in range(2):
+                        flight_no=selection.iloc[i]["flight_no"]
+                        origin=selection.iloc[i]["origin"]
+                        destination=selection.iloc[i]["dest"]
+                        dep_time=str(depature_date)+" "+str(selection.iloc[i]["dep_time"])[-8:]
+                        query="select * from SCHEDULE WHERE FLIGHT_NO='{}' AND ORIGIN='{}' AND DESTINATION='{}' AND DEPATURE_TIME='{}'".format(flight_no,origin,destination,dep_time)
+                        mycursor.execute(query)
+                        
+                        for i in mycursor.fetchall():
+                            res.append(i)
+                    print(res)
 
+                        
                             
 
                 query="select * from SCHEDULE WHERE FLIGHT_NO='{}' and ORIGIN"
