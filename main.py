@@ -282,6 +282,7 @@ def NEW_BOOKING():
                     else:
 
                         err = 1
+                        print(err)
                         query = 'select * from {},{} WHERE {}.DESTINATION = {}.ORIGIN '.format(
                             dep_1, arr_1, dep_1, arr_1)  # ignoring time constraint
                         mycursor.execute(query)
@@ -291,9 +292,10 @@ def NEW_BOOKING():
                             "flight_no", "origin", "dest", "dep_time", "arr_time", "days", "type", "duration", "PRICE (USD)", "flight_no1", "origin1", "dest1", "dep_time1", "arr_time1", "days1", "type1", "duration1", "PRICE (USD)1"])
 
                         df1 = pd.concat([df["flight_no"], df["origin"], df["dest"],
-                                         df["dep_time"], df["arr_time"], df["days"], df["duration"],df["PRICE (USD)"]], axis=1)
+                                         df["dep_time"], df["arr_time"], df["days"], df["duration"], df["PRICE (USD)"]], axis=1)
                         df2 = pd.concat([df["flight_no1"], df["origin1"], df["dest1"],
-                                         df["dep_time1"], df["arr_time1"], df["days1"],df["duration1"], df["PRICE (USD)1"]], axis=1)
+                                         df["dep_time1"], df["arr_time1"], df["days1"], df["duration1"], df["PRICE (USD)1"]], axis=1)
+
                         flight_no = []
                         for i in df1.index:
                             if df1["flight_no"][i] in flight_no:
@@ -302,7 +304,8 @@ def NEW_BOOKING():
                                 flight_no.append(df1["flight_no"][i])
 
                         df3 = df2.rename(columns={'flight_no1': 'flight_no', 'origin1': 'origin', 'dest1': 'dest',
-                                                  'dep_time1': 'dep_time', 'arr_time1': 'arr_time', 'days1': 'days',"duration1":"DURATION", "PRICE (USD)1": "PRICE (USD)"}, inplace=False)
+                                                  'dep_time1': 'dep_time', 'arr_time1': 'arr_time', 'days1': 'days', "duration1": "DURATION", "PRICE (USD)1": "PRICE (USD)"}, inplace=False)
+                        df1 = df1.rename(columns={"duration": "DURATION"})
                         flight_no = []
 
                         for i in df3.index:
@@ -482,6 +485,22 @@ def NEW_BOOKING():
                     main()
                     break
             print(selection1)
+            if err == 1:
+                A = selection1.iloc[0]["ARRIVAL_TIME"]
+                A_= str(selection1.iloc[1]["DEPATURE_TIME"])
+                A = str(A)
+                B = A_[11:]
+                A = A[0:10]
+                A = A[-2:]
+                A = int(A)
+                bb = A+1
+                print(bb)
+                A = str(selection1.iloc[0]["ARRIVAL_TIME"])
+
+                a = A[:8]+str(bb)+" "+B
+                print(a)
+                selection1.iloc[1]["DEPATURE_TIME"]=a
+                print(selection1)
 
         option = 1
         FLIGHTS = []
@@ -507,6 +526,8 @@ def NEW_BOOKING():
             del df1["days"]
             del df3["days"]
             print("\n", "="*8, 'CONNECTING FLIGHTS', "="*8, "\n")
+            print(df1)
+            print(df3)
             for i in range(1, len(df1)+1):
                 dep1 = df1.iloc[i-1:i, :]
                 for j in range(1, len(df3)+1):
@@ -581,7 +602,7 @@ def NEW_BOOKING():
                 selection = selection.reset_index()
                 selection = selection.drop("index", axis=1)
                 selection = selection.rename(columns={"flight_no": "FLIGHT NO", "origin": "ORIGIN",
-                                                      "dest": "DESTINATION", "dep_time": "DEPATURE_TIME", "arr_time": "ARRIVAL_TIME","duration":"DURATION"})
+                                                      "dest": "DESTINATION", "dep_time": "DEPATURE_TIME", "arr_time": "ARRIVAL_TIME", "duration": "DURATION"})
 
                 if res != []:
                     if len(res) == 1:
@@ -787,20 +808,27 @@ def NEW_BOOKING():
                 selection = selection.reset_index()
                 selection = selection.drop("index", axis=1)
                 if selection.empty == False:
-                    
                     details = customer_input()
                     if len(selection) == 1:
                         x = 2
                     else:
                         x = 3
-                        col=[]
+                        col = []
                         for i in selection.columns:
                             col.append(i)
+                        print(col)
                         selection1 = pd.DataFrame(columns=col)
+                    for i in range(len(selection)):
+                        dep_time = str(depature_date)+" " + \
+                            str(selection.iloc[i]["DEPATURE_TIME"])[-8:]
+                        selection.iloc[i]["DEPATURE_DATE"]=dep_time
+                        arr_time = str(depature_date)+" " + \
+                            str(selection.iloc[i]["ARRIVAL_TIME"])[-8:]
+                        selection.iloc[i]["ARRIVAL_TIME"]=arr_time
+                        print(selection)
 
-
-
-                    for i in range(1,x):
+                    for i in range(1, x):
+                        
                         if i == 1:
                             print(
                                 "\n", "="*4, 'SEAT SELECTION FOR {} TO {}'.format(selection.iloc[0][1], selection.iloc[0][2]), "="*4, "\n")
@@ -810,7 +838,7 @@ def NEW_BOOKING():
                             print(
                                 "\n", "="*4, 'SEAT SELECTION FOR {} TO {}'.format(selection.iloc[1][1], selection.iloc[1][2]), "="*4, "\n")
                             selection1 = pd.concat(
-                                [selection1, selection.iloc[1:,:]], axis=0)
+                                [selection1, selection.iloc[1:, :]], axis=0)
                         df = flight_seat(1)
                         print(df)
                         while True:
@@ -828,6 +856,7 @@ def NEW_BOOKING():
                                               'ENTER A VALID OPTION', "="*4, "\n")
                                         continue
                                 seat_id = flight_seat(2)
+                                print(df.loc[ROW, COLUMN])
                                 if df.loc[ROW, COLUMN] == '0':
                                     df.loc[ROW, COLUMN] = "X"
                                     seats = [df.columns.values.tolist()] + \
