@@ -485,6 +485,7 @@ def NEW_BOOKING():
                 else:
                     main()
                     break
+            
             if err == 1:
                 A = selection1.iloc[0]["ARRIVAL_TIME"]
                 A_= str(selection1.iloc[1]["DEPATURE_TIME"])
@@ -498,9 +499,10 @@ def NEW_BOOKING():
                 a = A[:8]+str(bb)+" "+B
                 sel=selection1.reset_index()
                 sel=sel.drop("index",axis=1)
-                sel.loc[1,"DEPATURE_TIME"]=a
-                print(sel) 
-                
+                sel.loc[1,"DEPATURE_TIME"]=a 
+            else:
+                sel=selection1
+            print(sel)    
         option = 1
         FLIGHTS = []
         OPTION = []
@@ -525,8 +527,6 @@ def NEW_BOOKING():
             del df1["days"]
             del df3["days"]
             print("\n", "="*8, 'CONNECTING FLIGHTS', "="*8, "\n")
-            print(df1)
-            print(df3)
             for i in range(1, len(df1)+1):
                 dep1 = df1.iloc[i-1:i, :]
                 for j in range(1, len(df3)+1):
@@ -752,6 +752,8 @@ def NEW_BOOKING():
                                             seat1.columns.values.tolist()] + seat1.values.tolist()
                                         with open('SEATS/{}.txt'.format(seatid[0]), 'w') as f:
                                             f.write(json.dumps(seats))
+                                        list_seat_id.append(str(seatid[0]))
+                                        list_seat.append(COLUMN+ROW)
                                         seat = COLUMN+ROW
                                         break
                                     else:
@@ -803,10 +805,19 @@ def NEW_BOOKING():
                                           'ENTER A VALID OPTION', "="*4, "\n")
                                     continue
                             selection1 = selection
+                            for i in range(len(selection1)):
+                                dep_time = str(depature_date)+" " + \
+                                    str(selection1.iloc[i]["DEPATURE_TIME"])[-8:]
+                                selection1.loc[i,"DEPATURE_TIME"]=dep_time
+                                arr_time = str(depature_date)+" " + \
+                                    str(selection1.iloc[i]["ARRIVAL_TIME"])[-8:]
+                                selection1.loc[i,"ARRIVAL_TIME"]=arr_time
+
                             selection = pd.DataFrame()
 
                 selection = selection.reset_index()
                 selection = selection.drop("index", axis=1)
+                print(selection)
                 if selection.empty == False:
                     details = customer_input()
                     if len(selection) == 1:
@@ -816,16 +827,14 @@ def NEW_BOOKING():
                         col = []
                         for i in selection.columns:
                             col.append(i)
-                        print(col)
                         selection1 = pd.DataFrame(columns=col)
                     for i in range(len(selection)):
                         dep_time = str(depature_date)+" " + \
                             str(selection.iloc[i]["DEPATURE_TIME"])[-8:]
-                        selection.iloc[i]["DEPATURE_DATE"]=dep_time
+                        selection.loc[i,"DEPATURE_TIME"]=dep_time
                         arr_time = str(depature_date)+" " + \
                             str(selection.iloc[i]["ARRIVAL_TIME"])[-8:]
-                        selection.iloc[i]["ARRIVAL_TIME"]=arr_time
-                        print(selection)
+                        selection.loc[i,"ARRIVAL_TIME"]=arr_time
 
                     for i in range(1, x):
                         
@@ -833,7 +842,7 @@ def NEW_BOOKING():
                             print(
                                 "\n", "="*4, 'SEAT SELECTION FOR {} TO {}'.format(selection.iloc[0][1], selection.iloc[0][2]), "="*4, "\n")
                             selection1 = pd.concat(
-                                [selection1, selection.iloc[0:, :]], axis=0)
+                                [selection1, selection.iloc[0:1, :]], axis=0)
                         else:
                             print(
                                 "\n", "="*4, 'SEAT SELECTION FOR {} TO {}'.format(selection.iloc[1][1], selection.iloc[1][2]), "="*4, "\n")
