@@ -16,6 +16,7 @@ import phonenumbers
 import pycountry
 import sys
 import json
+pd.options.mode.chained_assignment = None
 # CHANGE DEFAULT CUSTOMER INFO
 
 
@@ -484,24 +485,28 @@ def NEW_BOOKING():
                 else:
                     main()
                     break
-            print(selection1)
             if err == 1:
                 A = selection1.iloc[0]["ARRIVAL_TIME"]
                 A_= str(selection1.iloc[1]["DEPATURE_TIME"])
+
+                print(A_)
                 A = str(A)
-                B = A_[11:]
+                B = A_[-8:]
+                print(B)
                 A = A[0:10]
                 A = A[-2:]
                 A = int(A)
                 bb = A+1
                 print(bb)
                 A = str(selection1.iloc[0]["ARRIVAL_TIME"])
-
                 a = A[:8]+str(bb)+" "+B
                 print(a)
-                selection1.iloc[1]["DEPATURE_TIME"]=a
                 print(selection1)
-
+                print(selection1)
+                sel=selection1.reset_index()
+                sel=sel.drop("index",axis=1)
+                sel.loc[1,"DEPATURE_TIME"]=a
+                print(sel)
         option = 1
         FLIGHTS = []
         OPTION = []
@@ -691,6 +696,7 @@ def NEW_BOOKING():
                             selection1 = pd.concat([selection1, zzz], axis=0)
                             selection1 = selection1.drop("SEAT_ID", axis=1)
                             selection = selection.drop(x, axis=0)
+                        
 
                     else:
                         seatid = [res[0][-1], res[1][-1]]
