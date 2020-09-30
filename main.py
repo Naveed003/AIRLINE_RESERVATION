@@ -488,25 +488,19 @@ def NEW_BOOKING():
             if err == 1:
                 A = selection1.iloc[0]["ARRIVAL_TIME"]
                 A_= str(selection1.iloc[1]["DEPATURE_TIME"])
-
-                print(A_)
                 A = str(A)
                 B = A_[-8:]
-                print(B)
                 A = A[0:10]
                 A = A[-2:]
                 A = int(A)
                 bb = A+1
-                print(bb)
                 A = str(selection1.iloc[0]["ARRIVAL_TIME"])
                 a = A[:8]+str(bb)+" "+B
-                print(a)
-                print(selection1)
-                print(selection1)
                 sel=selection1.reset_index()
                 sel=sel.drop("index",axis=1)
                 sel.loc[1,"DEPATURE_TIME"]=a
-                print(sel)
+                selection1=sel
+                
         option = 1
         FLIGHTS = []
         OPTION = []
