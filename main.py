@@ -529,20 +529,48 @@ def NEW_BOOKING():
                         a = date+" "+dep_time2
                         selection1.loc[1, "DEPATURE_TIME"] = a
                     else:
-                        a = date+" "+dep_time1
+                        a = date+" "+dep_time2
                         selection1.loc[1, "DEPATURE_TIME"] = a
                     sel = selection1.reset_index()
                     sel = sel.drop("index", axis=1)
                     print(sel)
             except Exception:
-                date = dep_date
-                dep_time1 = str(selection1.iloc[0]["DEPATURE_TIME"])
-                dep_time1 = dep_time1[-8:]
-                a = date+" "+dep_time1
-                selection1.loc[0, "DEPATURE_TIME"] = a
-                sel = selection1.reset_index()
-                sel = sel.drop("index", axis=1)
-                print(sel)
+                if len(selection1) == 1:
+                    date = dep_date
+                    dep_time1 = str(selection1.iloc[0]["DEPATURE_TIME"])
+                    dep_time1 = dep_time1[-8:]
+                    a = date+" "+dep_time1
+                    selection1.loc[0, "DEPATURE_TIME"] = a
+                    sel = selection1.reset_index()
+                    sel = sel.drop("index", axis=1)
+                    print(sel)
+                else:
+                    arr_time1 = str(selection1.iloc[0]["ARRIVAL_TIME"])
+                    dep_time1 = str(selection1.iloc[0]["DEPATURE_TIME"])
+                    dep_time2 = str(selection1.iloc[1]["DEPATURE_TIME"])
+
+                    arr_time1 = arr_time1[-8:]
+                    dep_time1 = dep_time1[-8:]
+                    dep_time2 = dep_time2[-8:]
+
+                    a = date+" "+dep_time1
+                    selection1.loc[0, "DEPATURE_TIME"] = a
+
+                    if arr_time1 < dep_time1:
+                        print(dep_date)
+                        a = int(dep_date[-2:])
+                        a += 1
+                        date = date[:-2]+str(a)
+                        print(date)
+                        A = str(selection1.iloc[0]["ARRIVAL_TIME"])
+                        a = date+" "+dep_time2
+                        selection1.loc[1, "DEPATURE_TIME"] = a
+                    else:
+                        a = date+" "+dep_time2
+                        selection1.loc[1, "DEPATURE_TIME"] = a
+                    sel = selection1.reset_index()
+                    sel = sel.drop("index", axis=1)
+                    print(sel)
 
         option = 1
         FLIGHTS = []
