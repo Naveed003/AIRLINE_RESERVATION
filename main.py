@@ -499,7 +499,7 @@ def NEW_BOOKING():
                 sel=selection1.reset_index()
                 sel=sel.drop("index",axis=1)
                 sel.loc[1,"DEPATURE_TIME"]=a
-                selection1=sel
+                print(sel) 
                 
         option = 1
         FLIGHTS = []
