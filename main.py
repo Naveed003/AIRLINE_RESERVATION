@@ -470,6 +470,20 @@ def NEW_BOOKING():
             details = [customer_id, booking_id, customer_name, customer_phone,
                        customer_email, customer_sex, customer_dob, customer_pp_num, a]
             return details
+        def f_confirmation():
+            while True:
+                response = input("\nDO YOU WANT TO CONFIRM (Y/N): ")
+                response = response.strip()
+                if response.upper() == "Y":
+                    break
+                else:
+                    main()
+                    break
+            
+            print(selection1)
+
+                    
+            
         option = 1
         FLIGHTS = []
         OPTION = []
@@ -563,19 +577,21 @@ def NEW_BOOKING():
                 selection = FLIGHTS[int(flight_booking)-1]
                 selection = selection.reset_index()
                 selection = selection.drop("index", axis=1)
+                selection1 = selection
                 if res != []:
                     if len(res) == 1:
                         df = pd.DataFrame(res, columns=[
                             "FLIGHT NO", "ORIGIN", "DESTINATION", "DEPATURE_TIME", "ARRIVAL_TIME", "DURATION", "SEAT_ID"])
-                        print(df)
                         zz = df
                         seatid = df.iloc[0]["SEAT_ID"]
                         seatid = 1234
 
                         with open(os.getcwd()+'/SEATS/{}.txt'.format(seatid), 'r') as f:
                             seat_list = json.loads(f.read())
+                        indexx = [0, 1, 2, 3, 4, 5, 0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0, 16, 17, 18, 19, 20, 21,
+                                22, 23, 24, 25, 26, 0, 27, 28, 29, 30,  31, 32, 33, 34, 35, 36, 37, 38]
 
-                        df = pd.DataFrame(seat_list[1:], columns=seat_list[0])
+                        df = pd.DataFrame(seat_list[1:], columns=seat_list[0],index=indexx)
                         a = df.isin(["0"]).any()
                         b = []
                         for i in a:
@@ -595,7 +611,7 @@ def NEW_BOOKING():
                                 sys.exit()
                         else:
                             details = customer_input()
-                            print("\n", "="*4, 'SEAT SELECTION', "="*4, "\n")
+                            print("\n", "="*4, 'SEAT SELECTION FOR {} TO {}'.format(res[0][1],res[0][2]), "="*4, "\n")
                             print("\t0=AVAILABLE AND X=BOOKED\n")
                             print(df)
                             while True:
@@ -612,6 +628,7 @@ def NEW_BOOKING():
                                             print("\n", "="*4,
                                                   'ENTER A VALID OPTION', "="*4, "\n")
                                             continue
+                                    print(df.loc[int(ROW),COLUMN])
                                     if df.loc[int(ROW), COLUMN] == '0':
                                         df.loc[int(ROW), COLUMN] = "X"
                                         seats = [df.columns.values.tolist()] + \
@@ -629,11 +646,12 @@ def NEW_BOOKING():
                                     print("\n", "="*4,
                                           'ENTER A VALID OPTION', "="*4, "\n")
                                     continue
-
+                            selection1=pd.DataFrame()
                             Flight_no = zz.iloc[0]["FLIGHT NO"]
-                            print(Flight_no)
                             x = selection[selection["flight_no"] == Flight_no].index.values
+                            selection1=pd.concat(selection[x])
                             selection = selection.drop(x, axis=0)
+
 
                     else:
                         seatid = [res[0][-1], res[1][-1]]
@@ -641,8 +659,10 @@ def NEW_BOOKING():
                             seat1 = json.loads(f.read())
                         with open(os.getcwd()+'/SEATS/{}.txt'.format(seatid[1]), 'r') as f:
                             seat2 = json.loads(f.read())
-                        seat1 = pd.DataFrame(seat1[1:], columns=seat1[0])
-                        seat2 = pd.DataFrame(seat2[1:], columns=seat2[0])
+                        indexx = [0, 1, 2, 3, 4, 5, 0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0, 16, 17, 18, 19, 20, 21,
+                                22, 23, 24, 25, 26, 0, 27, 28, 29, 30,  31, 32, 33, 34, 35, 36, 37, 38]
+                        seat1 = pd.DataFrame(seat1[1:], columns=seat1[0],index=indexx)
+                        seat2 = pd.DataFrame(seat2[1:], columns=seat2[0],index=indexx)
                         a = seat1.isin(["0"]).any()
                         b = []
                         for i in a:
@@ -739,23 +759,20 @@ def NEW_BOOKING():
                                     print("\n", "="*4,
                                           'ENTER A VALID OPTION', "="*4, "\n")
                                     continue
-
+                            selection1=selection    
                             selection = pd.DataFrame()
 
                 selection = selection.reset_index()
                 selection = selection.drop("index", axis=1)
 
                 if selection.empty == False:
-                    print("abc")
                     details = customer_input()
-                    print(details)
                     if len(selection) == 1:
                         x = 1
                     else:
                         x = 2
 
                     for i in range(x):
-                        print(selection)
                         if x == 1:
                             print(
                                 "\n", "="*4, 'SEAT SELECTION FOR {} TO {}'.format(selection.iloc[0][1], selection.iloc[0][2]), "="*4, "\n")
@@ -779,7 +796,6 @@ def NEW_BOOKING():
                                               'ENTER A VALID OPTION', "="*4, "\n")
                                         continue
                                 seat_id = flight_seat(2)
-                                print(seat_id)
                                 if df.loc[ROW, COLUMN] == '0':
                                     df.loc[ROW, COLUMN] = "X"
                                     seats = [df.columns.values.tolist()] + df.values.tolist()
@@ -788,8 +804,6 @@ def NEW_BOOKING():
                                     print(df)
                                     list_seat_id.append(str(seat_id))
                                     list_seat.append(COLUMN+ROW)
-                                    print(list_seat_id)
-                                    print(list_seat)
                                     break
                                 else:
                                     print("\n", "="*4,
@@ -802,16 +816,9 @@ def NEW_BOOKING():
                                 continue
 
                             break
-                    while True:
-                        response = input("\nDO YOU WANT TO CONFIRM (Y/N): ")
-                        response = response.strip()
-                        if response.upper() == "Y":
-
-                            pass
+                
                 break
-
-        def ins_schedule():
-            pass
+                f_confirmation()
 
     dep_arrival_input()
     flights_extract()
