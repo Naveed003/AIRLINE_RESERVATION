@@ -449,14 +449,6 @@ def NEW_BOOKING():
             return details
 
         def f_confirmation():
-            while True:
-                response = input("\nDO YOU WANT TO CONFIRM (Y/N): ")
-                response = response.strip()
-                if response.upper() == "Y":
-                    break
-                else:
-                    main()
-                    break
             try:
 
                 if err == 1:
@@ -550,6 +542,29 @@ def NEW_BOOKING():
                     sel = selection1.reset_index()
                     sel = sel.drop("index", axis=1)
                     sel.loc[0, "DEPARTURE_TIME"] = a
+
+            print("\n", "="*8, 'SELECTION', "="*8, "\n")
+            sel.insert(6,"SEAT",list_seat)
+            price=[]
+            total=0
+            for i in range(len(sel)):
+                d=str(sel.loc[i,"PRICE (USD)"])
+                total+=int(d)
+                price.append(d)
+            sel=sel.drop("PRICE (USD)",axis=1)
+            print(sel)
+            sel=sel.drop("SEAT",axis=1)
+            sel.insert(6,"PRICE (USD)",price)
+            print("\nTOTAL FARE: ${:,.2f}".format(total))
+            while True:
+                response = input("\nDO YOU WANT TO CONFIRM (Y/N): ")
+                response = response.strip()
+                if response.upper() == "Y":
+                    break
+                else:
+                    main()
+                    break
+
             for i in range(len(list_seat_id)):
                 with open(os.getcwd()+'/SEATS/{}.txt'.format(list_seat_id[i]), 'r') as f:
                     seat_list = json.loads(f.read())
