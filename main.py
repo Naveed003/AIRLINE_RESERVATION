@@ -1,31 +1,5 @@
-from datetime import date
-import sqlite3
-import pandas as pd
-import time
-import random
-from random import randint
-import datetime
-from datetime import datetime
-from datetime import date
-import mysql.connector
-import calendar
-import os
-import re
-from FLIGHT_SEATS import *
-import phonenumbers
-import pycountry
-import sys
-import json
-pd.options.mode.chained_assignment = None
 # CHANGE DEFAULT CUSTOMER INFO
-# my sql connction
-mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
-                               passwd="Kf0GcKV5sh", port=3306, database="QxKi8MQlUR")
-mycursor = mydb.cursor()
-
 # main menu
-
-
 def main():
     print("="*20, "GIHS AIRLINE", "="*20)
     print("\n", "="*8, "MAIN MENU", "="*8, "\n")
@@ -486,25 +460,34 @@ def NEW_BOOKING():
             try:
 
                 if err == 1:
-                    print("aa")
-                    A = selection1.iloc[0]["ARRIVAL_TIME"]
+                    """ A = selection1.iloc[0]["ARRIVAL_TIME"]
                     A_ = str(selection1.iloc[1]["DEPARTURE_TIME"])
                     print(A)
                     print(A_)
                     A = str(A)
+                    print(A)
                     B = A_[-8:]
+                    print(B)
                     A = A[0:10]
+                    print(A)
                     A = A[-2:]
+                    print(A)
                     A = int(A)
+                    print(A)
                     bb = A+1
-                    A = str(selection1.iloc[0]["ARRIVAL_TIME"])
-                    a = A[:8]+str(bb)+" "+B
+                    print(bb) """
+                    timee=str(selection1.iloc[0]["ARRIVAL_TIME"])[-8:]
+                    datee=dep_date[0:8]+str((int(dep_date[-2:])+1))
+                    dep_time=datee+" "+timee
                     sel = selection1.reset_index()
                     sel = sel.drop("index", axis=1)
-                    sel.loc[1, "DEPARTURE_TIME"] = a
-                    print(sel)
+                    sel.loc[1, "DEPARTURE_TIME"] = dep_time
+                    timee=str(selection1.iloc[0]["DEPARTURE_TIME"])[-8:]
+                    datee=dep_date
+                    dep_time=dep_date+" "+timee
+                    sel.loc[0, "DEPARTURE_TIME"] = dep_time
+
                 elif err == 0:
-                    print("abc")
                     date = dep_date
 
                     arr_time1 = str(selection1.iloc[0]["ARRIVAL_TIME"])
@@ -530,6 +513,7 @@ def NEW_BOOKING():
                     sel = sel.drop("index", axis=1)
                     sel.loc[1, "DEPARTURE_TIME"] = a
 
+
             except Exception:
                 if len(selection1) == 1:
                     date = dep_date
@@ -539,8 +523,8 @@ def NEW_BOOKING():
                     sel = selection1.reset_index()
                     sel = sel.drop("index", axis=1)
                     sel.loc[0, "DEPARTURE_TIME"] = a
-                    print(sel)
                 else:
+                    date=dep_date
                     arr_time1 = str(selection1.iloc[0]["ARRIVAL_TIME"])
                     dep_time1 = str(selection1.iloc[0]["DEPARTURE_TIME"])
                     dep_time2 = str(selection1.iloc[1]["DEPARTURE_TIME"])
@@ -554,14 +538,11 @@ def NEW_BOOKING():
                     sel = selection1.reset_index()
                     sel = sel.drop("index", axis=1)
                     sel.loc[0, "DEPARTURE_TIME"] = a
-                    print(sel)
 
                     if arr_time1 < dep_time1:
-                        print(dep_date)
                         a = int(dep_date[-2:])
                         a += 1
                         date = date[:-2]+str(a)
-                        print(date)
                         A = str(selection1.iloc[0]["ARRIVAL_TIME"])
                         a = date+" "+dep_time2
                     else:
@@ -569,7 +550,6 @@ def NEW_BOOKING():
                     sel = selection1.reset_index()
                     sel = sel.drop("index", axis=1)
                     sel.loc[0, "DEPARTURE_TIME"] = a
-                    print(sel)
             for i in range(len(list_seat_id)):
                 with open(os.getcwd()+'/SEATS/{}.txt'.format(list_seat_id[i]), 'r') as f:
                     seat_list = json.loads(f.read())
@@ -590,20 +570,24 @@ def NEW_BOOKING():
                         sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'ORIGIN'], sel.loc[i, 'DESTINATION'], sel.loc[i, 'DEPARTURE_TIME'], sel.loc[i, 'ARRIVAL_TIME'], sel.loc[i, 'DURATION'], list_seat_id[i])
                     mycursor.execute(query)
                     mydb.commit()
-            """ etails = [customer_id, booking_id, customer_name, customer_phone,
+            """ details = [customer_id, booking_id, customer_name, customer_phone,
                         customer_email, customer_sex, customer_dob, customer_pp_num, a] """
-            query="select CUSTOMER_ID FROM customers where CUSTOMER_PASSPORT_NUMBER='{}'".fomrat(details[-2])
+            query="select CUSTOMER_ID FROM CUSTOMERS where CUSTOMER_PASSPORT_NUMBER='{}'".format(details[-2])
             mycursor.execute(query)
             res=mycursor.fetchall()
+            from datetime import date
             if res!=[]:
                 details[0]=res[0][0]
             else:
-                query="INSERT INTO CUSTOMERS VALUES({},'{}','{}','{}','{}','{}','{}','{}')".format(details[0],details[2],details[3],details[4],details[5],details[6],details[-1],details[-2])
-                
-            query = 'INSERT INTO BOOKINGS VALUES("{}","{}","{}","{}","{}","{}","{}")'.format(
-                details[0], details[1], sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'DEPARTURE_TIME'], list_seat[i], list_seat_id[i], sel.loc[i, 'PRICE (USD)'])
-            mycursor.execute(query)
-            mydb.commit()
+                query="INSERT INTO CUSTOMERS VALUES({},'{}','{}','{}','{}','{}','{}','{}','{}')".format(details[0],details[2],details[3],details[4],details[5],details[6],details[-1],details[-2],str(date.today()))
+                mycursor.execute(query)
+                mydb.commit()
+            for i in range(len(sel)):
+                query = 'INSERT INTO BOOKINGS VALUES("{}","{}","{}","{}","{}","{}","{}","{}")'.format(
+                    details[0], details[1], sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'DEPARTURE_TIME'], list_seat[i], list_seat_id[i], sel.loc[i, 'PRICE (USD)'],str(date.today()))
+                mycursor.execute(query)
+                mydb.commit()
+
             
 
         option = 1
@@ -936,13 +920,11 @@ def NEW_BOOKING():
                                 "\n", "="*4, 'SEAT SELECTION FOR {} TO {}'.format(selection.iloc[0][1], selection.iloc[0][2]), "="*4, "\n")
                             selection1 = pd.concat(
                                 [selection1, selection.iloc[0:1, :]], axis=0)
-                            print(selection1)
                         else:
                             print(
                                 "\n", "="*4, 'SEAT SELECTION FOR {} TO {}'.format(selection.iloc[1][1], selection.iloc[1][2]), "="*4, "\n")
                             selection1 = pd.concat(
                                 [selection1, selection.iloc[1:, :]], axis=0)
-                            print(selection1)
                         df = flight_seat(1)
                         print(df)
                         while True:
@@ -960,7 +942,6 @@ def NEW_BOOKING():
                                               'ENTER A VALID OPTION', "="*4, "\n")
                                         continue
                                 seat_id = flight_seat(2)
-                                print(df.loc[ROW, COLUMN])
                                 if df.loc[ROW, COLUMN] == '0':
                                     df.loc[ROW, COLUMN] = "X"
                                     seats = [df.columns.values.tolist()] + \
@@ -1014,5 +995,28 @@ def STAFF_LOGIN():
 def ABOUT():
     print("="*8, "ABOUT", "="*8)
 
-
-NEW_BOOKING()
+if __name__ == "__main__":
+    from datetime import date
+    import sqlite3
+    import pandas as pd
+    import time
+    import random
+    from random import randint
+    import datetime
+    from datetime import datetime
+    from datetime import date
+    import mysql.connector
+    import calendar
+    import os
+    import re
+    from FLIGHT_SEATS import *
+    import phonenumbers
+    import pycountry
+    import sys
+    import json
+    pd.options.mode.chained_assignment = None
+    # my sql connction
+    mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
+                               passwd="Kf0GcKV5sh", port=3306, database="QxKi8MQlUR")
+    mycursor = mydb.cursor()
+    main()
