@@ -2,17 +2,23 @@ import smtplib
 from email.message import EmailMessage
 msg = EmailMessage()
 msg['Subject'] = "AIRLINE BOOKING CONFIRMATION"
-msg['From'] = "gihs.hotel@gmail.com"
+msg['From'] = "gihs.airline@gmail.com"
 msg['To'] = "imnaveed2003@gmail.com"
-message = """
+MESSAGE="""
 DEAR {},
+
 This email is to confirm your booking on {} 
+========================================
+FLIGHT DETAILS
 
 {}
 
+========================================
 PASSENGER DETAILS
 
 {}
+
+========================================
 
 
 Further details of your bookings are listed below:
@@ -53,16 +59,13 @@ ABOUT THIS TRIP:
 
 We are looking forward to your visit and hope that you enjoy your stay
 Best regards
-"""
+""".format(1,2,3,4,5,6)
 
-msg.set_content(message)
-print(message)
-
+msg.set_content(MESSAGE)
 with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
     smtp.ehlo()
     smtp.starttls()
     smtp.ehlo()
-
-    smtp.login("gihs.airline", "naveedzzansh")
+    smtp.login("gihs.airline@gmail.com", "naveedzzansh")
 
     smtp.send_message(msg)

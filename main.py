@@ -807,13 +807,12 @@ We are looking forward to your visit and hope that you enjoy your stay
 Best regards
 """.format(details[2].upper(),date,DET,pp_detail,booking_id,total)
 
-                msg.set_content(message)
+                msg.set_content(MESSAGE)
                 with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
                     smtp.ehlo()
                     smtp.starttls()
                     smtp.ehlo()
-
-                    smtp.login("gihs.airline", "naveedzzansh")
+                    smtp.login("gihs.airline@gmail.com", "naveedzzansh")
 
                     smtp.send_message(msg)
 
