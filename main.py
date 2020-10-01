@@ -18,8 +18,6 @@ import sys
 import json
 pd.options.mode.chained_assignment = None
 # CHANGE DEFAULT CUSTOMER INFO
-
-
 # my sql connction
 mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
                                passwd="Kf0GcKV5sh", port=3306, database="QxKi8MQlUR")
@@ -485,7 +483,6 @@ def NEW_BOOKING():
                 else:
                     main()
                     break
-            print(list_seat_id, list_seat)
             try:
 
                 if err == 1:
@@ -522,11 +519,9 @@ def NEW_BOOKING():
                     selection1.loc[0, "DEPARTURE_TIME"] = a
 
                     if arr_time1 < dep_time1:
-                        print(dep_date)
                         a = int(dep_date[-2:])
                         a += 1
                         date = date[:-2]+str(a)
-                        print(date)
                         A = str(selection1.iloc[0]["ARRIVAL_TIME"])
                         a = date+" "+dep_time2
                     else:
@@ -534,7 +529,6 @@ def NEW_BOOKING():
                     sel = selection1.reset_index()
                     sel = sel.drop("index", axis=1)
                     sel.loc[1, "DEPARTURE_TIME"] = a
-                    print(sel)
 
             except Exception:
                 if len(selection1) == 1:
@@ -587,7 +581,6 @@ def NEW_BOOKING():
                 sel.loc[i, 'ARRIVAL_TIME'] = a
                 a = str(sel.loc[i, 'DURATION'])[-8:]
                 sel.loc[i, 'DURATION'] = a
-                print(sel.loc[i, 'DURATION'])
                 query = 'select FLIGHT_NO FROM SCHEDULE WHERE FLIGHT_NO = "{}" AND ORIGIN ="{}" AND DESTINATION ="{}" AND DEPATURE_TIME = "{}"'.format(
                     sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'ORIGIN'], sel.loc[i, 'DESTINATION'], sel.loc[i, 'DEPARTURE_TIME'])
                 mycursor.execute(query)
@@ -597,12 +590,21 @@ def NEW_BOOKING():
                         sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'ORIGIN'], sel.loc[i, 'DESTINATION'], sel.loc[i, 'DEPARTURE_TIME'], sel.loc[i, 'ARRIVAL_TIME'], sel.loc[i, 'DURATION'], list_seat_id[i])
                     mycursor.execute(query)
                     mydb.commit()
-                query = 'INSERT INTO BOOKINGS VALUES("{}","{}","{}","{}","{}","{}","{}")'.format(
-                    details[0], details[1], sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'DEPARTURE_TIME'], list_seat[i], list_seat_id[i], sel.loc[i, 'PRICE (USD)'])
-                mycursor.execute(query)
-                mydb.commit()
-
-                print(query)
+            """ etails = [customer_id, booking_id, customer_name, customer_phone,
+                        customer_email, customer_sex, customer_dob, customer_pp_num, a] """
+            query="select CUSTOMER_ID FROM customers where CUSTOMER_PASSPORT_NUMBER='{}'".fomrat(details[-2])
+            mycursor.execute(query)
+            res=mycursor.fetchall()
+            if res!=[]:
+                details[0]=res[0][0]
+            else:
+                query="INSERT INTO CUSTOMERS VALUES({},'{}','{}','{}','{}','{}','{}','{}')".format(details[0],details[2],details[3],details[4],details[5],details[6],details[-1],details[-2])
+                
+            query = 'INSERT INTO BOOKINGS VALUES("{}","{}","{}","{}","{}","{}","{}")'.format(
+                details[0], details[1], sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'DEPARTURE_TIME'], list_seat[i], list_seat_id[i], sel.loc[i, 'PRICE (USD)'])
+            mycursor.execute(query)
+            mydb.commit()
+            
 
         option = 1
         details = []
@@ -961,7 +963,8 @@ def NEW_BOOKING():
                                 print(df.loc[ROW, COLUMN])
                                 if df.loc[ROW, COLUMN] == '0':
                                     df.loc[ROW, COLUMN] = "X"
-                                    seats = [df.columns.values.tolist()] + df.values.tolist()
+                                    seats = [df.columns.values.tolist()] + \
+                                        df.values.tolist()
                                     with open('seats/{}.txt'.format(seat_id), 'w') as f:
                                         f.write(json.dumps(seats))
                                     print(df)
