@@ -442,58 +442,94 @@ def NEW_BOOKING():
 
             while True:
                 customer_pp_num = "12345678"
+                query = "select P_NUMBER,P_NAME,P_EXPIRY FROM PASSPORT WHERE P_NUMBER='{}'".format(
+                    customer_pp_num)
+                mycursor.execute(query)
+                res = mycursor.fetchall()
                 if len(customer_pp_num) < 5:
                     print("\n", "="*4,
                           'ENTER A VALID PASSPORT NUMBER', "="*4, "\n")
                     continue
                 else:
-                    while True:
-                        customer_pp_name = input(
-                            "\nENTER NAME ACCORDING TO PASSPORT: ")
-                        customer_pp_name = customer_pp_name.strip()
-                        customer_pp_name = customer_pp_name.upper()
-                        if customer_pp_name != "":
-                            while True:
-                                customer_pp_expiry = input(
-                                    "\nENTER EXPIRY OF PASSPORT (YYYY-MM-DD): ")
-                                try:
-                                    customer_pp_expiry = datetime.datetime.strptime(
-                                        customer_pp_expiry, "%Y-%m-%d")
-                                    customer_pp_expiry = str(
-                                        customer_pp_expiry)
-                                    customer_pp_expiry = customer_pp_expiry[0:10]
-                                    break
-                                except:
-                                    print(
-                                        "\n", "="*4, 'ENTER A VALID PASSPORT EXPIRY', "="*4, "\n")
-                                    continue
-                                if str(customer_pp_expiry) >= dep_date:
-                                    break
-                                else:
-                                    print(
-                                        "\n", "="*4, 'SORRY YOUR PASSPORT IS EXPIRED', "="*4, "\n")
-                                    time.sleep(4)
-                                    sys.exit()
-                            break
+                    if res != []:
+                        while True:
+                            customer_pp_name = input(
+                                "\nENTER NAME ACCORDING TO PASSPORT: ")
+                            customer_pp_name = customer_pp_name.strip()
+                            customer_pp_name = customer_pp_name.upper()
+                            if res[0][1] == customer_pp_name:
+                                while True:
+                                    customer_pp_expiry = input(
+                                        "\nENTER EXPIRY OF PASSPORT (YYYY-MM-DD): ")
+                                    try:
+                                        customer_pp_expiry = datetime.datetime.strptime(
+                                            customer_pp_expiry, "%Y-%m-%d")
+                                        customer_pp_expiry = str(
+                                            customer_pp_expiry)
+                                        customer_pp_expiry = customer_pp_expiry[0:10]
+                                    except:
+                                        print(
+                                            "\n", "="*4, 'PASSPORT EXPIRY DOES NOT MATCH OUR DB', "="*4, "\n")
+                                        continue
+                                    date1 = dep_date[:8]+str(int(dep_date[-2])+1)
+                                    if str(res[0][2]) == customer_pp_expiry:
+                                        break
+                                    else:
+                                        print(
+                                            "\n", "="*4, 'PASSPORT EXPIRY DOES NOT MATCH OUR DB', "="*4, "\n")
+                                        continue
+                                break
+                            else:
+                                print(
+                                    "\n", "="*4, 'NAME YOU ENTERED DOES NOT MATCH OUR DB', "="*4, "\n")
+                                continue
 
-                        else:
-                            print(
-                                "\n", "="*4, 'ENTER NAME ACCORDING TO PASSPORT', "="*4, "\n")
-                            continue
+                    else:
+
+                        while True:
+                            customer_pp_name = input(
+                                "\nENTER NAME ACCORDING TO PASSPORT: ")
+                            customer_pp_name = customer_pp_name.strip()
+                            customer_pp_name = customer_pp_name.upper()
+                            if customer_pp_name != "":
+                                while True:
+                                    customer_pp_expiry = input(
+                                        "\nENTER EXPIRY OF PASSPORT (YYYY-MM-DD): ")
+                                    try:
+                                        customer_pp_expiry = datetime.datetime.strptime(
+                                            customer_pp_expiry, "%Y-%m-%d")
+                                        customer_pp_expiry = str(
+                                            customer_pp_expiry)
+                                        customer_pp_expiry = customer_pp_expiry[0:10]
+                                        break
+                                    except:
+                                        print(
+                                            "\n", "="*4, 'ENTER A VALID PASSPORT EXPIRY', "="*4, "\n")
+                                        continue
+                                    if str(customer_pp_expiry) >= dep_date:
+                                        break
+                                    else:
+                                        print(
+                                            "\n", "="*4, 'SORRY YOUR PASSPORT IS EXPIRED', "="*4, "\n")
+                                        time.sleep(4)
+                                        sys.exit()
+                                break
+
+                            else:
+                                print(
+                                    "\n", "="*4, 'ENTER NAME ACCORDING TO PASSPORT', "="*4, "\n")
+                                continue
 
                     break
-            PP_DETAILS = [customer_pp_num,
-                          customer_pp_name, customer_pp_expiry]
+            PP_DETAILS = [customer_pp_num.upper(),
+                          customer_pp_name.upper(), customer_pp_expiry.upper()]
             details = [customer_id, booking_id, customer_name, customer_phone,
                        customer_email, customer_sex, customer_dob, customer_pp_num, a, PP_DETAILS]
             return details
 
         def f_confirmation():
-            print(details)
-            print(list_seat,list_seat_id)
-            if len(selection1)!=1:
+            if len(selection1) != 1:
                 try:
-
                     if err == 1:
                         """ A = selection1.iloc[0]["ARRIVAL_TIME"]
                         A_ = str(selection1.iloc[1]["DEPARTURE_TIME"])
@@ -616,57 +652,101 @@ def NEW_BOOKING():
                 else:
                     main()
                     break
+            try:
 
-            for i in range(len(list_seat_id)):
-                with open(os.getcwd()+'/SEATS/{}.txt'.format(list_seat_id[i]), 'r') as f:
-                    seat_list = json.loads(f.read())
-                with open('SEATS/{}.txt'.format(list_seat_id[i]), 'w') as f:
-                    f.write(json.dumps(SEATS_1[i]))
-
-            for i in range(len(sel)):
-                a = str(sel.loc[i, 'ARRIVAL_TIME'])[-8:]
-                sel.loc[i, 'ARRIVAL_TIME'] = a
-                a = str(sel.loc[i, 'DURATION'])[-8:]
-                sel.loc[i, 'DURATION'] = a
-                query = 'select FLIGHT_NO FROM SCHEDULE WHERE FLIGHT_NO = "{}" AND ORIGIN ="{}" AND DESTINATION ="{}" AND DEPATURE_TIME = "{}"'.format(
-                    sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'ORIGIN'], sel.loc[i, 'DESTINATION'], sel.loc[i, 'DEPARTURE_TIME'])
+                for i in range(len(sel)):
+                    a = str(sel.loc[i, 'ARRIVAL_TIME'])[-8:]
+                    sel.loc[i, 'ARRIVAL_TIME'] = a
+                    a = str(sel.loc[i, 'DURATION'])[-8:]
+                    sel.loc[i, 'DURATION'] = a
+                    query = 'select FLIGHT_NO FROM SCHEDULE WHERE FLIGHT_NO = "{}" AND ORIGIN ="{}" AND DESTINATION ="{}" AND DEPATURE_TIME = "{}"'.format(
+                        sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'ORIGIN'], sel.loc[i, 'DESTINATION'], sel.loc[i, 'DEPARTURE_TIME'])
+                    mycursor.execute(query)
+                    res = mycursor.fetchall()
+                    if res == []:
+                        query = 'INSERT INTO SCHEDULE VALUES ("{}","{}","{}","{}","{}","{}","{}")'.format(
+                            sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'ORIGIN'], sel.loc[i, 'DESTINATION'], sel.loc[i, 'DEPARTURE_TIME'], sel.loc[i, 'ARRIVAL_TIME'], sel.loc[i, 'DURATION'], list_seat_id[i])
+                        mycursor.execute(query)
+                        mydb.commit()
+                """ details = [customer_id, booking_id, customer_name, customer_phone,
+                            customer_email, customer_sex, customer_dob, customer_pp_num, a,PP_DETAILS] """
+                query = "select CUSTOMER_ID,CUSTOMER_NAME,CUSTOMER_PHONE,CUSTOMER_EMAIL,CUSTOMER_SEX,CUSTOMER_DOB,CUSTOMER_NATIONALITY,CUSTOMER_PASSPORT_NUMBER FROM CUSTOMERS where CUSTOMER_PASSPORT_NUMBER='{}' AND CUSTOMER_NAME='{}' AND CUSTOMER_PHONE='{}' AND CUSTOMER_EMAIL='{}' AND CUSTOMER_SEX='{}' AND CUSTOMER_DOB='{}' AND CUSTOMER_NATIONALITY='{}'".format(
+                    details[-3], details[2], details[3], details[4], details[5], details[6], details[8])
                 mycursor.execute(query)
                 res = mycursor.fetchall()
-                if res == []:
-                    query = 'INSERT INTO SCHEDULE VALUES ("{}","{}","{}","{}","{}","{}","{}")'.format(
-                        sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'ORIGIN'], sel.loc[i, 'DESTINATION'], sel.loc[i, 'DEPARTURE_TIME'], sel.loc[i, 'ARRIVAL_TIME'], sel.loc[i, 'DURATION'], list_seat_id[i])
-                    mycursor.execute(query)
-                    mydb.commit()
-            """ details = [customer_id, booking_id, customer_name, customer_phone,
-                        customer_email, customer_sex, customer_dob, customer_pp_num, a,PP_DETAILS] """
-            query = "select CUSTOMER_ID,CUSTOMER_NAME,CUSTOMER_PHONE,CUSTOMER_EMAIL,CUSTOMER_SEX,CUSTOMER_DOB,CUSTOMER_NATIONALITY,CUSTOMER_PASSPORT_NUMBER FROM CUSTOMERS where CUSTOMER_PASSPORT_NUMBER='{}' AND CUSTOMER_NAME='{}' AND CUSTOMER_PHONE='{}' AND CUSTOMER_EMAIL='{}' AND CUSTOMER_SEX='{}' AND CUSTOMER_DOB='{}' AND CUSTOMER_NATIONALITY='{}'".format(
-                details[-3], details[2], details[3], details[4], details[5], details[6],details[8])
-            mycursor.execute(query)
-            res = mycursor.fetchall()
-            from datetime import date
-            if res != []:
-                res1=[]
-                for i in res:
-                    for j in i:
-                        res1.append(str(j))
-                if res1[1:]==[details[2], details[3], details[4], details[5], details[6],details[8],details[-3]]:
-                    details[0]=res[0][0]
+                from datetime import date
+                if res != []:
+                    res1 = []
+                    for i in res:
+                        for j in i:
+                            res1.append(str(j))
+                    if res1[1:] == [details[2], details[3], details[4], details[5], details[6], details[8], details[-3]]:
+                        details[0] = res[0][0]
+                    else:
+                        query = "INSERT INTO CUSTOMERS VALUES({},'{}','{}','{}','{}','{}','{}','{}','{}')".format(
+                            details[0], details[2], details[3], details[4], details[5], details[6], details[-2], details[-3], str(date.today()))
+                        mycursor.execute(query)
+                        mydb.commit()
+
                 else:
                     query = "INSERT INTO CUSTOMERS VALUES({},'{}','{}','{}','{}','{}','{}','{}','{}')".format(
-                    details[0], details[2], details[3], details[4], details[5], details[6], details[-2], details[-3], str(date.today()))
+                        details[0], details[2], details[3], details[4], details[5], details[6], details[-2], details[-3], str(date.today()))
+                    mycursor.execute(query)
+                    mydb.commit()
+                for i in range(len(sel)):
+                    query = 'INSERT INTO BOOKINGS VALUES("{}","{}","{}","{}","{}","{}","{}","{}")'.format(
+                        details[0], details[1], sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'DEPARTURE_TIME'], list_seat[i], list_seat_id[i], sel.loc[i, 'PRICE (USD)'], str(date.today()))
+                    mycursor.execute(query)
+                    mydb.commit()
+                query="select P_NUMBER,P_NAME,P_EXPIRY FROM PASSPORT"
+                pp_details=details[-1]
+                mycursor.execute(query)
+                res=mycursor.fetchall()
+                temp=[]
+                res1=[]
+                if res!=[]:
+                    for i in res:
+                        for j in i:
+                            temp.append(str(j))
+                        res1.append(temp)
+                        temp=[]
+                    if pp_details in res1:
+                        pass
+                    else:
+                        query="insert into PASSPORT VALUES({},'{}','{}','{}')".format(int(details[0]),pp_details[0],pp_details[1],pp_details[2])
+                        mycursor.execute(query)
+                        mydb.commit()
+                else:
+                    query="insert into PASSPORT VALUES({},'{}','{}','{}')".format(int(details[0]),pp_details[0],pp_details[1],pp_details[2])
+                 
                     mycursor.execute(query)
                     mydb.commit()
 
-            else:
-                query = "INSERT INTO CUSTOMERS VALUES({},'{}','{}','{}','{}','{}','{}','{}','{}')".format(
-                    details[0], details[2], details[3], details[4], details[5], details[6], details[-2], details[-3], str(date.today()))
-                mycursor.execute(query)
-                mydb.commit()
-            for i in range(len(sel)):
-                query = 'INSERT INTO BOOKINGS VALUES("{}","{}","{}","{}","{}","{}","{}","{}")'.format(
-                    details[0], details[1], sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'DEPARTURE_TIME'], list_seat[i], list_seat_id[i], sel.loc[i, 'PRICE (USD)'], str(date.today()))
-                mycursor.execute(query)
-                mydb.commit()
+                for i in range(len(list_seat_id)):
+                    with open(os.getcwd()+'/SEATS/{}.txt'.format(list_seat_id[i]), 'r') as f:
+                        seat_list = json.loads(f.read())
+                    with open('SEATS/{}.txt'.format(list_seat_id[i]), 'w') as f:
+                        f.write(json.dumps(SEATS_1[i]))
+                
+                
+
+            except Exception:
+                print("\n", "="*8, 'ERROR WHILE BOOKING FLIGHTS', "="*8, "\n")
+                message = """
+ERROR WHILE BOOKING FLIGHTS
+PLEASE TRY AGAIN LATER
+
+IF ERROR CONTINUES 
+FEEL FREE TO CONTACT USAT
+
+gihs.airline@gmail.com
+
+"""
+                print(message)
+                time.sleep(3)
+                main()
+
+            
 
         option = 1
         details = []
@@ -977,10 +1057,10 @@ def NEW_BOOKING():
                 else:
                     selection = selection.reset_index()
                     selection = selection.drop("index", axis=1)
-                    col=[]
+                    col = []
                     for i in selection.columns:
                         col.append(i)
-                    selection1=pd.DataFrame(columns=col)
+                    selection1 = pd.DataFrame(columns=col)
                 selection = selection.reset_index()
                 selection = selection.drop("index", axis=1)
                 if selection.empty == False:
@@ -1104,4 +1184,4 @@ if __name__ == "__main__":
     mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
                                    passwd="Kf0GcKV5sh", port=3306, database="QxKi8MQlUR")
     mycursor = mydb.cursor()
-    main()
+    NEW_BOOKING()
