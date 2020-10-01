@@ -360,8 +360,9 @@ def NEW_BOOKING():
                     break
 
             while True:  # taking input for name
-                customer_name = "NAVEED"
+                customer_name = "NAVEEDD"
                 customer_name = customer_name.strip()
+                customer_name = customer_name.upper()
                 if customer_name == "":
                     print("\n", "="*4,
                           'PLEASE ENTER YOUR NAME', "="*4, "\n")
@@ -385,6 +386,7 @@ def NEW_BOOKING():
             while True:  # taking input and valiation for EMAIL
                 customer_email = "imnaveed2003@gmail.com"
                 customer_email = customer_email.strip()
+                customer_email = customer_email.lower()
                 regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
                 if(re.search(regex, customer_email)):
                     break
@@ -408,18 +410,18 @@ def NEW_BOOKING():
                 import datetime
 
                 customer_dob = "2003-04-20"
-
+                try:
+                    date_of_birth = datetime.datetime.strptime(
+                        customer_dob, "%Y-%m-%d")
+                    customer_dob = str(date_of_birth)
+                    customer_dob = customer_dob[0:10]
+                    break
+                except:
+                    print(
+                        "\n", "="*4, 'ENTER A VALID DATE OF BIRTH', "="*4, "\n")
+                    continue
                 if str(date.today()) > customer_dob:
-                    try:
-                        date_of_birth = datetime.datetime.strptime(
-                            customer_dob, "%Y-%m-%d")
-                        customer_dob = str(date_of_birth)
-                        customer_dob = customer_dob[0:10]
-                        break
-                    except:
-                        print(
-                            "\n", "="*4, 'ENTER A VALID DATE OF BIRTH', "="*4, "\n")
-                        continue
+                    break
 
                 else:
                     print("\n", "="*4,
@@ -429,12 +431,15 @@ def NEW_BOOKING():
 
                 a = "INDIA"
                 b = list(pycountry.countries)
+                a = a.strip()
+                a = a.upper()
                 if pycountry.countries.get(name=a) != None:
                     break
 
                 else:
                     print("\n", "="*4, 'ENTER A VALID COUNTRY', "="*4, "\n")
                     continue
+
             while True:
                 customer_pp_num = "12345678"
                 if len(customer_pp_num) < 5:
@@ -442,119 +447,166 @@ def NEW_BOOKING():
                           'ENTER A VALID PASSPORT NUMBER', "="*4, "\n")
                     continue
                 else:
-                    break
+                    while True:
+                        customer_pp_name = input(
+                            "\nENTER NAME ACCORDING TO PASSPORT: ")
+                        customer_pp_name = customer_pp_name.strip()
+                        customer_pp_name = customer_pp_name.upper()
+                        if customer_pp_name != "":
+                            while True:
+                                customer_pp_expiry = input(
+                                    "\nENTER EXPIRY OF PASSPORT (YYYY-MM-DD): ")
+                                try:
+                                    customer_pp_expiry = datetime.datetime.strptime(
+                                        customer_pp_expiry, "%Y-%m-%d")
+                                    customer_pp_expiry = str(
+                                        customer_pp_expiry)
+                                    customer_pp_expiry = customer_pp_expiry[0:10]
+                                    break
+                                except:
+                                    print(
+                                        "\n", "="*4, 'ENTER A VALID PASSPORT EXPIRY', "="*4, "\n")
+                                    continue
+                                if str(customer_pp_expiry) >= dep_date:
+                                    break
+                                else:
+                                    print(
+                                        "\n", "="*4, 'SORRY YOUR PASSPORT IS EXPIRED', "="*4, "\n")
+                                    time.sleep(4)
+                                    sys.exit()
+                            break
 
+                        else:
+                            print(
+                                "\n", "="*4, 'ENTER NAME ACCORDING TO PASSPORT', "="*4, "\n")
+                            continue
+
+                    break
+            PP_DETAILS = [customer_pp_num,
+                          customer_pp_name, customer_pp_expiry]
             details = [customer_id, booking_id, customer_name, customer_phone,
-                       customer_email, customer_sex, customer_dob, customer_pp_num, a]
+                       customer_email, customer_sex, customer_dob, customer_pp_num, a, PP_DETAILS]
             return details
 
         def f_confirmation():
-            try:
+            print(details)
+            print(list_seat,list_seat_id)
+            if len(selection1)!=1:
+                try:
 
-                if err == 1:
-                    """ A = selection1.iloc[0]["ARRIVAL_TIME"]
-                    A_ = str(selection1.iloc[1]["DEPARTURE_TIME"])
-                    print(A)
-                    print(A_)
-                    A = str(A)
-                    print(A)
-                    B = A_[-8:]
-                    print(B)
-                    A = A[0:10]
-                    print(A)
-                    A = A[-2:]
-                    print(A)
-                    A = int(A)
-                    print(A)
-                    bb = A+1
-                    print(bb) """
-                    timee=str(selection1.iloc[0]["ARRIVAL_TIME"])[-8:]
-                    datee=dep_date[0:8]+str((int(dep_date[-2:])+1))
-                    dep_time=datee+" "+timee
-                    sel = selection1.reset_index()
-                    sel = sel.drop("index", axis=1)
-                    sel.loc[1, "DEPARTURE_TIME"] = dep_time
-                    timee=str(selection1.iloc[0]["DEPARTURE_TIME"])[-8:]
-                    datee=dep_date
-                    dep_time=dep_date+" "+timee
-                    sel.loc[0, "DEPARTURE_TIME"] = dep_time
+                    if err == 1:
+                        """ A = selection1.iloc[0]["ARRIVAL_TIME"]
+                        A_ = str(selection1.iloc[1]["DEPARTURE_TIME"])
+                        print(A)
+                        print(A_)
+                        A = str(A)
+                        print(A)
+                        B = A_[-8:]
+                        print(B)
+                        A = A[0:10]
+                        print(A)
+                        A = A[-2:]
+                        print(A)
+                        A = int(A)
+                        print(A)
+                        bb = A+1
+                        print(bb) """
+                        timee = str(selection1.iloc[0]["ARRIVAL_TIME"])[-8:]
+                        datee = dep_date[0:8]+str((int(dep_date[-2:])+1))
+                        dep_time = datee+" "+timee
+                        sel = selection1.reset_index()
+                        sel = sel.drop("index", axis=1)
+                        sel.loc[1, "DEPARTURE_TIME"] = dep_time
+                        timee = str(selection1.iloc[0]["DEPARTURE_TIME"])[-8:]
+                        datee = dep_date
+                        dep_time = dep_date+" "+timee
+                        sel.loc[0, "DEPARTURE_TIME"] = dep_time
 
-                elif err == 0:
-                    date = dep_date
+                    elif err == 0:
+                        date = dep_date
 
-                    arr_time1 = str(selection1.iloc[0]["ARRIVAL_TIME"])
-                    dep_time1 = str(selection1.iloc[0]["DEPARTURE_TIME"])
-                    dep_time2 = str(selection1.iloc[1]["DEPARTURE_TIME"])
+                        arr_time1 = str(selection1.iloc[0]["ARRIVAL_TIME"])
+                        dep_time1 = str(selection1.iloc[0]["DEPARTURE_TIME"])
+                        dep_time2 = str(selection1.iloc[1]["DEPARTURE_TIME"])
 
-                    arr_time1 = arr_time1[-8:]
-                    dep_time1 = dep_time1[-8:]
-                    dep_time2 = dep_time2[-8:]
+                        arr_time1 = arr_time1[-8:]
+                        dep_time1 = dep_time1[-8:]
+                        dep_time2 = dep_time2[-8:]
 
-                    a = date+" "+dep_time1
-                    selection1.loc[0, "DEPARTURE_TIME"] = a
-
-                    if arr_time1 < dep_time1:
-                        a = int(dep_date[-2:])
-                        a += 1
-                        date = date[:-2]+str(a)
-                        A = str(selection1.iloc[0]["ARRIVAL_TIME"])
-                        a = date+" "+dep_time2
-                    else:
-                        a = date+" "+dep_time2
-                    sel = selection1.reset_index()
-                    sel = sel.drop("index", axis=1)
-                    sel.loc[1, "DEPARTURE_TIME"] = a
-
-
-            except Exception:
-                if len(selection1) == 1:
-                    date = dep_date
-                    dep_time1 = str(selection1.iloc[0]["DEPARTURE_TIME"])
-                    dep_time1 = dep_time1[-8:]
-                    a = date+" "+dep_time1
-                    sel = selection1.reset_index()
-                    sel = sel.drop("index", axis=1)
-                    sel.loc[0, "DEPARTURE_TIME"] = a
-                else:
-                    date=dep_date
-                    arr_time1 = str(selection1.iloc[0]["ARRIVAL_TIME"])
-                    dep_time1 = str(selection1.iloc[0]["DEPARTURE_TIME"])
-                    dep_time2 = str(selection1.iloc[1]["DEPARTURE_TIME"])
-
-                    arr_time1 = arr_time1[-8:]
-                    dep_time1 = dep_time1[-8:]
-                    dep_time2 = dep_time2[-8:]
-
-                    a = date+" "+dep_time1
-
-                    sel = selection1.reset_index()
-                    sel = sel.drop("index", axis=1)
-                    sel.loc[0, "DEPARTURE_TIME"] = a
-
-                    if arr_time1 < dep_time1:
-                        a = int(dep_date[-2:])
-                        a += 1
-                        date = date[:-2]+str(a)
-                        A = str(selection1.iloc[0]["ARRIVAL_TIME"])
-                        a = date+" "+dep_time2
-                    else:
                         a = date+" "+dep_time1
-                    sel = selection1.reset_index()
-                    sel = sel.drop("index", axis=1)
-                    sel.loc[0, "DEPARTURE_TIME"] = a
+                        selection1.loc[0, "DEPARTURE_TIME"] = a
 
+                        if arr_time1 < dep_time1:
+                            a = int(dep_date[-2:])
+                            a += 1
+                            date = date[:-2]+str(a)
+                            A = str(selection1.iloc[0]["ARRIVAL_TIME"])
+                            a = date+" "+dep_time2
+                        else:
+                            a = date+" "+dep_time2
+                        sel = selection1.reset_index()
+                        sel = sel.drop("index", axis=1)
+                        sel.loc[1, "DEPARTURE_TIME"] = a
+
+                except Exception:
+                    if len(selection1) == 1:
+                        date = dep_date
+                        dep_time1 = str(selection1.iloc[0]["DEPARTURE_TIME"])
+                        dep_time1 = dep_time1[-8:]
+                        a = date+" "+dep_time1
+                        sel = selection1.reset_index()
+                        sel = sel.drop("index", axis=1)
+                        sel.loc[0, "DEPARTURE_TIME"] = a
+                    else:
+                        date = dep_date
+                        arr_time1 = str(selection1.iloc[0]["ARRIVAL_TIME"])
+                        dep_time1 = str(selection1.iloc[0]["DEPARTURE_TIME"])
+                        dep_time2 = str(selection1.iloc[1]["DEPARTURE_TIME"])
+
+                        arr_time1 = arr_time1[-8:]
+                        dep_time1 = dep_time1[-8:]
+                        dep_time2 = dep_time2[-8:]
+
+                        a = date+" "+dep_time1
+
+                        sel = selection1.reset_index()
+                        sel = sel.drop("index", axis=1)
+                        sel.loc[0, "DEPARTURE_TIME"] = a
+
+                        if arr_time1 < dep_time1:
+                            a = int(dep_date[-2:])
+                            a += 1
+                            date = date[:-2]+str(a)
+                            A = str(selection1.iloc[0]["ARRIVAL_TIME"])
+                            a = date+" "+dep_time2
+                        else:
+                            a = date+" "+dep_time1
+                        sel = selection1.reset_index()
+                        sel = sel.drop("index", axis=1)
+                        sel.loc[0, "DEPARTURE_TIME"] = a
+            else:
+                timee = str(selection1.iloc[0]["ARRIVAL_TIME"])[-8:]
+                datee = dep_date
+                dep_time = datee+" "+timee
+                sel = selection1.reset_index()
+                sel = sel.drop("index", axis=1)
+                sel.loc[0, "DEPARTURE_TIME"] = dep_time
+                timee = str(selection1.iloc[0]["DEPARTURE_TIME"])[-8:]
+                datee = dep_date
+                dep_time = dep_date+" "+timee
+                sel.loc[0, "DEPARTURE_TIME"] = dep_time
             print("\n", "="*8, 'SELECTION', "="*8, "\n")
-            sel.insert(6,"SEAT",list_seat)
-            price=[]
-            total=0
+            sel.insert(6, "SEAT", list_seat)
+            price = []
+            total = 0
             for i in range(len(sel)):
-                d=str(sel.loc[i,"PRICE (USD)"])
-                total+=int(d)
+                d = str(sel.loc[i, "PRICE (USD)"])
+                total += int(d)
                 price.append(d)
-            sel=sel.drop("PRICE (USD)",axis=1)
+            sel = sel.drop("PRICE (USD)", axis=1)
             print(sel)
-            sel=sel.drop("SEAT",axis=1)
-            sel.insert(6,"PRICE (USD)",price)
+            sel = sel.drop("SEAT", axis=1)
+            sel.insert(6, "PRICE (USD)", price)
             print("\nTOTAL FARE: ${:,.2f}".format(total))
             while True:
                 response = input("\nDO YOU WANT TO CONFIRM (Y/N): ")
@@ -586,24 +638,35 @@ def NEW_BOOKING():
                     mycursor.execute(query)
                     mydb.commit()
             """ details = [customer_id, booking_id, customer_name, customer_phone,
-                        customer_email, customer_sex, customer_dob, customer_pp_num, a] """
-            query="select CUSTOMER_ID FROM CUSTOMERS where CUSTOMER_PASSPORT_NUMBER='{}'".format(details[-2])
+                        customer_email, customer_sex, customer_dob, customer_pp_num, a,PP_DETAILS] """
+            query = "select CUSTOMER_ID,CUSTOMER_NAME,CUSTOMER_PHONE,CUSTOMER_EMAIL,CUSTOMER_SEX,CUSTOMER_DOB,CUSTOMER_NATIONALITY,CUSTOMER_PASSPORT_NUMBER FROM CUSTOMERS where CUSTOMER_PASSPORT_NUMBER='{}' AND CUSTOMER_NAME='{}' AND CUSTOMER_PHONE='{}' AND CUSTOMER_EMAIL='{}' AND CUSTOMER_SEX='{}' AND CUSTOMER_DOB='{}' AND CUSTOMER_NATIONALITY='{}'".format(
+                details[-3], details[2], details[3], details[4], details[5], details[6],details[8])
             mycursor.execute(query)
-            res=mycursor.fetchall()
+            res = mycursor.fetchall()
             from datetime import date
-            if res!=[]:
-                details[0]=res[0][0]
+            if res != []:
+                res1=[]
+                for i in res:
+                    for j in i:
+                        res1.append(str(j))
+                if res1[1:]==[details[2], details[3], details[4], details[5], details[6],details[8],details[-3]]:
+                    details[0]=res[0][0]
+                else:
+                    query = "INSERT INTO CUSTOMERS VALUES({},'{}','{}','{}','{}','{}','{}','{}','{}')".format(
+                    details[0], details[2], details[3], details[4], details[5], details[6], details[-2], details[-3], str(date.today()))
+                    mycursor.execute(query)
+                    mydb.commit()
+
             else:
-                query="INSERT INTO CUSTOMERS VALUES({},'{}','{}','{}','{}','{}','{}','{}','{}')".format(details[0],details[2],details[3],details[4],details[5],details[6],details[-1],details[-2],str(date.today()))
+                query = "INSERT INTO CUSTOMERS VALUES({},'{}','{}','{}','{}','{}','{}','{}','{}')".format(
+                    details[0], details[2], details[3], details[4], details[5], details[6], details[-2], details[-3], str(date.today()))
                 mycursor.execute(query)
                 mydb.commit()
             for i in range(len(sel)):
                 query = 'INSERT INTO BOOKINGS VALUES("{}","{}","{}","{}","{}","{}","{}","{}")'.format(
-                    details[0], details[1], sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'DEPARTURE_TIME'], list_seat[i], list_seat_id[i], sel.loc[i, 'PRICE (USD)'],str(date.today()))
+                    details[0], details[1], sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'DEPARTURE_TIME'], list_seat[i], list_seat_id[i], sel.loc[i, 'PRICE (USD)'], str(date.today()))
                 mycursor.execute(query)
                 mydb.commit()
-
-            
 
         option = 1
         details = []
@@ -911,7 +974,13 @@ def NEW_BOOKING():
                                     continue
                             selection1 = selection
                             selection = pd.DataFrame()
-
+                else:
+                    selection = selection.reset_index()
+                    selection = selection.drop("index", axis=1)
+                    col=[]
+                    for i in selection.columns:
+                        col.append(i)
+                    selection1=pd.DataFrame(columns=col)
                 selection = selection.reset_index()
                 selection = selection.drop("index", axis=1)
                 if selection.empty == False:
@@ -1010,6 +1079,7 @@ def STAFF_LOGIN():
 def ABOUT():
     print("="*8, "ABOUT", "="*8)
 
+
 if __name__ == "__main__":
     from datetime import date
     import sqlite3
@@ -1032,6 +1102,6 @@ if __name__ == "__main__":
     pd.options.mode.chained_assignment = None
     # my sql connction
     mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
-                               passwd="Kf0GcKV5sh", port=3306, database="QxKi8MQlUR")
+                                   passwd="Kf0GcKV5sh", port=3306, database="QxKi8MQlUR")
     mycursor = mydb.cursor()
     main()
