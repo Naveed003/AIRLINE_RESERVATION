@@ -66,7 +66,7 @@ def NEW_BOOKING():
     # taking input for new booking
     def dep_arrival_input():
         print("\n", "="*8, "NEW BOOKING", "="*8)
-        print("\n", "="*4, "DEPATURE", "="*4)
+        print("\n", "="*4, "DEPARTURE", "="*4)
         print("\nCODE DXB: Dubai International Airport")
         print("CODE JFK: John F. Kennedy International Airport")
         print("CODE LHR: Heathrow Airport")
@@ -141,7 +141,7 @@ def NEW_BOOKING():
         global depature_date
         global dep_date
         while True:
-            depature_date = input("\nENTER DEPATURE DATE (YYYY-MM-DD): ")
+            depature_date = input("\nENTER DEPARTURE DATE (YYYY-MM-DD): ")
             depature_date.strip()
             if len(depature_date) != 10:
                 print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
@@ -371,7 +371,7 @@ def NEW_BOOKING():
             booking_ids = []
             for i in res:
                 for j in i:
-                    bookin_ids.append(j)
+                    booking_ids.append(j)
 
             while True:
                 customer_id = random.randint(0, 9999)
@@ -485,12 +485,13 @@ def NEW_BOOKING():
                 else:
                     main()
                     break
+            print(list_seat_id, list_seat)
             try:
 
                 if err == 1:
                     print("aa")
                     A = selection1.iloc[0]["ARRIVAL_TIME"]
-                    A_ = str(selection1.iloc[1]["DEPATURE_TIME"])
+                    A_ = str(selection1.iloc[1]["DEPARTURE_TIME"])
                     print(A)
                     print(A_)
                     A = str(A)
@@ -503,22 +504,22 @@ def NEW_BOOKING():
                     a = A[:8]+str(bb)+" "+B
                     sel = selection1.reset_index()
                     sel = sel.drop("index", axis=1)
-                    sel.loc[1, "DEPATURE_TIME"] = a
+                    sel.loc[1, "DEPARTURE_TIME"] = a
                     print(sel)
                 elif err == 0:
                     print("abc")
                     date = dep_date
 
                     arr_time1 = str(selection1.iloc[0]["ARRIVAL_TIME"])
-                    dep_time1 = str(selection1.iloc[0]["DEPATURE_TIME"])
-                    dep_time2 = str(selection1.iloc[1]["DEPATURE_TIME"])
+                    dep_time1 = str(selection1.iloc[0]["DEPARTURE_TIME"])
+                    dep_time2 = str(selection1.iloc[1]["DEPARTURE_TIME"])
 
                     arr_time1 = arr_time1[-8:]
                     dep_time1 = dep_time1[-8:]
                     dep_time2 = dep_time2[-8:]
 
                     a = date+" "+dep_time1
-                    selection1.loc[0, "DEPATURE_TIME"] = a
+                    selection1.loc[0, "DEPARTURE_TIME"] = a
 
                     if arr_time1 < dep_time1:
                         print(dep_date)
@@ -528,35 +529,38 @@ def NEW_BOOKING():
                         print(date)
                         A = str(selection1.iloc[0]["ARRIVAL_TIME"])
                         a = date+" "+dep_time2
-                        selection1.loc[1, "DEPATURE_TIME"] = a
                     else:
                         a = date+" "+dep_time2
-                        selection1.loc[1, "DEPATURE_TIME"] = a
                     sel = selection1.reset_index()
                     sel = sel.drop("index", axis=1)
+                    sel.loc[1, "DEPARTURE_TIME"] = a
                     print(sel)
 
             except Exception:
                 if len(selection1) == 1:
                     date = dep_date
-                    dep_time1 = str(selection1.iloc[0]["DEPATURE_TIME"])
+                    dep_time1 = str(selection1.iloc[0]["DEPARTURE_TIME"])
                     dep_time1 = dep_time1[-8:]
                     a = date+" "+dep_time1
-                    selection1.loc[0, "DEPATURE_TIME"] = a
                     sel = selection1.reset_index()
                     sel = sel.drop("index", axis=1)
+                    sel.loc[0, "DEPARTURE_TIME"] = a
                     print(sel)
                 else:
                     arr_time1 = str(selection1.iloc[0]["ARRIVAL_TIME"])
-                    dep_time1 = str(selection1.iloc[0]["DEPATURE_TIME"])
-                    dep_time2 = str(selection1.iloc[1]["DEPATURE_TIME"])
+                    dep_time1 = str(selection1.iloc[0]["DEPARTURE_TIME"])
+                    dep_time2 = str(selection1.iloc[1]["DEPARTURE_TIME"])
 
                     arr_time1 = arr_time1[-8:]
                     dep_time1 = dep_time1[-8:]
                     dep_time2 = dep_time2[-8:]
 
                     a = date+" "+dep_time1
-                    selection1.loc[0, "DEPATURE_TIME"] = a
+
+                    sel = selection1.reset_index()
+                    sel = sel.drop("index", axis=1)
+                    sel.loc[0, "DEPARTURE_TIME"] = a
+                    print(sel)
 
                     if arr_time1 < dep_time1:
                         print(dep_date)
@@ -566,15 +570,42 @@ def NEW_BOOKING():
                         print(date)
                         A = str(selection1.iloc[0]["ARRIVAL_TIME"])
                         a = date+" "+dep_time2
-                        selection1.loc[1, "DEPATURE_TIME"] = a
                     else:
                         a = date+" "+dep_time1
-                        selection1.loc[1, "DEPATURE_TIME"] = a
                     sel = selection1.reset_index()
                     sel = sel.drop("index", axis=1)
+                    sel.loc[0, "DEPARTURE_TIME"] = a
                     print(sel)
+            for i in range(len(list_seat_id)):
+                with open(os.getcwd()+'/SEATS/{}.txt'.format(list_seat_id[i]), 'r') as f:
+                    seat_list = json.loads(f.read())
+                with open('SEATS/{}.txt'.format(list_seat_id[i]), 'w') as f:
+                    f.write(json.dumps(SEATS_1[i]))
+
+            for i in range(len(sel)):
+                a = str(sel.loc[i, 'ARRIVAL_TIME'])[-8:]
+                sel.loc[i, 'ARRIVAL_TIME'] = a
+                a = str(sel.loc[i, 'DURATION'])[-8:]
+                sel.loc[i, 'DURATION'] = a
+                print(sel.loc[i, 'DURATION'])
+                query = 'select FLIGHT_NO FROM SCHEDULE WHERE FLIGHT_NO = "{}" AND ORIGIN ="{}" AND DESTINATION ="{}" AND DEPATURE_TIME = "{}"'.format(
+                    sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'ORIGIN'], sel.loc[i, 'DESTINATION'], sel.loc[i, 'DEPARTURE_TIME'])
+                mycursor.execute(query)
+                res = mycursor.fetchall()
+                if res == []:
+                    query = 'INSERT INTO SCHEDULE VALUES ("{}","{}","{}","{}","{}","{}","{}")'.format(
+                        sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'ORIGIN'], sel.loc[i, 'DESTINATION'], sel.loc[i, 'DEPARTURE_TIME'], sel.loc[i, 'ARRIVAL_TIME'], sel.loc[i, 'DURATION'], list_seat_id[i])
+                    mycursor.execute(query)
+                    mydb.commit()
+                query = 'INSERT INTO BOOKINGS VALUES("{}","{}","{}","{}","{}","{}","{}")'.format(
+                    details[0], details[1], sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'DEPARTURE_TIME'], list_seat[i], list_seat_id[i], sel.loc[i, 'PRICE (USD)'])
+                mycursor.execute(query)
+                mydb.commit()
+
+                print(query)
 
         option = 1
+        details = []
         FLIGHTS = []
         OPTION = []
         if dirr.empty:
@@ -625,6 +656,7 @@ def NEW_BOOKING():
                     break
                 # asking for which flight
             while True:
+                SEATS_1 = []
                 flight_booking = input('\nENTER THE OPTION NO.: ')
                 res = []
                 try:
@@ -672,12 +704,16 @@ def NEW_BOOKING():
                 selection = selection.reset_index()
                 selection = selection.drop("index", axis=1)
                 selection = selection.rename(columns={"flight_no": "FLIGHT NO", "origin": "ORIGIN",
-                                                      "dest": "DESTINATION", "dep_time": "DEPATURE_TIME", "arr_time": "ARRIVAL_TIME", "duration": "DURATION"})
+                                                      "dest": "DESTINATION", "dep_time": "DEPARTURE_TIME", "arr_time": "ARRIVAL_TIME", "duration": "DURATION"})
 
                 if res != []:
                     if len(res) == 1:
+                        if details == []:
+                            details = customer_input()
+                        else:
+                            pass
                         df = pd.DataFrame(res, columns=[
-                            "FLIGHT NO", "ORIGIN", "DESTINATION", "DEPATURE_TIME", "ARRIVAL_TIME", "DURATION", "SEAT_ID"])
+                            "FLIGHT NO", "ORIGIN", "DESTINATION", "DEPARTURE_TIME", "ARRIVAL_TIME", "DURATION", "SEAT_ID"])
                         zzz = df
                         Flight_no = zzz.iloc[0]["FLIGHT NO"]
                         p_x = selection[selection["FLIGHT NO"]
@@ -685,7 +721,6 @@ def NEW_BOOKING():
                         zzz["PRICE (USD)"] = selection.iloc[p_x[0]
                                                             ]["PRICE (USD)"]
                         seatid = df.iloc[0]["SEAT_ID"]
-                        seatid = 1234
                         with open(os.getcwd()+'/SEATS/{}.txt'.format(seatid), 'r') as f:
                             seat_list = json.loads(f.read())
                         indexx = [0, 1, 2, 3, 4, 5, 0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0, 16, 17, 18, 19, 20, 21,
@@ -712,7 +747,6 @@ def NEW_BOOKING():
                                 time.sleep(5)
                                 sys.exit()
                         else:
-                            details = customer_input()
                             print(
                                 "\n", "="*4, 'SEAT SELECTION FOR {} TO {}'.format(res[0][1], res[0][2]), "="*4, "\n")
                             print("\t0=AVAILABLE AND X=BOOKED\n")
@@ -735,11 +769,10 @@ def NEW_BOOKING():
                                         df.loc[int(ROW), COLUMN] = "X"
                                         seats = [
                                             df.columns.values.tolist()] + df.values.tolist()
-                                        with open('SEATS/{}.txt'.format(seatid), 'w') as f:
-                                            f.write(json.dumps(seats))
                                         seat = COLUMN+ROW
                                         list_seat_id.append(str(seatid))
                                         list_seat.append(COLUMN+ROW)
+                                        SEATS_1.append(seats)
                                         break
                                     else:
                                         print("\n", "="*4,
@@ -763,6 +796,10 @@ def NEW_BOOKING():
                             selection = selection.drop(x, axis=0)
 
                     else:
+                        if details == []:
+                            details = customer_input()
+                        else:
+                            pass
                         seatid = [res[0][-1], res[1][-1]]
                         with open(os.getcwd()+'/SEATS/{}.txt'.format(seatid[0]), 'r') as f:
                             seat1 = json.loads(f.read())
@@ -797,7 +834,6 @@ def NEW_BOOKING():
                                 time.sleep(5)
                                 sys.exit()
                         else:
-                            details = customer_input()
                             print("\n", "="*4, 'SEAT SELECTION FOR {} TO {}'.format(dep,
                                                                                     res[0][2]), "="*4, "\n")
                             print("\t0=AVAILABLE AND X=BOOKED\n")
@@ -820,11 +856,10 @@ def NEW_BOOKING():
                                         seat1.loc[int(ROW), COLUMN] = "X"
                                         seats = [
                                             seat1.columns.values.tolist()] + seat1.values.tolist()
-                                        with open('SEATS/{}.txt'.format(seatid[0]), 'w') as f:
-                                            f.write(json.dumps(seats))
                                         seat = COLUMN+ROW
                                         list_seat_id.append(str(seatid[0]))
                                         list_seat.append(seat)
+                                        SEATS_1.append(seats)
                                         break
                                     else:
                                         print("\n", "="*4,
@@ -858,11 +893,10 @@ def NEW_BOOKING():
                                         seat2.loc[int(ROW), COLUMN] = "X"
                                         seats = [
                                             seat2.columns.values.tolist()] + seat2.values.tolist()
-                                        with open('SEATS/{}.txt'.format(seatid[1]), 'w') as f:
-                                            f.write(json.dumps(seats))
                                         seat = COLUMN+ROW
                                         list_seat_id.append(str(seatid[1]))
                                         list_seat.append(COLUMN+ROW)
+                                        SEATS_1.append(seats)
                                         break
                                     else:
                                         print("\n", "="*4,
@@ -880,7 +914,10 @@ def NEW_BOOKING():
                 selection = selection.reset_index()
                 selection = selection.drop("index", axis=1)
                 if selection.empty == False:
-                    details = customer_input()
+                    if details == []:
+                        details = customer_input()
+                    else:
+                        pass
                     if len(selection) == 1:
                         x = 2
                     else:
@@ -930,6 +967,7 @@ def NEW_BOOKING():
                                     print(df)
                                     list_seat_id.append(str(seat_id))
                                     list_seat.append(COLUMN+ROW)
+                                    SEATS_1.append(seats)
                                     break
                                 else:
                                     print("\n", "="*4,
