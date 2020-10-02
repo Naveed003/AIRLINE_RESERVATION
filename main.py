@@ -360,7 +360,7 @@ def NEW_BOOKING():
                     break
 
             while True:  # taking input for name
-                customer_name = "NAVEEDD"
+                customer_name = "NAVEED"
                 customer_name = customer_name.strip()
                 customer_name = customer_name.upper()
                 if customer_name == "":
@@ -636,6 +636,10 @@ def NEW_BOOKING():
             price = []
             total = 0
             for i in range(len(sel)):
+                a = str(sel.loc[i, 'ARRIVAL_TIME'])[-8:]
+                sel.loc[i, 'ARRIVAL_TIME'] = a
+                a = str(sel.loc[i, 'DURATION'])[-8:]
+                sel.loc[i, 'DURATION'] = a
                 d = str(sel.loc[i, "PRICE (USD)"])
                 total += int(d)
                 price.append(d)
@@ -753,31 +757,28 @@ def NEW_BOOKING():
                 MESSAGE="""
 DEAR {},
 
-This email is to confirm your booking on {} 
-========================================
+This email is to confirm your booking on {}.
+
 FLIGHT DETAILS
 
 {}
 
-========================================
 PASSENGER DETAILS
 
 {}
-
-========================================
 
 
 Further details of your bookings are listed below:
 
 BOOKING ID: {}
 TOTAL FARE: {}
+
 Amenities: Complementary Wifi,InFlight Entertainment,
             Airport Lounge,Inflight Gym
 
-Baggage info – 
-Free check-in baggage allowance is 30 kg per adult & child. 
-Each bag must not exceed 32 kg and overall dimensions of 
-checked baggage should not exceed 62 inches. 
+Baggage info: Free check-in baggage allowance is 30 kg per adult & child. 
+                Each bag must not exceed 32 kg and overall dimensions of 
+                checked baggage should not exceed 62 inches. 
 
 Cancellation policy: Cancellations made 7 days or more in advance of 
                     the check-in day, will receive a 100% refund. 
@@ -786,22 +787,24 @@ Cancellation policy: Cancellations made 7 days or more in advance of
                     to the check-in day will incur a 30% fee.
                     Cancellation made within 24 Hrs to the check-in 
                     day will incur a 50% fee.
-If you have any inqueries, Please do not hesitate to contact
-or call the AIRLINE directly
 
 ABOUT THIS TRIP: 
-    Use your Trip ID for all communication
 
-    Check-in counters for International flights 
-        close 75 minutes before departure
+            Use your Trip ID for all communication
 
-    Your carry-on baggage shouldn't weigh more than 7kgs
+            Check-in counters for International flights 
+                close 75 minutes before departure
 
-    Carry photo identification, you will need it as proof of 
-        identity while checking-in
+            Your carry-on baggage shouldn't weigh more than 7kgs
 
-    Kindly ensure that you have the relevant visa, immigration 
-        clearance and travel with a passport, with a validity of at least 6 months.
+            Carry photo identification, you will need it as proof of 
+                identity while checking-in
+
+            Kindly ensure that you have the relevant visa, immigration 
+                clearance and travel with a passport, with a validity of at least 6 months.
+
+If you have any inqueries, Please do not hesitate to contact
+or call the AIRLINE directly
 
 We are looking forward to your visit and hope that you enjoy your stay
 Best regards
@@ -812,7 +815,7 @@ Best regards
                     smtp.ehlo()
                     smtp.starttls()
                     smtp.ehlo()
-                    smtp.login("gihs.airline@gmail.com", "naveedzzansh")
+                    smtp.login("gihs.airline@gmail.com", "gelronfuifxcyheb")
 
                     smtp.send_message(msg)
 
@@ -1200,7 +1203,6 @@ gihs.airline@gmail.com
                                         df.values.tolist()
                                     with open('seats/{}.txt'.format(seat_id), 'w') as f:
                                         f.write(json.dumps(seats))
-                                    print(df)
                                     list_seat_id.append(str(seat_id))
                                     list_seat.append(COLUMN+ROW)
                                     SEATS_1.append(seats)
