@@ -11,4 +11,4 @@ pp_details=[['12345678', 'NAVE', 4866]]
 pp_detail=pd.DataFrame(pp_details,columns=["PASSPORT NUMBER","NAME","PNR"])
 
 text="helglo "
-print("\u0332".join(text))
+print(text[0:-2])
