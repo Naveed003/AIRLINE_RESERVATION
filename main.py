@@ -1,4 +1,3 @@
-# CHANGE DEFAULT CUSTOMER INFO
 # main menu
 def main():
     print("="*20, "GIHS AIRLINE", "="*20)
@@ -138,6 +137,7 @@ def NEW_BOOKING():
     def flights_extract():  # extracting flights from database
         while True:
             date_input()
+
             def dir():  # extracting direct flights
                 query = "select * from SCHEDULE"
                 mycursor.execute(query)
@@ -359,7 +359,7 @@ def NEW_BOOKING():
                     break
 
             while True:  # taking input for name
-                customer_name = "NAVEED"
+                customer_name = input("\nENTER PASSENGER NAME: ")
                 customer_name = customer_name.strip()
                 customer_name = customer_name.upper()
                 if customer_name == "":
@@ -368,7 +368,7 @@ def NEW_BOOKING():
                     continue
                 break
             while True:  # taking input and valiation for phone number
-                customer_phone = "+971558004998"
+                customer_phone = input("ENTER PASSENGER PHONE NUMBER ((COUNTRY CODE)-########): ")
                 try:
                     z = phonenumbers.parse(customer_phone)
                     if phonenumbers.is_valid_number(z) == False:
@@ -383,7 +383,7 @@ def NEW_BOOKING():
 
                     continue
             while True:  # taking input and valiation for EMAIL
-                customer_email = "imnaveed2003@gmail.com"
+                customer_email = input("\nENTER PASSENGER EMAIL ADDRESS: ")
                 customer_email = customer_email.strip()
                 customer_email = customer_email.lower()
                 regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
@@ -396,7 +396,7 @@ def NEW_BOOKING():
                     continue
 
             while True:  # taking input and valiation for SEX
-                customer_sex = "M"
+                customer_sex = input("\nENTER PASSENGER SEX (M/F): ")
                 customer_sex = customer_sex.strip()
                 customer_sex = customer_sex.upper()
                 if customer_sex.upper() not in ["M", "F"]:
@@ -408,7 +408,7 @@ def NEW_BOOKING():
             while True:  # taking input and valiation for DOB
                 import datetime
 
-                customer_dob = "2003-04-20"
+                customer_dob = input("\nENTER PASSENGER DATE OF BIRTH (YYYY-MM-DD): ")
                 try:
                     date_of_birth = datetime.datetime.strptime(
                         customer_dob, "%Y-%m-%d")
@@ -440,7 +440,7 @@ def NEW_BOOKING():
                     continue
 
             while True:
-                customer_pp_num = "12345678"
+                customer_pp_num = input("\nENTER PASSPORT NUMBER OF PASSENGER: ")
                 query = "select P_NUMBER,P_NAME,P_EXPIRY FROM PASSPORT WHERE P_NUMBER='{}'".format(
                     customer_pp_num)
                 mycursor.execute(query)
@@ -470,7 +470,8 @@ def NEW_BOOKING():
                                         print(
                                             "\n", "="*4, 'PASSPORT EXPIRY DOES NOT MATCH OUR DB', "="*4, "\n")
                                         continue
-                                    date1 = dep_date[:8]+str(int(dep_date[-2])+1)
+                                    date1 = dep_date[:8] + \
+                                        str(int(dep_date[-2])+1)
                                     if str(res[0][2]) == customer_pp_expiry:
                                         break
                                     else:
@@ -530,22 +531,6 @@ def NEW_BOOKING():
             if len(selection1) != 1:
                 try:
                     if err == 1:
-                        """ A = selection1.iloc[0]["ARRIVAL_TIME"]
-                        A_ = str(selection1.iloc[1]["DEPARTURE_TIME"])
-                        print(A)
-                        print(A_)
-                        A = str(A)
-                        print(A)
-                        B = A_[-8:]
-                        print(B)
-                        A = A[0:10]
-                        print(A)
-                        A = A[-2:]
-                        print(A)
-                        A = int(A)
-                        print(A)
-                        bb = A+1
-                        print(bb) """
                         timee = str(selection1.iloc[0]["ARRIVAL_TIME"])[-8:]
                         datee = dep_date[0:8]+str((int(dep_date[-2:])+1))
                         dep_time = datee+" "+timee
@@ -644,7 +629,7 @@ def NEW_BOOKING():
                 price.append(d)
             sel = sel.drop("PRICE (USD)", axis=1)
             print(sel)
-            DET=sel
+            DET = sel
             sel = sel.drop("SEAT", axis=1)
 
             sel.insert(6, "PRICE (USD)", price)
@@ -672,8 +657,6 @@ def NEW_BOOKING():
                         query = 'INSERT INTO SCHEDULE VALUES ("{}","{}","{}","{}","{}","{}","{}")'.format(
                             sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'ORIGIN'], sel.loc[i, 'DESTINATION'], sel.loc[i, 'DEPARTURE_TIME'], sel.loc[i, 'ARRIVAL_TIME'], sel.loc[i, 'DURATION'], list_seat_id[i])
                         mycursor.execute(query)
-                """ details = [customer_id, booking_id, customer_name, customer_phone,
-                            customer_email, customer_sex, customer_dob, customer_pp_num, a,PP_DETAILS] """
                 query = "select CUSTOMER_ID,CUSTOMER_NAME,CUSTOMER_PHONE,CUSTOMER_EMAIL,CUSTOMER_SEX,CUSTOMER_DOB,CUSTOMER_NATIONALITY,CUSTOMER_PASSPORT_NUMBER FROM CUSTOMERS where CUSTOMER_PASSPORT_NUMBER='{}' AND CUSTOMER_NAME='{}' AND CUSTOMER_PHONE='{}' AND CUSTOMER_EMAIL='{}' AND CUSTOMER_SEX='{}' AND CUSTOMER_DOB='{}' AND CUSTOMER_NATIONALITY='{}'".format(
                     details[-3], details[2], details[3], details[4], details[5], details[6], details[8])
                 mycursor.execute(query)
@@ -699,26 +682,28 @@ def NEW_BOOKING():
                     query = 'INSERT INTO BOOKINGS VALUES("{}","{}","{}","{}","{}","{}","{}","{}")'.format(
                         details[0], details[1], sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'DEPARTURE_TIME'], list_seat[i], list_seat_id[i], sel.loc[i, 'PRICE (USD)'], str(date.today()))
                     mycursor.execute(query)
-                query="select P_NUMBER,P_NAME,P_EXPIRY FROM PASSPORT"
-                pp_details=details[-1]
+                query = "select P_NUMBER,P_NAME,P_EXPIRY FROM PASSPORT"
+                pp_details = details[-1]
                 mycursor.execute(query)
-                res=mycursor.fetchall()
-                temp=[]
-                res1=[]
-                if res!=[]:
+                res = mycursor.fetchall()
+                temp = []
+                res1 = []
+                if res != []:
                     for i in res:
                         for j in i:
                             temp.append(str(j))
                         res1.append(temp)
-                        temp=[]
+                        temp = []
                     if pp_details in res1:
                         pass
                     else:
-                        query="insert into PASSPORT VALUES({},'{}','{}','{}')".format(int(details[0]),pp_details[0],pp_details[1],pp_details[2])
+                        query = "insert into PASSPORT VALUES({},'{}','{}','{}')".format(
+                            int(details[0]), pp_details[0], pp_details[1], pp_details[2])
                         mycursor.execute(query)
                 else:
-                    query="insert into PASSPORT VALUES({},'{}','{}','{}')".format(int(details[0]),pp_details[0],pp_details[1],pp_details[2])
-                 
+                    query = "insert into PASSPORT VALUES({},'{}','{}','{}')".format(
+                        int(details[0]), pp_details[0], pp_details[1], pp_details[2])
+
                     mycursor.execute(query)
 
                 for i in range(len(list_seat_id)):
@@ -726,21 +711,19 @@ def NEW_BOOKING():
                         seat_list = json.loads(f.read())
                     with open('SEATS/{}.txt'.format(list_seat_id[i]), 'w') as f:
                         f.write(json.dumps(SEATS_1[i]))
-                CUSTOMER_NAME=details[2].upper()
+                CUSTOMER_NAME = details[2].upper()
                 from datetime import date
-                date=date.today()
-                pp_details=pp_details[0:2]
+                date = date.today()
+                pp_details = pp_details[0:2]
                 pp_details.append(details[6])
-                """ details = [customer_id, booking_id, customer_name, customer_phone,
-                            customer_email, customer_sex, customer_dob, customer_pp_num, a,PP_DETAILS] """
                 pp_details.append(details[5])
                 pp_details.append(details[3])
                 pp_details.append(details[1])
                 print(pp_details)
-                DET=DET
-                booking_id=details[1]
+                DET = DET
+                booking_id = details[1]
                 print(booking_id)
-                total=total
+                total = total
                 print(total)
                 import smtplib
                 from email.message import EmailMessage
@@ -748,9 +731,8 @@ def NEW_BOOKING():
                 msg['Subject'] = "AIRLINE BOOKING CONFIRMATION"
                 msg['From'] = "gihs.airline@gmail.com"
                 msg['To'] = "imnaveed2003@gmail.com"
-
-                if len(sel)==1:
-                    MESSAGE="""
+                if len(sel) == 1:
+                    MESSAGE = """
 DEAR {},
 
 This email is to confirm your booking on {}.
@@ -820,10 +802,10 @@ or call the AIRLINE directly
 
 We are looking forward to your visit and hope that you enjoy your stay
 Best regards
-""".format(details[2].upper(),date,sel.loc[0,"FLIGHT NO"],(str(sel.loc[0,"DEPARTURE_TIME"]))[:10],sel.loc[0,"ORIGIN"],sel.loc[0,"DESTINATION"],(str(sel.loc[0,"DEPARTURE_TIME"]))[-8:],sel.loc[0,"ARRIVAL_TIME"],sel.loc[0,"DURATION"],DET.loc[0,"SEAT"],pp_details[0],pp_details[1],pp_details[2],pp_details[3],pp_details[4],pp_details[5],booking_id,total)
+""".format(details[2].upper(), date, img, sel.loc[0, "FLIGHT NO"], (str(sel.loc[0, "DEPARTURE_TIME"]))[:10], sel.loc[0, "ORIGIN"], sel.loc[0, "DESTINATION"], (str(sel.loc[0, "DEPARTURE_TIME"]))[-8:], sel.loc[0, "ARRIVAL_TIME"], sel.loc[0, "DURATION"], DET.loc[0, "SEAT"], pp_details[0], pp_details[1], pp_details[2], pp_details[3], pp_details[4], pp_details[5], booking_id, total)
                     print(MESSAGE)
                 else:
-                    MESSAGE="""
+                    MESSAGE = """
 DEAR {},
 
 This email is to confirm your booking on {}.
@@ -895,8 +877,8 @@ or call the AIRLINE directly
 
 We are looking forward to your visit and hope that you enjoy your stay
 Best regards
-""".format(details[2].upper(),date,sel.loc[0,"FLIGHT NO"],sel.loc[1,"FLIGHT NO"],(str(sel.loc[0,"DEPARTURE_TIME"]))[:10],(str(sel.loc[1,"DEPARTURE_TIME"]))[:10],sel.loc[0,"ORIGIN"],sel.loc[0,"DESTINATION"],(str(sel.loc[0,"DEPARTURE_TIME"]))[-8:],sel.loc[0,"ARRIVAL_TIME"],sel.loc[1,"ORIGIN"],sel.loc[1,"DESTINATION"],(str(sel.loc[1,"DEPARTURE_TIME"]))[-8:],sel.loc[1,"ARRIVAL_TIME"],sel.loc[0,"DURATION"],sel.loc[1,"DURATION"],DET.loc[0,"SEAT"],DET.loc[1,"SEAT"],pp_details[0],pp_details[1],pp_details[2],pp_details[3],pp_details[4],pp_details[5],booking_id,total)
-                    
+""".format(details[2].upper(), date, sel.loc[0, "FLIGHT NO"], sel.loc[1, "FLIGHT NO"], (str(sel.loc[0, "DEPARTURE_TIME"]))[:10], (str(sel.loc[1, "DEPARTURE_TIME"]))[:10], sel.loc[0, "ORIGIN"], sel.loc[0, "DESTINATION"], (str(sel.loc[0, "DEPARTURE_TIME"]))[-8:], sel.loc[0, "ARRIVAL_TIME"], sel.loc[1, "ORIGIN"], sel.loc[1, "DESTINATION"], (str(sel.loc[1, "DEPARTURE_TIME"]))[-8:], sel.loc[1, "ARRIVAL_TIME"], sel.loc[0, "DURATION"], sel.loc[1, "DURATION"], DET.loc[0, "SEAT"], DET.loc[1, "SEAT"], pp_details[0], pp_details[1], pp_details[2], pp_details[3], pp_details[4], pp_details[5], booking_id, total)
+
                 msg.set_content(MESSAGE)
                 with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
                     smtp.ehlo()
@@ -907,11 +889,10 @@ Best regards
                     smtp.send_message(msg)
                 mydb.commit()
                 print("\n", "="*8, 'THANK YOU FOR USING OUR SERVICE', "="*8, "\n")
-                print("\n", "="*8, 'TO CONFIRM YOUR BOOKING PLEASE PAY THE MENTIONED AMOUNT', "="*8, "\n")
-                print("\n", "="*8, 'PLEASE CHECK YOUR MAIL FOR FURTHER PROCEDURES', "="*8, "\n")
-
-
-
+                print(
+                    "\n", "="*8, 'TO CONFIRM YOUR BOOKING PLEASE PAY THE MENTIONED AMOUNT', "="*8, "\n")
+                print(
+                    "\n", "="*8, 'PLEASE CHECK YOUR MAIL FOR FURTHER PROCEDURES', "="*8, "\n")
 
             except Exception:
                 print("\n", "="*8, 'ERROR WHILE BOOKING FLIGHTS', "="*8, "\n")
@@ -928,8 +909,6 @@ gihs.airline@gmail.com
                 print(message)
                 time.sleep(3)
                 main()
-
-            
 
         option = 1
         details = []
@@ -1317,6 +1296,7 @@ gihs.airline@gmail.com
     dep_arrival_input()
     flights_extract()
 
+
 def FLIGHT_STATUS():
     print("="*8, "FLIGHT STATUS", "="*8)
 
@@ -1324,12 +1304,94 @@ def FLIGHT_STATUS():
 def MANAGE_BOOKINGS():
     print("="*8, "MANAGE BOOKINGS", "="*8)
 
+    def details():
+        while True:
+            booking_id = input("\nENTER BOOKING ID: ")
+            query = "select * from BOOKINGS WHERE BOOKING_ID='{}'".format(
+                booking_id)
+            mycursor.execute(query)
+            res = mycursor.fetchall()
+            if res != []:
+                query = "SELECT SCHEDULE.FLIGHT_NO,SCHEDULE.ORIGIN,SCHEDULE.DESTINATION,SCHEDULE.DEPATURE_TIME,SCHEDULE.ARRIVAL_TIME ,SCHEDULE.DURATION,BOOKINGS.SEAT_NO,BOOKINGS.AMOUNT_USD,BOOKINGS.SEAT_ID FROM SCHEDULE,BOOKINGS WHERE BOOKINGS.SEAT_ID=SCHEDULE.SEAT_ID AND BOOKINGS.BOOKING_ID={}".format(booking_id)
+                mycursor.execute(query)
+                res=mycursor.fetchall()
+                a=pd.DataFrame(res,columns=["FLIGHT NO","ORIGIN","DESTINATION","DEPARTURE TIME","ARRIVAL TIME","DURATION","SEAT NO","AMOUNT (USD)","SEAT ID"])
+                for i in range(len(a)):
+                    a.loc[i,"ARRIVAL TIME"]=(str(a.loc[i,"ARRIVAL TIME"]))[-8:]
+                    a.loc[i,"DURATION"]=(str(a.loc[i,"DURATION"]))[-8:]
+                print(a)
+                break
+            else:
+                continue
+        
+    def m_main():
+        pass
 
 
 
 def STAFF_LOGIN():
-    print("="*8, "STAFF LOGIN", "="*8)
+    print("\n","="*8, "STAFF LOGIN", "="*8,"\n")
+    while True:
+        USERNAME=input("\nENTER USERNAME: ")
+        USERNAME=USERNAME.strip()
+        query="select * from STAFFS WHERE USERNAME='{}'".format(USERNAME)
+        try:
+            mycursor.execute(query)
+        except Exception:
+            print("\n","="*4, "ENTER VALID USERNAME", "="*4,"\n")
+            continue
+        res=mycursor.fetchall()
+        if res!=[]:
+            break
+        else:
+            print("\n","="*4, "ENTER VALID USERNAME", "="*4,"\n")
+            continue
+    while True:
+        PASSWORD=input("\nENTER PASSWORD: ")
+        PASSWORD=PASSWORD.strip
+        query="select EMPL_NAME from STAFFS where USERNAME='{}' and PASSWORD='{}'".format(USERNAME,PASSWORD)
+        try:
+            mycursor.execute(query)
+        except Exception:
+            print("\n","="*4, "ENTER VALID PASSWORD", "="*4,"\n")
+            continue
+        res=mycursor.fetchall()
+        if res!=[]:
+            break
+        else:
+            print("\n","="*4, "ENTER VALID PASSWORD", "="*4,"\n")
+            continue
+    
+    NAME=res[0][0]
+    print("\n","="*4, "WELCOME BACK {}".format(NAME), "="*4,"\n")
 
+    print("OPTION 1: ANALYZE DATA")
+    print("OPTION 2: MANAGE SCHEDULES")
+    list=["1","2"]
+    while True:
+        res=input("\nENTER OPTION NUMBER: ")
+        res=res.strip()
+        if res not in list:
+            print("\n","="*4, "ENTER A VALID OPTION", "="*4,"\n")
+            continue
+        else:
+            break
+    
+    """ if res==1:
+        ANALYZE_DATA()
+    else:
+        MANAGE_SCHEDULES() """
+            
+
+
+
+   
+            
+
+            
+
+
+    
 
 def ABOUT():
     print("="*8, "ABOUT", "="*8)
@@ -1359,20 +1421,23 @@ if __name__ == "__main__":
     mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
                                    passwd="Kf0GcKV5sh", port=3306, database="QxKi8MQlUR")
     mycursor = mydb.cursor()
-    date1=datetime.now()
-    datee1=str(date1)
-    datee1=datee1[:19]
-    c_date=date.today()
-    datee1='2020-10-03 18:59:09'
-    query="insert into E_SCHEDULE SELECT * FROM SCHEDULE WHERE DEPATURE_TIME<'{}'".format(datee1)
+    date1 = datetime.now()
+    datee1 = str(date1)
+    datee1 = datee1[:19]
+    c_date = date.today()
+    datee1 = '2020-10-03 18:59:09'
+    query = "insert into E_SCHEDULE SELECT * FROM SCHEDULE WHERE DEPATURE_TIME<'{}'".format(
+        datee1)
     mycursor.execute(query)
-    query="delete from SCHEDULE where DEPATURE_TIME<'{}'".format(datee1)
+    query = "delete from SCHEDULE where DEPATURE_TIME<'{}'".format(datee1)
     mycursor.execute(query)
-    query="insert into E_BOOKINGS SELECT * FROM BOOKINGS WHERE DEPATURE_TIME<'{}'".format(datee1)
+    query = "insert into E_BOOKINGS SELECT * FROM BOOKINGS WHERE DEPATURE_TIME<'{}'".format(
+        datee1)
     mycursor.execute(query)
-    query="delete from BOOKINGS where DEPATURE_TIME<'{}'".format(datee1)
+    query = "delete from BOOKINGS where DEPATURE_TIME<'{}'".format(datee1)
     mycursor.execute(query)
-    query="delete from PASSPORT WHERE P_EXPIRY<'{}'".format(c_date)
+    query = "delete from PASSPORT WHERE P_EXPIRY<'{}'".format(c_date)
     mycursor.execute(query)
     mydb.commit()
-    NEW_BOOKING()
+    STAFF_LOGIN()
+    mydb.close()
