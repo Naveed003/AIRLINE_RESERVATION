@@ -127,7 +127,7 @@ def NEW_BOOKING():
                 print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
             elif depature_date[5:7] == "02" and int(depature_date[0:4]) % 4 == 0 and depature_date[-2:] > "29":
                 print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
-            elif str(current_date) <= depature_date and str(f_date) > depature_date:
+            elif str(current_date) < depature_date and str(f_date) > depature_date:
                 dep_date = depature_date
                 break
             else:
@@ -138,7 +138,6 @@ def NEW_BOOKING():
     def flights_extract():  # extracting flights from database
         while True:
             date_input()
-
             def dir():  # extracting direct flights
                 query = "select * from SCHEDULE"
                 mycursor.execute(query)
@@ -673,7 +672,6 @@ def NEW_BOOKING():
                         query = 'INSERT INTO SCHEDULE VALUES ("{}","{}","{}","{}","{}","{}","{}")'.format(
                             sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'ORIGIN'], sel.loc[i, 'DESTINATION'], sel.loc[i, 'DEPARTURE_TIME'], sel.loc[i, 'ARRIVAL_TIME'], sel.loc[i, 'DURATION'], list_seat_id[i])
                         mycursor.execute(query)
-                        mydb.commit()
                 """ details = [customer_id, booking_id, customer_name, customer_phone,
                             customer_email, customer_sex, customer_dob, customer_pp_num, a,PP_DETAILS] """
                 query = "select CUSTOMER_ID,CUSTOMER_NAME,CUSTOMER_PHONE,CUSTOMER_EMAIL,CUSTOMER_SEX,CUSTOMER_DOB,CUSTOMER_NATIONALITY,CUSTOMER_PASSPORT_NUMBER FROM CUSTOMERS where CUSTOMER_PASSPORT_NUMBER='{}' AND CUSTOMER_NAME='{}' AND CUSTOMER_PHONE='{}' AND CUSTOMER_EMAIL='{}' AND CUSTOMER_SEX='{}' AND CUSTOMER_DOB='{}' AND CUSTOMER_NATIONALITY='{}'".format(
@@ -692,18 +690,15 @@ def NEW_BOOKING():
                         query = "INSERT INTO CUSTOMERS VALUES({},'{}','{}','{}','{}','{}','{}','{}','{}')".format(
                             details[0], details[2], details[3], details[4], details[5], details[6], details[-2], details[-3], str(date.today()))
                         mycursor.execute(query)
-                        mydb.commit()
 
                 else:
                     query = "INSERT INTO CUSTOMERS VALUES({},'{}','{}','{}','{}','{}','{}','{}','{}')".format(
                         details[0], details[2], details[3], details[4], details[5], details[6], details[-2], details[-3], str(date.today()))
                     mycursor.execute(query)
-                    mydb.commit()
                 for i in range(len(sel)):
                     query = 'INSERT INTO BOOKINGS VALUES("{}","{}","{}","{}","{}","{}","{}","{}")'.format(
                         details[0], details[1], sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'DEPARTURE_TIME'], list_seat[i], list_seat_id[i], sel.loc[i, 'PRICE (USD)'], str(date.today()))
                     mycursor.execute(query)
-                    mydb.commit()
                 query="select P_NUMBER,P_NAME,P_EXPIRY FROM PASSPORT"
                 pp_details=details[-1]
                 mycursor.execute(query)
@@ -721,12 +716,10 @@ def NEW_BOOKING():
                     else:
                         query="insert into PASSPORT VALUES({},'{}','{}','{}')".format(int(details[0]),pp_details[0],pp_details[1],pp_details[2])
                         mycursor.execute(query)
-                        mydb.commit()
                 else:
                     query="insert into PASSPORT VALUES({},'{}','{}','{}')".format(int(details[0]),pp_details[0],pp_details[1],pp_details[2])
                  
                     mycursor.execute(query)
-                    mydb.commit()
 
                 for i in range(len(list_seat_id)):
                     with open(os.getcwd()+'/SEATS/{}.txt'.format(list_seat_id[i]), 'r') as f:
@@ -736,17 +729,18 @@ def NEW_BOOKING():
                 CUSTOMER_NAME=details[2].upper()
                 from datetime import date
                 date=date.today()
-                print(date)
                 pp_details=pp_details[0:2]
-                print(pp_details)
+                pp_details.append(details[6])
+                """ details = [customer_id, booking_id, customer_name, customer_phone,
+                            customer_email, customer_sex, customer_dob, customer_pp_num, a,PP_DETAILS] """
+                pp_details.append(details[5])
+                pp_details.append(details[3])
                 pp_details.append(details[1])
                 print(pp_details)
                 DET=DET
                 booking_id=details[1]
                 print(booking_id)
-                pp_detail=pd.DataFrame([pp_details],columns=["PASSPORT NUMBER","NAME","PNR"])
                 total=total
-                print(pp_detail)
                 print(total)
                 import smtplib
                 from email.message import EmailMessage
@@ -754,19 +748,37 @@ def NEW_BOOKING():
                 msg['Subject'] = "AIRLINE BOOKING CONFIRMATION"
                 msg['From'] = "gihs.airline@gmail.com"
                 msg['To'] = "imnaveed2003@gmail.com"
-                MESSAGE="""
+
+                if len(sel)==1:
+                    MESSAGE="""
 DEAR {},
 
 This email is to confirm your booking on {}.
 
 FLIGHT DETAILS
 
-{}
+    FLIGHT NUMBERS: {}
+
+    DEPATURE DATES: {}
+
+     DEPARTURE      ARRIVAL
+            {}               {}
+         {}         {}
+                
+    DURATION: {}
+
+    SEAT: {}
+
+
 
 PASSENGER DETAILS
 
-{}
-
+    PASSPORT NUMBER: {}
+    NAME: {}
+    DOB: {}
+    SEX: {}
+    PHONE: {}
+    PNR: : {}
 
 Further details of your bookings are listed below:
 
@@ -808,8 +820,83 @@ or call the AIRLINE directly
 
 We are looking forward to your visit and hope that you enjoy your stay
 Best regards
-""".format(details[2].upper(),date,DET,pp_detail,booking_id,total)
+""".format(details[2].upper(),date,sel.loc[0,"FLIGHT NO"],(str(sel.loc[0,"DEPARTURE_TIME"]))[:10],sel.loc[0,"ORIGIN"],sel.loc[0,"DESTINATION"],(str(sel.loc[0,"DEPARTURE_TIME"]))[-8:],sel.loc[0,"ARRIVAL_TIME"],sel.loc[0,"DURATION"],DET.loc[0,"SEAT"],pp_details[0],pp_details[1],pp_details[2],pp_details[3],pp_details[4],pp_details[5],booking_id,total)
+                    print(MESSAGE)
+                else:
+                    MESSAGE="""
+DEAR {},
 
+This email is to confirm your booking on {}.
+
+FLIGHT DETAILS
+
+        FLIGHT NUMBER: {} and {}
+
+        DEPATURE DATE: {} and {}
+
+        DEPARTURE      ARRIVAL
+                {}               {}
+            {}         {}
+                {}               {}
+            {}         {}
+
+        DURATIONS: {} and {}
+
+        SEATS: {} and {}
+
+
+
+PASSENGER DETAILS
+
+        PASSPORT NUMBER: {}
+        NAME: {}
+        DOB: {}
+        SEX: {}
+        PHONE: {}
+        PNR: : {}
+
+Further details of your bookings are listed below:
+
+BOOKING ID: {}
+TOTAL FARE: {}
+
+Amenities: Complementary Wifi,InFlight Entertainment,
+            Airport Lounge,Inflight Gym
+
+Baggage info: Free check-in baggage allowance is 30 kg per adult & child. 
+                Each bag must not exceed 32 kg and overall dimensions of 
+                checked baggage should not exceed 62 inches. 
+
+Cancellation policy: Cancellations made 7 days or more in advance of 
+                    the check-in day, will receive a 100% refund. 
+                    Cancellations made within 3 - 6 days will incur 
+                    a 20% fee. Cancellations made within 48 hours 
+                    to the check-in day will incur a 30% fee.
+                    Cancellation made within 24 Hrs to the check-in 
+                    day will incur a 50% fee.
+
+ABOUT THIS TRIP: 
+
+            Use your Trip ID for all communication
+
+            Check-in counters for International flights 
+                close 75 minutes before departure
+
+            Your carry-on baggage shouldn't weigh more than 7kgs
+
+            Carry photo identification, you will need it as proof of 
+                identity while checking-in
+
+            Kindly ensure that you have the relevant visa, immigration 
+                clearance and travel with a passport, with a validity of at least 6 months.
+
+If you have any inqueries, Please do not hesitate to contact
+or call the AIRLINE directly
+
+We are looking forward to your visit and hope that you enjoy your stay
+Best regards
+""".format(details[2].upper(),date,sel.loc[0,"FLIGHT NO"],sel.loc[1,"FLIGHT NO"],(str(sel.loc[0,"DEPARTURE_TIME"]))[:10],(str(sel.loc[1,"DEPARTURE_TIME"]))[:10],sel.loc[0,"ORIGIN"],sel.loc[0,"DESTINATION"],(str(sel.loc[0,"DEPARTURE_TIME"]))[-8:],sel.loc[0,"ARRIVAL_TIME"],sel.loc[1,"ORIGIN"],sel.loc[1,"DESTINATION"],(str(sel.loc[1,"DEPARTURE_TIME"]))[-8:],sel.loc[1,"ARRIVAL_TIME"],sel.loc[0,"DURATION"],sel.loc[1,"DURATION"],DET.loc[0,"SEAT"],DET.loc[1,"SEAT"],pp_details[0],pp_details[1],pp_details[2],pp_details[3],pp_details[4],pp_details[5],booking_id,total)
+                    
                 msg.set_content(MESSAGE)
                 with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
                     smtp.ehlo()
@@ -818,6 +905,11 @@ Best regards
                     smtp.login("gihs.airline@gmail.com", "gelronfuifxcyheb")
 
                     smtp.send_message(msg)
+                mydb.commit()
+                print("\n", "="*8, 'THANK YOU FOR USING OUR SERVICE', "="*8, "\n")
+                print("\n", "="*8, 'TO CONFIRM YOUR BOOKING PLEASE PAY THE MENTIONED AMOUNT', "="*8, "\n")
+                print("\n", "="*8, 'PLEASE CHECK YOUR MAIL FOR FURTHER PROCEDURES', "="*8, "\n")
+
 
 
 
@@ -1225,21 +1317,14 @@ gihs.airline@gmail.com
     dep_arrival_input()
     flights_extract()
 
-
-""" print("\n", "="*4, 'DIRECT FLIGHTS', "="*4, "\n")
-    print(dirr)
-    print("\n", "="*4, 'CONNECTING FLIGHTS', "="*4, "\n")
-    print(conn)
-    for i in range(1,len(conn)+1):
-        print(conn.iloc[i-1:i,:]) """
-
-
 def FLIGHT_STATUS():
     print("="*8, "FLIGHT STATUS", "="*8)
 
 
 def MANAGE_BOOKINGS():
     print("="*8, "MANAGE BOOKINGS", "="*8)
+
+
 
 
 def STAFF_LOGIN():
@@ -1274,4 +1359,20 @@ if __name__ == "__main__":
     mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
                                    passwd="Kf0GcKV5sh", port=3306, database="QxKi8MQlUR")
     mycursor = mydb.cursor()
+    date1=datetime.now()
+    datee1=str(date1)
+    datee1=datee1[:19]
+    c_date=date.today()
+    datee1='2020-10-03 18:59:09'
+    query="insert into E_SCHEDULE SELECT * FROM SCHEDULE WHERE DEPATURE_TIME<'{}'".format(datee1)
+    mycursor.execute(query)
+    query="delete from SCHEDULE where DEPATURE_TIME<'{}'".format(datee1)
+    mycursor.execute(query)
+    query="insert into E_BOOKINGS SELECT * FROM BOOKINGS WHERE DEPATURE_TIME<'{}'".format(datee1)
+    mycursor.execute(query)
+    query="delete from BOOKINGS where DEPATURE_TIME<'{}'".format(datee1)
+    mycursor.execute(query)
+    query="delete from PASSPORT WHERE P_EXPIRY<'{}'".format(c_date)
+    mycursor.execute(query)
+    mydb.commit()
     NEW_BOOKING()
