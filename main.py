@@ -802,7 +802,7 @@ or call the AIRLINE directly
 
 We are looking forward to your visit and hope that you enjoy your stay
 Best regards
-""".format(details[2].upper(), date, img, sel.loc[0, "FLIGHT NO"], (str(sel.loc[0, "DEPARTURE_TIME"]))[:10], sel.loc[0, "ORIGIN"], sel.loc[0, "DESTINATION"], (str(sel.loc[0, "DEPARTURE_TIME"]))[-8:], sel.loc[0, "ARRIVAL_TIME"], sel.loc[0, "DURATION"], DET.loc[0, "SEAT"], pp_details[0], pp_details[1], pp_details[2], pp_details[3], pp_details[4], pp_details[5], booking_id, total)
+""".format(details[2].upper(), date, sel.loc[0, "FLIGHT NO"], (str(sel.loc[0, "DEPARTURE_TIME"]))[:10], sel.loc[0, "ORIGIN"], sel.loc[0, "DESTINATION"], (str(sel.loc[0, "DEPARTURE_TIME"]))[-8:], sel.loc[0, "ARRIVAL_TIME"], sel.loc[0, "DURATION"], DET.loc[0, "SEAT"], pp_details[0], pp_details[1], pp_details[2], pp_details[3], pp_details[4], pp_details[5], booking_id, total)
                     print(MESSAGE)
                 else:
                     MESSAGE = """
@@ -1348,7 +1348,7 @@ def STAFF_LOGIN():
             continue
     while True:
         PASSWORD=input("\nENTER PASSWORD: ")
-        PASSWORD=PASSWORD.strip
+        PASSWORD=PASSWORD.strip()
         query="select EMPL_NAME from STAFFS where USERNAME='{}' and PASSWORD='{}'".format(USERNAME,PASSWORD)
         try:
             mycursor.execute(query)
@@ -1439,5 +1439,5 @@ if __name__ == "__main__":
     query = "delete from PASSPORT WHERE P_EXPIRY<'{}'".format(c_date)
     mycursor.execute(query)
     mydb.commit()
-    STAFF_LOGIN()
+    NEW_BOOKING()
     mydb.close()
