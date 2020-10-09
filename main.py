@@ -352,7 +352,7 @@ def NEW_BOOKING():
                     break
 
             while True:
-                booking_id = random.randint(0, 9999)
+                booking_id = random.randint(100, 99999)
                 if booking_id in booking_ids:
                     continue
                 else:
@@ -656,6 +656,9 @@ def NEW_BOOKING():
                     if res == []:
                         query = 'INSERT INTO SCHEDULE VALUES ("{}","{}","{}","{}","{}","{}","{}")'.format(
                             sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'ORIGIN'], sel.loc[i, 'DESTINATION'], sel.loc[i, 'DEPARTURE_TIME'], sel.loc[i, 'ARRIVAL_TIME'], sel.loc[i, 'DURATION'], list_seat_id[i])
+                        mycursor.execute(query)
+                        query= "INSERT INTO DELAY VALUES('{}',{},0)".format(sel.loc[i,"FLIGHT NO"],list_seat_id[i])
+                        print(query)
                         mycursor.execute(query)
                 query = "select CUSTOMER_ID,CUSTOMER_NAME,CUSTOMER_PHONE,CUSTOMER_EMAIL,CUSTOMER_SEX,CUSTOMER_DOB,CUSTOMER_NATIONALITY,CUSTOMER_PASSPORT_NUMBER FROM CUSTOMERS where CUSTOMER_PASSPORT_NUMBER='{}' AND CUSTOMER_NAME='{}' AND CUSTOMER_PHONE='{}' AND CUSTOMER_EMAIL='{}' AND CUSTOMER_SEX='{}' AND CUSTOMER_DOB='{}' AND CUSTOMER_NATIONALITY='{}'".format(
                     details[-3], details[2], details[3], details[4], details[5], details[6], details[8])
@@ -1299,6 +1302,79 @@ gihs.airline@gmail.com
 
 def FLIGHT_STATUS():
     print("="*8, "FLIGHT STATUS", "="*8)
+    def data_check(value,table,column):
+        try:
+            if type(value)==int:
+                query="select * from {} where {}={}".format(table,column,value)
+                mycursor.execute(query)
+                res=mycursor.fetchall()
+                if res!=[]:
+                    return True
+                else:
+                    return False
+            else:
+                query="select * from {} where {}='{}'".format(table,column,value)
+                mycursor.execute(query)
+                res=mycursor.fetchall()
+                if res!=[]:
+                    return True
+                else:
+                    return False
+        except Exception:
+            return False
+    while True:
+        res=input("\nENTER BOOKING ID: ")
+        try:
+            res=int(res)
+            a=data_check(res,"BOOKINGS","BOOKING_ID")
+            if a==True:
+                break
+            else:
+                print("\n","="*4, "ENTER VALID BOOKING ID", "="*4,"\n")
+                continue
+        except Exception:
+            print("\n","="*4, "ENTER VALID SEAT ID", "="*4,"\n")
+            continue
+    
+    query="select SEAT_ID FROM BOOKINGS WHERE BOOKING_ID={}".format(res)
+    mycursor.execute(query)
+    res=mycursor.fetchall()
+    ress=[]
+    for i in res:
+        for j in i:
+            ress.append(j)
+    res=ress 
+    if len(res)==2:
+        x=2
+    else:
+        x=1
+    df=[]
+    temp=[]
+    for i in range(x):
+        
+        query="select FLIGHT_NO,DELAY from DELAY WHERE SEAT_ID={}".format(res[i])
+        mycursor.execute(query)
+        for i in mycursor.fetchall():
+            for j in i:
+                temp.append(j)
+            df.append(temp)
+            temp=[]
+    for i in range(len(df)):
+        a=df[i]
+        for j in range(len(a)):
+            if type(a[j])==int:
+                if a[j]==0:
+                    a[j]="NO DELAY"
+                else:
+                    a[j]=str(a[j]) + " MINUTES"
+    
+    df=pd.DataFrame(df,columns=["FLIGHT NO","DELAY"])
+    print("\n",df)
+    
+
+
+
+    
 
 
 def MANAGE_BOOKINGS():
@@ -1320,17 +1396,104 @@ def MANAGE_BOOKINGS():
                     a.loc[i,"ARRIVAL TIME"]=(str(a.loc[i,"ARRIVAL TIME"]))[-8:]
                     a.loc[i,"DURATION"]=(str(a.loc[i,"DURATION"]))[-8:]
                 print(a)
-                break
+                return True,a
             else:
+                print("\n","="*4, "BOOKING ID INVALID, ENTER A VALID BOOKING ID", "="*4,"\n")
                 continue
         
     def m_main():
         pass
 
+    details()
+
 
 
 def STAFF_LOGIN():
     print("\n","="*8, "STAFF LOGIN", "="*8,"\n")
+    def ANALYZE_DATA():
+        pass
+    def ADD_DELAY(delay,seat_id):
+        query="UPDATE DELAY SET DELAY={} WHERE SEAT_ID={}".format(res,seat_id)
+        mycursor.execute(query)
+        pass
+    def VIUSALIZE_DATA():
+        pass
+    def data_check(value,table,column):
+        try:
+            if type(value)==int:
+                query="select * from {} where {}={}".format(table,column,value)
+                mycursor.execute(query)
+                res=mycursor.fetchall()
+                if res!=[]:
+                    return True
+                else:
+                    return False
+            else:
+                query="select * from {} where {}='{}'".format(table,column,value)
+                mycursor.execute(query)
+                res=mycursor.fetchall()
+                if res!=[]:
+                    return True
+                else:
+                    return False
+        except Exception:
+            return False
+        pass
+    def VIEW_DB():
+        query="show tables"
+        mycursor.execute(query)
+        res=[]
+        for i in mycursor.fetchall():
+            for j in i:
+                res.append(j)
+        print("\n")
+        opt=[]
+        for i in range(1,len(res)+1):
+            MESSAGE="OPTION {}: {} ".format(i,res[i-1])
+            print(MESSAGE)
+            opt.append(i)
+        tables=res
+        print
+        while True:
+            res=input("\nENTER OPTION NUMBER: ")
+            try:
+                res=int(res)
+                if res in opt:
+                    res=res-1
+                    break
+                else:
+                    print("\n","="*4, "ENTER VALID OPTION", "="*4,"\n")
+                    continue
+            except Exception:
+                print("\n","="*4, "ENTER VALID OPTION", "="*4,"\n")
+                continue
+        
+        query="show COLUMNS FROM {}".format(tables[res])
+        print(query)
+        mycursor.execute(query)
+        df=pd.DataFrame(mycursor.fetchall())
+        cols=[]
+        for i in range(len(df)):
+            cols.append(df.iloc[i,0])
+        
+        data=[]
+        data.append(cols)
+        query="select * from {}".format(tables[res])
+        mycursor.execute(query)
+        temp=[]
+        for i in mycursor.fetchall():
+            for j in i:
+                temp.append(j)
+            data.append(temp)
+            temp=[]
+        df=pd.DataFrame(data[1:],columns=data[0])
+        print("\n")
+        PAT="/DB/{}.csv".format(tables[res])
+        df.to_csv(r'{}'.format(os.getcwd()+PAT))
+        print("TABLE EXPORTED TO DB FOLDER")
+        time.sleep(3)
+        main()   
+        pass
     while True:
         USERNAME=input("\nENTER USERNAME: ")
         USERNAME=USERNAME.strip()
@@ -1366,8 +1529,10 @@ def STAFF_LOGIN():
     print("\n","="*4, "WELCOME BACK {}".format(NAME), "="*4,"\n")
 
     print("OPTION 1: ANALYZE DATA")
-    print("OPTION 2: MANAGE SCHEDULES")
-    list=["1","2"]
+    print("OPTION 2: ADD DELAY")
+    print("OPTION 3: VIUSALIZE DATA")
+    print("OPTION 4: VIEW DB")
+    list=["1","2","3","4"]
     while True:
         res=input("\nENTER OPTION NUMBER: ")
         res=res.strip()
@@ -1377,10 +1542,38 @@ def STAFF_LOGIN():
         else:
             break
     
-    """ if res==1:
+    if int(res)==1:
         ANALYZE_DATA()
+    elif int(res)==2:
+        while True:
+            seat_id=input("\nENTER SEAT ID: ")
+            
+            try:
+                seat_id=int(seat_id)
+                a=data_check(seat_id,"DELAY","SEAT_ID")
+                break
+            except Exception:
+                print("\n","="*4, "ENTER VALID SEAT ID", "="*4,"\n")
+                continue
+        if a==True:
+            while True:
+                res=input("\nENTER DELAY IN MINUTES: ")
+                try:
+                    res=int(res)
+                    ADD_DELAY(res,seat_id)
+                    mydb.commit()
+                    break
+                except Exception:
+                    print("\n","="*4, "ENTER ONLY NUMBERS", "="*4,"\n")
+                    continue
+
+
+        else:
+            print("\n","="*4, "ENTER VALID SEAT ID", "="*4,"\n")
+    elif int(res)==4:
+        VIEW_DB()   
     else:
-        MANAGE_SCHEDULES() """
+        VIUSALIZE_DATA()
             
 
 
@@ -1439,5 +1632,5 @@ if __name__ == "__main__":
     query = "delete from PASSPORT WHERE P_EXPIRY<'{}'".format(c_date)
     mycursor.execute(query)
     mydb.commit()
-    NEW_BOOKING()
+    main()
     mydb.close()
