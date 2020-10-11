@@ -20,7 +20,7 @@ import json
 pd.options.mode.chained_assignment = None
 # my sql connction
 mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
-                                passwd="Kf0GcKV5sh", port=3306, database="QxKi8MQlUR")
+                               passwd="Kf0GcKV5sh", port=3306, database="QxKi8MQlUR")
 mycursor = mydb.cursor()
 date1 = datetime.now()
 datee1 = str(date1)
@@ -702,7 +702,7 @@ def NEW_BOOKING():
                             sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'ORIGIN'], sel.loc[i, 'DESTINATION'], sel.loc[i, 'DEPARTURE_TIME'], sel.loc[i, 'ARRIVAL_TIME'], sel.loc[i, 'DURATION'], list_seat_id[i])
                         mycursor.execute(query)
                         query = 'INSERT INTO DELAY VALUES ("{}","{}","{}","{}","{}","{}","{}",{})'.format(
-                            sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'ORIGIN'], sel.loc[i, 'DESTINATION'], sel.loc[i, 'DEPARTURE_TIME'], sel.loc[i, 'ARRIVAL_TIME'], sel.loc[i, 'DURATION'], list_seat_id[i],0)
+                            sel.loc[i, 'FLIGHT NO'], sel.loc[i, 'ORIGIN'], sel.loc[i, 'DESTINATION'], sel.loc[i, 'DEPARTURE_TIME'], sel.loc[i, 'ARRIVAL_TIME'], sel.loc[i, 'DURATION'], list_seat_id[i], 0)
                         mycursor.execute(query)
                 query = "select CUSTOMER_ID,CUSTOMER_NAME,CUSTOMER_PHONE,CUSTOMER_EMAIL,CUSTOMER_SEX,CUSTOMER_DOB,CUSTOMER_NATIONALITY,CUSTOMER_PASSPORT_NUMBER FROM CUSTOMERS where CUSTOMER_PASSPORT_NUMBER='{}' AND CUSTOMER_NAME='{}' AND CUSTOMER_PHONE='{}' AND CUSTOMER_EMAIL='{}' AND CUSTOMER_SEX='{}' AND CUSTOMER_DOB='{}' AND CUSTOMER_NATIONALITY='{}'".format(
                     details[-3], details[2], details[3], details[4], details[5], details[6], details[8])
@@ -793,7 +793,7 @@ FLIGHT DETAILS
      DEPARTURE      ARRIVAL
             {}               {}
          {}         {}
-                
+
     DURATION: {}
 
     SEAT: {}
@@ -817,31 +817,31 @@ TOTAL FARE: {}
 Amenities: Complementary Wifi,InFlight Entertainment,
             Airport Lounge,Inflight Gym
 
-Baggage info: Free check-in baggage allowance is 30 kg per adult & child. 
-                Each bag must not exceed 32 kg and overall dimensions of 
-                checked baggage should not exceed 62 inches. 
+Baggage info: Free check-in baggage allowance is 30 kg per adult & child.
+                Each bag must not exceed 32 kg and overall dimensions of
+                checked baggage should not exceed 62 inches.
 
-Cancellation policy: Cancellations made 7 days or more in advance of 
-                    the check-in day, will receive a 100% refund. 
-                    Cancellations made within 3 - 6 days will incur 
-                    a 20% fee. Cancellations made within 48 hours 
+Cancellation policy: Cancellations made 7 days or more in advance of
+                    the check-in day, will receive a 100% refund.
+                    Cancellations made within 3 - 6 days will incur
+                    a 20% fee. Cancellations made within 48 hours
                     to the check-in day will incur a 30% fee.
-                    Cancellation made within 24 Hrs to the check-in 
+                    Cancellation made within 24 Hrs to the check-in
                     day will incur a 50% fee.
 
-ABOUT THIS TRIP: 
+ABOUT THIS TRIP:
 
             Use your Trip ID for all communication
 
-            Check-in counters for International flights 
+            Check-in counters for International flights
                 close 75 minutes before departure
 
             Your carry-on baggage shouldn't weigh more than 7kgs
 
-            Carry photo identification, you will need it as proof of 
+            Carry photo identification, you will need it as proof of
                 identity while checking-in
 
-            Kindly ensure that you have the relevant visa, immigration 
+            Kindly ensure that you have the relevant visa, immigration
                 clearance and travel with a passport, with a validity of at least 6 months.
 
 If you have any inqueries, Please do not hesitate to contact
@@ -892,31 +892,31 @@ TOTAL FARE: {}
 Amenities: Complementary Wifi,InFlight Entertainment,
             Airport Lounge,Inflight Gym
 
-Baggage info: Free check-in baggage allowance is 30 kg per adult & child. 
-                Each bag must not exceed 32 kg and overall dimensions of 
-                checked baggage should not exceed 62 inches. 
+Baggage info: Free check-in baggage allowance is 30 kg per adult & child.
+                Each bag must not exceed 32 kg and overall dimensions of
+                checked baggage should not exceed 62 inches.
 
-Cancellation policy: Cancellations made 7 days or more in advance of 
-                    the check-in day, will receive a 100% refund. 
-                    Cancellations made within 3 - 6 days will incur 
-                    a 20% fee. Cancellations made within 48 hours 
+Cancellation policy: Cancellations made 7 days or more in advance of
+                    the check-in day, will receive a 100% refund.
+                    Cancellations made within 3 - 6 days will incur
+                    a 20% fee. Cancellations made within 48 hours
                     to the check-in day will incur a 30% fee.
-                    Cancellation made within 24 Hrs to the check-in 
+                    Cancellation made within 24 Hrs to the check-in
                     day will incur a 50% fee.
 
-ABOUT THIS TRIP: 
+ABOUT THIS TRIP:
 
             Use your Trip ID for all communication
 
-            Check-in counters for International flights 
+            Check-in counters for International flights
                 close 75 minutes before departure
 
             Your carry-on baggage shouldn't weigh more than 7kgs
 
-            Carry photo identification, you will need it as proof of 
+            Carry photo identification, you will need it as proof of
                 identity while checking-in
 
-            Kindly ensure that you have the relevant visa, immigration 
+            Kindly ensure that you have the relevant visa, immigration
                 clearance and travel with a passport, with a validity of at least 6 months.
 
 If you have any inqueries, Please do not hesitate to contact
@@ -947,7 +947,7 @@ Best regards
 ERROR WHILE BOOKING FLIGHTS
 PLEASE TRY AGAIN LATER
 
-IF ERROR CONTINUES 
+IF ERROR CONTINUES
 FEEL FREE TO CONTACT USAT
 
 gihs.airline@gmail.com
@@ -1345,91 +1345,85 @@ gihs.airline@gmail.com
 
 
 def FLIGHT_STATUS(xyz):
-    def data_check(value,table,column):
+    def data_check(value, table, column):
         try:
-            if type(value)==int:
-                query="select * from {} where {}={}".format(table,column,value)
+            if type(value) == int:
+                query = "select * from {} where {}={}".format(table, column, value)
                 mycursor.execute(query)
-                res=mycursor.fetchall()
-                if res!=[]:
+                res = mycursor.fetchall()
+                if res != []:
                     return True
                 else:
                     return False
             else:
-                query="select * from {} where {}='{}'".format(table,column,value)
+                query = "select * from {} where {}='{}'".format(table, column, value)
                 mycursor.execute(query)
-                res=mycursor.fetchall()
-                if res!=[]:
+                res = mycursor.fetchall()
+                if res != []:
                     return True
                 else:
                     return False
         except Exception:
             return False
     while True:
-        res=input("\nENTER BOOKING ID: ")
-        BOOKING_ID=res
+        res = input("\nENTER BOOKING ID: ")
+        BOOKING_ID = res
         try:
-            res=int(res)
-            a=data_check(res,"BOOKINGS","BOOKING_ID")
-            if a==True:
+            res = int(res)
+            a = data_check(res, "BOOKINGS", "BOOKING_ID")
+            if a == True:
                 break
             else:
-                print("\n","="*4, "ENTER VALID BOOKING ID", "="*4,"\n")
+                print("\n", "="*4, "ENTER VALID BOOKING ID", "="*4, "\n")
                 continue
         except Exception:
-            print("\n","="*4, "ENTER VALID SEAT ID", "="*4,"\n")
+            print("\n", "="*4, "ENTER VALID SEAT ID", "="*4, "\n")
             continue
-    
-    query="select SEAT_ID FROM BOOKINGS WHERE BOOKING_ID={}".format(res)
+
+    query = "select SEAT_ID FROM BOOKINGS WHERE BOOKING_ID={}".format(res)
     mycursor.execute(query)
-    res=mycursor.fetchall()
-    ress=[]
+    res = mycursor.fetchall()
+    ress = []
     for i in res:
         for j in i:
             ress.append(j)
-    res=ress 
-    if len(res)==2:
-        x=2
+    res = ress
+    if len(res) == 2:
+        x = 2
     else:
-        x=1
-    df=[]
-    temp=[]
+        x = 1
+    df = []
+    temp = []
     for i in range(x):
-        query="select DELAY.FLIGHT_NO,DELAY.ORIGIN,DELAY.DESTINATION,DELAY.DEPATURE_TIME,DELAY.ARRIVAL_TIME,DELAY.DURATION,BOOKINGS.SEAT_NO,DELAY.DELAY from DELAY,BOOKINGS WHERE DELAY.SEAT_ID={} AND BOOKINGS.BOOKING_ID={} and BOOKINGS.SEAT_ID=DELAY.SEAT_ID".format(res[i],BOOKING_ID)
+        query = "select DELAY.FLIGHT_NO,DELAY.ORIGIN,DELAY.DESTINATION,DELAY.DEPATURE_TIME,DELAY.ARRIVAL_TIME,DELAY.DURATION,BOOKINGS.SEAT_NO,DELAY.DELAY from DELAY,BOOKINGS WHERE DELAY.SEAT_ID={} AND BOOKINGS.BOOKING_ID={} and BOOKINGS.SEAT_ID=DELAY.SEAT_ID".format(
+            res[i], BOOKING_ID)
         mycursor.execute(query)
         for i in mycursor.fetchall():
             for j in i:
                 temp.append(j)
             df.append(temp)
-            temp=[]
-    
-    df=pd.DataFrame(df,columns=["FLIGHT NO","ORIGIN","DESTINATION","DEPARTURE TIME","ARRIVAL TIME","DURATION","SEAT NO","DELAY"])
+            temp = []
+
+    df = pd.DataFrame(df, columns=["FLIGHT NO", "ORIGIN", "DESTINATION",
+                                   "DEPARTURE TIME", "ARRIVAL TIME", "DURATION", "SEAT NO", "DELAY"])
     for i in range(len(df)):
-        df.loc[i,"ARRIVAL TIME"]=(str(df.loc[i,"ARRIVAL TIME"]))[-8:]
-        df.loc[i,"DURATION"]=(str(df.loc[i,"DURATION"]))[-8:]
-        if df.loc[i,"DELAY"]==0:
-            df.loc[i,"DELAY"]="ON TIME"
+        df.loc[i, "ARRIVAL TIME"] = (str(df.loc[i, "ARRIVAL TIME"]))[-8:]
+        df.loc[i, "DURATION"] = (str(df.loc[i, "DURATION"]))[-8:]
+        if df.loc[i, "DELAY"] == 0:
+            df.loc[i, "DELAY"] = "ON TIME"
         else:
-            df.loc[i,"DELAY"]=str(df.loc[i,"DELAY"]) + " MINUTES"
-
-    
-
-    print("\n",df)
-    if xyz==0:
+            df.loc[i, "DELAY"] = str(df.loc[i, "DELAY"]) + " MINUTES"
+    print("\n", "="*4, "*THE MENTIONED DEPATURE TIME AND ARRIVAL TIME DO NOT ACCOUNT FOR DELAY*", "="*4, "\n")
+    print("\n", df)
+    if xyz == 0:
         main()
     else:
         return BOOKING_ID
-    
-
-    
-
-
-
-    
 
 
 def MANAGE_BOOKINGS():
     print("="*8, "MANAGE BOOKINGS", "="*8)
+
     def details(B):
         while True:
             booking_id = B
@@ -1437,75 +1431,73 @@ def MANAGE_BOOKINGS():
                 booking_id)
             mycursor.execute(query)
             res = mycursor.fetchall()
-            query = "SELECT SCHEDULE.FLIGHT_NO,SCHEDULE.ORIGIN,SCHEDULE.DESTINATION,SCHEDULE.DEPATURE_TIME,SCHEDULE.ARRIVAL_TIME ,SCHEDULE.DURATION,BOOKINGS.SEAT_NO,BOOKINGS.AMOUNT_USD,BOOKINGS.SEAT_ID FROM SCHEDULE,BOOKINGS WHERE BOOKINGS.SEAT_ID=SCHEDULE.SEAT_ID AND BOOKINGS.BOOKING_ID={}".format(booking_id)
+            query = "SELECT SCHEDULE.FLIGHT_NO,SCHEDULE.ORIGIN,SCHEDULE.DESTINATION,SCHEDULE.DEPATURE_TIME,SCHEDULE.ARRIVAL_TIME ,SCHEDULE.DURATION,BOOKINGS.SEAT_NO,BOOKINGS.AMOUNT_USD,BOOKINGS.SEAT_ID FROM SCHEDULE,BOOKINGS WHERE BOOKINGS.SEAT_ID=SCHEDULE.SEAT_ID AND BOOKINGS.BOOKING_ID={}".format(
+                booking_id)
             mycursor.execute(query)
-            res=mycursor.fetchall()
-            a=pd.DataFrame(res,columns=["FLIGHT NO","ORIGIN","DESTINATION","DEPARTURE TIME","ARRIVAL TIME","DURATION","SEAT NO","AMOUNT (USD)","SEAT ID"])
+            res = mycursor.fetchall()
+            a = pd.DataFrame(res, columns=["FLIGHT NO", "ORIGIN", "DESTINATION", "DEPARTURE TIME",
+                                           "ARRIVAL TIME", "DURATION", "SEAT NO", "AMOUNT (USD)", "SEAT ID"])
             for i in range(len(a)):
-                a.loc[i,"ARRIVAL TIME"]=(str(a.loc[i,"ARRIVAL TIME"]))[-8:]
-                a.loc[i,"DURATION"]=(str(a.loc[i,"DURATION"]))[-8:]
+                a.loc[i, "ARRIVAL TIME"] = (str(a.loc[i, "ARRIVAL TIME"]))[-8:]
+                a.loc[i, "DURATION"] = (str(a.loc[i, "DURATION"]))[-8:]
             return a
-        
+
     def m_main():
-        booking_id=FLIGHT_STATUS(1)
-        detail=details(booking_id)
+        booking_id = FLIGHT_STATUS(1)
+        detail = details(booking_id)
         print("OPTION 1: CHANGE SEAT")
         print("OPTION 2: UPDATE PHONE NUMBER")
         print("OPTION 3: UPDATE EMAIL ID")
         print("OPTION 4: CANCEL BOOKING")
         print("OPTION 5: EXIT")
-        list=[str(i) for i in range(1,6)]
+        list = [str(i) for i in range(1, 6)]
         while True:
-            res=input("ENTER OPTION NUMBER: ")
+            res = input("\nENTER OPTION NUMBER: ")
             if res in list:
                 pass
             else:
-                print("\n","="*4, "ENTER VALID OPTION", "="*4,"\n")
+                print("\n", "="*4, "ENTER VALID OPTION", "="*4, "\n")
                 continue
-            if res=="1":
-                if len(detail)==2:
+            if res == "1":
+                if len(detail) == 2:
                     while True:
-                        z=input("DO YOU WANT TO CHANGE FOR BOTH FLIGHTS (Y/N): ")
-                        z=z.upper()
-                        z=z.strip()
-                        if z not in ["Y","N"]:
+                        z = input("DO YOU WANT TO CHANGE FOR BOTH FLIGHTS (Y/N): ")
+                        z = z.upper()
+                        z = z.strip()
+                        if z not in ["Y", "N"]:
                             continue
                         elif z == "Y":
                             break
-                        elif z=="N":
+                        elif z == "N":
                             while True:
-                                index=input("WHICH FLIGHT DO YOU WANT CHANGE SEAT FOR (1/2): ")
+                                index = input("WHICH FLIGHT DO YOU WANT CHANGE SEAT FOR (1/2): ")
                                 if index == "1":
-                                    detail=detail.drop(1,axis=0)
+                                    detail = detail.drop(1, axis=0)
                                     break
-                                elif index=="2":
-                                    detail=detail.drop(0,axis=0)
+                                elif index == "2":
+                                    detail = detail.drop(0, axis=0)
                                     break
                                 else:
-                                    print("\n","="*4, "ENTER VALID OPTION", "="*4,"\n")
+                                    print("\n", "="*4, "ENTER VALID OPTION", "="*4, "\n")
                                     continue
                             break
-                        
-                                   
 
-                            
-                        
                 detail = detail.reset_index()
                 detail = detail.drop("index", axis=1)
                 for i in range(len(detail)):
-                    seat_id=str(detail.loc[i,"SEAT ID"])
-                    seat_no=str(detail.loc[i,"SEAT NO"])
+                    seat_id = str(detail.loc[i, "SEAT ID"])
+                    seat_no = str(detail.loc[i, "SEAT NO"])
                     print(seat_no)
                     with open(os.getcwd()+'/SEATS/{}.txt'.format(seat_id), 'r') as f:
                         seat_list = json.loads(f.read())
                     indexx = [0, 1, 2, 3, 4, 5, 0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0, 16, 17, 18, 19, 20, 21,
-                                22, 23, 24, 25, 26, 0, 27, 28, 29, 30,  31, 32, 33, 34, 35, 36, 37, 38]
+                              22, 23, 24, 25, 26, 0, 27, 28, 29, 30,  31, 32, 33, 34, 35, 36, 37, 38]
 
                     df = pd.DataFrame(
-                        seat_list[1:], columns=seat_list[0], index=indexx)                    
-                    df.loc[int(seat_no[1]),seat_no[0]]="0"
+                        seat_list[1:], columns=seat_list[0], index=indexx)
+                    df.loc[int(seat_no[1]), seat_no[0]] = "0"
                     print(
-                        "\n", "="*4, 'SEAT SELECTION FOR {} TO {}'.format(detail.loc[i,"ORIGIN"], detail.loc[i,"DESTINATION"]), "="*4, "\n")
+                        "\n", "="*4, 'SEAT SELECTION FOR {} TO {}'.format(detail.loc[i, "ORIGIN"], detail.loc[i, "DESTINATION"]), "="*4, "\n")
                     print("\t0=AVAILABLE AND X=BOOKED\n")
                     print(df)
                     while True:
@@ -1520,7 +1512,7 @@ def MANAGE_BOOKINGS():
 
                                 else:
                                     print("\n", "="*4,
-                                            'ENTER A VALID OPTION', "="*4, "\n")
+                                          'ENTER A VALID OPTION', "="*4, "\n")
                                     continue
                             if df.loc[int(ROW), COLUMN] == '0':
                                 df.loc[int(ROW), COLUMN] = "X"
@@ -1529,221 +1521,283 @@ def MANAGE_BOOKINGS():
                                 with open('seats/{}.txt'.format(seat_id), 'w') as f:
                                     f.write(json.dumps(seats))
                                 print(df)
-                                seat_no=COLUMN+ROW
-                                query="update BOOKINGS set SEAT_NO='{}' WHERE SEAT_ID={}".format(seat_no,seat_id)
+                                seat_no = COLUMN+ROW
+                                query = "update BOOKINGS set SEAT_NO='{}' WHERE SEAT_ID={}".format(
+                                    seat_no, seat_id)
                                 mycursor.execute(query)
                                 mydb.commit()
+                                print("\n", "="*4, "SEAT CHANGED SUCCESSFULLY", "="*4, "\n")
 
                                 break
-            
-            
-            
-            
-            
-            
-            
-            break
-                    
-                    
+            if res == '2':
+                seat_id = detail.loc[0, 'SEAT NO']
+                while True:  # taking input and valiation for phone number
+                    customer_phone = input(
+                        "ENTER PASSENGER PHONE NUMBER ((COUNTRY CODE)-########): ")
+                    try:
+                        z = phonenumbers.parse(customer_phone)
+                        if phonenumbers.is_valid_number(z) == False:
+                            print("\n", "="*4,
+                                  'PLEASE ENTER VALID NUMBER', "="*4, "\n")
+                            continue
+                        break
 
+                    except Exception:
+                        print("\n", "="*4,
+                              'PLEASE ENTER VALID NUMBER', "="*4, "\n")
 
+                        continue
 
-                    
-                    
+                query = "select CUSTOMER_ID from BOOKINGS WHERE BOOKING_ID={}".format(booking_id)
+                mycursor.execute(query)
+                res = mycursor.fetchall()
+                customer_id = res[0][0]
+                query = "update CUSTOMERS set CUSTOMER_PHONE='{}' WHERE CUSTOMER_ID ={} ".format(
+                    customer_phone, customer_id,)
+                mycursor.execute(query)
+                mydb.commit()
+                print("\n", "="*4, "PHONE NUMBER CHANGED SUCCESSFULLY", "="*4, "\n")
 
+            if res == '3':
+                seat_id = detail.loc[0, 'SEAT NO']
+                while True:  # taking input and valiation for EMAIL
+                    customer_email = input("\nENTER NEW PASSENGER EMAIL ADDRESS: ")
+                    customer_email = customer_email.strip()
+                    customer_email = customer_email.lower()
+                    regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+                    if(re.search(regex, customer_email)):
+                        break
 
-        
+                    else:
+                        print("\n", "="*4,
+                              'PLEASE ENTER VALID EMAIL ID', "="*4, "\n")
+                        continue
+
+                query = "select CUSTOMER_ID from BOOKINGS WHERE BOOKING_ID={}".format(booking_id)
+                mycursor.execute(query)
+                res = mycursor.fetchall()
+                customer_id = res[0][0]
+                query = "update CUSTOMERS set CUSTOMER_EMAIL='{}' WHERE CUSTOMER_ID ={} ".format(
+                    customer_email, customer_id,)
+                mycursor.execute(query)
+                mydb.commit()
+                print("\n", "="*4, "EMAIL CHANGED SUCCESSFULLY", "="*4, "\n")
+
+            if res == '4':
+                for i in range(len(detail)):
+                    seat_id = str(detail.loc[i, "SEAT ID"])
+                    seat_no = str(detail.loc[i, "SEAT NO"])
+                    print(seat_no)
+                    with open(os.getcwd()+'/SEATS/{}.txt'.format(seat_id), 'r') as f:
+                        seat_list = json.loads(f.read())
+                    indexx = [0, 1, 2, 3, 4, 5, 0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0, 16, 17, 18, 19, 20, 21,
+                              22, 23, 24, 25, 26, 0, 27, 28, 29, 30,  31, 32, 33, 34, 35, 36, 37, 38]
+
+                    df = pd.DataFrame(
+                        seat_list[1:], columns=seat_list[0], index=indexx)
+                    df.loc[int(seat_no[1]), seat_no[0]] = "0"
+                    seats = [df.columns.values.tolist()] + \
+                        df.values.tolist()
+                    with open('seats/{}.txt'.format(seat_id), 'w') as f:
+                        f.write(json.dumps(seats))
+                query = "delete from BOOKINGS where BOOKING_ID={}".format(booking_id)
+                mycursor.execute(query)
+                mydb.commit()
+                print("\n", "="*4, "BOOKING CANCELED SUCCESSFULLY", "="*4, "\n")
+
+            if res == '5':
+                main()
+                break
+
+            continue
 
     m_main()
 
 
-
 def STAFF_LOGIN():
-    print("\n","="*8, "STAFF LOGIN", "="*8,"\n")
+    print("\n", "="*8, "STAFF LOGIN", "="*8, "\n")
+
     def ANALYZE_DATA():
         pass
-    def ADD_DELAY(delay,seat_id):
-        query="UPDATE DELAY SET DELAY={} WHERE SEAT_ID={}".format(res,seat_id)
+
+    def ADD_DELAY(delay, seat_id):
+        query = "UPDATE DELAY SET DELAY={} WHERE SEAT_ID={}".format(res, seat_id)
         print(query)
         mycursor.execute(query)
         pass
+
     def VIUSALIZE_DATA():
         pass
-    def data_check(value,table,column):
+
+    def data_check(value, table, column):
         try:
-            if type(value)==int:
-                query="select * from {} where {}={}".format(table,column,value)
+            if type(value) == int:
+                query = "select * from {} where {}={}".format(table, column, value)
                 mycursor.execute(query)
-                res=mycursor.fetchall()
-                if res!=[]:
+                res = mycursor.fetchall()
+                if res != []:
                     return True
                 else:
                     return False
             else:
-                query="select * from {} where {}='{}'".format(table,column,value)
+                query = "select * from {} where {}='{}'".format(table, column, value)
                 mycursor.execute(query)
-                res=mycursor.fetchall()
-                if res!=[]:
+                res = mycursor.fetchall()
+                if res != []:
                     return True
                 else:
                     return False
         except Exception:
             return False
         pass
+
     def VIEW_DB():
-        query="show tables"
+        query = "show tables"
         mycursor.execute(query)
-        res=[]
+        res = []
         for i in mycursor.fetchall():
             for j in i:
                 res.append(j)
         print("\n")
-        opt=[]
-        for i in range(1,len(res)+1):
-            MESSAGE="OPTION {}: {} ".format(i,res[i-1])
+        opt = []
+        for i in range(1, len(res)+1):
+            MESSAGE = "OPTION {}: {} ".format(i, res[i-1])
             print(MESSAGE)
             opt.append(i)
-        tables=res
+        tables = res
         print
         while True:
-            res=input("\nENTER OPTION NUMBER: ")
+            res = input("\nENTER OPTION NUMBER: ")
             try:
-                res=int(res)
+                res = int(res)
                 if res in opt:
-                    res=res-1
+                    res = res-1
                     break
                 else:
-                    print("\n","="*4, "ENTER VALID OPTION", "="*4,"\n")
+                    print("\n", "="*4, "ENTER VALID OPTION", "="*4, "\n")
                     continue
             except Exception:
-                print("\n","="*4, "ENTER VALID OPTION", "="*4,"\n")
+                print("\n", "="*4, "ENTER VALID OPTION", "="*4, "\n")
                 continue
-        
-        query="show COLUMNS FROM {}".format(tables[res])
+
+        query = "show COLUMNS FROM {}".format(tables[res])
         print(query)
         mycursor.execute(query)
-        df=pd.DataFrame(mycursor.fetchall())
-        cols=[]
+        df = pd.DataFrame(mycursor.fetchall())
+        cols = []
         for i in range(len(df)):
-            cols.append(df.iloc[i,0])
-        
-        data=[]
+            cols.append(df.iloc[i, 0])
+
+        data = []
         data.append(cols)
-        query="select * from {}".format(tables[res])
+        query = "select * from {}".format(tables[res])
         mycursor.execute(query)
-        temp=[]
+        temp = []
         for i in mycursor.fetchall():
             for j in i:
                 temp.append(j)
             data.append(temp)
-            temp=[]
-        df=pd.DataFrame(data[1:],columns=data[0])
+            temp = []
+        df = pd.DataFrame(data[1:], columns=data[0])
         print("\n")
-        PAT="/DB/{}.csv".format(tables[res])
+        PAT = "/DB/{}.csv".format(tables[res])
         df.to_csv(r'{}'.format(os.getcwd()+PAT))
         print("TABLE EXPORTED TO DB FOLDER")
         time.sleep(3)
-        main()   
+        main()
         pass
     while True:
-        USERNAME=input("\nENTER USERNAME: ")
-        USERNAME=USERNAME.strip()
-        query="select * from STAFFS WHERE USERNAME='{}'".format(USERNAME)
+        USERNAME = input("\nENTER USERNAME: ")
+        USERNAME = USERNAME.strip()
+        query = "select * from STAFFS WHERE USERNAME='{}'".format(USERNAME)
         try:
             mycursor.execute(query)
         except Exception:
-            print("\n","="*4, "ENTER VALID USERNAME", "="*4,"\n")
+            print("\n", "="*4, "ENTER VALID USERNAME", "="*4, "\n")
             continue
-        res=mycursor.fetchall()
-        if res!=[]:
+        res = mycursor.fetchall()
+        if res != []:
             break
         else:
-            print("\n","="*4, "ENTER VALID USERNAME", "="*4,"\n")
+            print("\n", "="*4, "ENTER VALID USERNAME", "="*4, "\n")
             continue
     while True:
-        PASSWORD=input("\nENTER PASSWORD: ")
-        PASSWORD=PASSWORD.strip()
-        query="select EMPL_NAME from STAFFS where USERNAME='{}' and PASSWORD='{}'".format(USERNAME,PASSWORD)
+        PASSWORD = input("\nENTER PASSWORD: ")
+        PASSWORD = PASSWORD.strip()
+        query = "select EMPL_NAME from STAFFS where USERNAME='{}' and PASSWORD='{}'".format(
+            USERNAME, PASSWORD)
         try:
             mycursor.execute(query)
         except Exception:
-            print("\n","="*4, "ENTER VALID PASSWORD", "="*4,"\n")
+            print("\n", "="*4, "ENTER VALID PASSWORD", "="*4, "\n")
             continue
-        res=mycursor.fetchall()
-        if res!=[]:
+        res = mycursor.fetchall()
+        if res != []:
             break
         else:
-            print("\n","="*4, "ENTER VALID PASSWORD", "="*4,"\n")
+            print("\n", "="*4, "ENTER VALID PASSWORD", "="*4, "\n")
             continue
-    
-    NAME=res[0][0]
-    print("\n","="*4, "WELCOME BACK {}".format(NAME), "="*4,"\n")
+
+    NAME = res[0][0]
+    print("\n", "="*4, "WELCOME BACK {}".format(NAME), "="*4, "\n")
 
     print("OPTION 1: ANALYZE DATA")
     print("OPTION 2: ADD DELAY")
     print("OPTION 3: VIUSALIZE DATA")
     print("OPTION 4: VIEW DB")
     print("OPTION 5: EXIT")
-    list=["1","2","3","4","5"]
+    list = ["1", "2", "3", "4", "5"]
     while True:
-        res=input("\nENTER OPTION NUMBER: ")
-        res=res.strip()
+        res = input("\nENTER OPTION NUMBER: ")
+        res = res.strip()
         if res not in list:
-            print("\n","="*4, "ENTER A VALID OPTION", "="*4,"\n")
+            print("\n", "="*4, "ENTER A VALID OPTION", "="*4, "\n")
             continue
         else:
             break
-    
-    if int(res)==1:
-        ANALYZE_DATA()
-    elif int(res)==2:
-        while True:
-            flight_no=input("ENTER FLIGHT NUMBER: ")
-            depature_date=input("ENTER DATE AND TIME (YYYY-MM-DD HH:MM:SS): ")
-            query="select SEAT_ID from SCHEDULE where FLIGHT_NO='{}' AND DEPATURE_TIME='{}'".format(flight_no,depature_date)
-            mycursor.execute(query)
-            seat_id=mycursor.fetchall()
 
-            if seat_id!=[]:
-                seat_id=seat_id[0][0]
+    if int(res) == 1:
+        ANALYZE_DATA()
+    elif int(res) == 2:
+        while True:
+            flight_no = input("ENTER FLIGHT NUMBER: ")
+            depature_date = input("ENTER DATE AND TIME (YYYY-MM-DD HH:MM:SS): ")
+            query = "select SEAT_ID from SCHEDULE where FLIGHT_NO='{}' AND DEPATURE_TIME='{}'".format(
+                flight_no, depature_date)
+            mycursor.execute(query)
+            seat_id = mycursor.fetchall()
+
+            if seat_id != []:
+                seat_id = seat_id[0][0]
                 while True:
-                    res=input("\nENTER DELAY IN MINUTES: ")
+                    res = input("\nENTER DELAY IN MINUTES: ")
                     try:
-                        res=int(res)
-                        ADD_DELAY(res,seat_id)
+                        res = int(res)
+                        ADD_DELAY(res, seat_id)
                         mydb.commit()
                         break
                     except Exception:
-                        print("\n","="*4, "ENTER ONLY NUMBERS", "="*4,"\n")
+                        print("\n", "="*4, "ENTER ONLY NUMBERS", "="*4, "\n")
                         continue
                     break
                 break
-        
+
             else:
-                print("\n","="*4, "ENTER VALID DETAILS", "="*4,"\n")
+                print("\n", "="*4, "ENTER VALID DETAILS", "="*4, "\n")
                 continue
         main()
 
-    elif int(res)==3:
-        VIEW_DB()   
-    
-    elif int(res)==4:
+    elif int(res) == 3:
+        VIEW_DB()
+
+    elif int(res) == 4:
         VIUSALIZE_DATA()
     else:
         main()
-            
 
-
-
-   
-            
-
-            
-
-
-    
 
 def ABOUT():
     print("="*8, "ABOUT", "="*8)
+
 
 main()
