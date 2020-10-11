@@ -1628,16 +1628,32 @@ def MANAGE_BOOKINGS():
                 continue
 
             elif res == '5':
-                query="select CUSTOMER_EMAIL FROM CUSTOMERS,BOOKINGS WHERE CUSTOMERS.CUSTOMER_ID=BOOKINGS.CUSTOMER_ID AND BOOKINGS.BOOKING_ID={}".format(booking_id)
-                mycursor.execute(query)
-                email=mycursor.fetchall()
-                email=res[0][0]
-                taskdone={1:"SEAT CHANGED SUCCESSFULLY",2:"PHONE NUMBER UPDATED",3:"EMAIL ADDRESS UPDATED",4:"BOOKING CANCELLED"}
-                m=""
-                
-                for i in opt:
-                    if int(i) in taskdone.keys():
-                        m=m + "\n"taskdone[int(i)]
+                if opt!=[]:
+                    query="select CUSTOMER_NAME,CUSTOMER_EMAIL FROM CUSTOMERS,BOOKINGS WHERE CUSTOMERS.CUSTOMER_ID=BOOKINGS.CUSTOMER_ID AND BOOKINGS.BOOKING_ID={}".format(booking_id)
+                    mycursor.execute(query)
+                    res=mycursor.fetchall()
+                    NAME=res[0][0]
+                    EMAIL=res[0][1]
+                    taskdone={1:"SEAT CHANGED",2:"PHONE NUMBER UPDATED",3:"EMAIL ADDRESS UPDATED",4:"BOOKING CANCELLED"}
+                    m=""
+                    for i in opt:
+                        if int(i) in taskdone.keys():
+                            m=m + "\n"+taskdone[int(i)]
+
+                    MESSAGE="""
+DEAR {},
+
+This is to inform that you have updated your
+flight details.
+
+CHANGES MADE:
+    {}
+
+IF YOU HAVE NOT MADE ANY CHANGES PLEASE CONTACT US
+""".format(NAME,m)
+                    mail(EMAIL,MESSAGE)
+                    
+                    
             
                 main()
                 break
