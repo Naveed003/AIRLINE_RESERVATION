@@ -76,6 +76,21 @@ def main():
         else:
             print("="*20, "ENTER VALID OPTION", "="*20)
 
+def mail(email,message):
+    import smtplib
+    from email.message import EmailMessage
+    msg = EmailMessage()
+    msg['Subject'] = "AIRLINE BOOKING CONFIRMATION"
+    msg['From'] = "gihs.airline@gmail.com"
+    msg['To'] = email
+    msg.set_content(message)
+    with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
+        smtp.ehlo()
+        smtp.starttls()
+        smtp.ehlo()
+        smtp.login("gihs.airline@gmail.com", "gelronfuifxcyheb")
+
+        smtp.send_message(msg)
 
 def NEW_BOOKING():
     # taking input for new booking
@@ -766,18 +781,15 @@ def NEW_BOOKING():
                 pp_details.append(details[5])
                 pp_details.append(details[3])
                 pp_details.append(details[1])
-                print(pp_details)
                 DET = DET
                 booking_id = details[1]
-                print(booking_id)
                 total = total
-                print(total)
                 import smtplib
                 from email.message import EmailMessage
                 msg = EmailMessage()
                 msg['Subject'] = "AIRLINE BOOKING CONFIRMATION"
                 msg['From'] = "gihs.airline@gmail.com"
-                msg['To'] = "imnaveed2003@gmail.com"
+                msg['To'] = str(details[4])
                 if len(sel) == 1:
                     MESSAGE = """
 DEAR {},
@@ -850,7 +862,6 @@ or call the AIRLINE directly
 We are looking forward to your visit and hope that you enjoy your stay
 Best regards
 """.format(details[2].upper(), date, sel.loc[0, "FLIGHT NO"], (str(sel.loc[0, "DEPARTURE_TIME"]))[:10], sel.loc[0, "ORIGIN"], sel.loc[0, "DESTINATION"], (str(sel.loc[0, "DEPARTURE_TIME"]))[-8:], sel.loc[0, "ARRIVAL_TIME"], sel.loc[0, "DURATION"], DET.loc[0, "SEAT"], pp_details[0], pp_details[1], pp_details[2], pp_details[3], pp_details[4], pp_details[5], booking_id, total)
-                    print(MESSAGE)
                 else:
                     MESSAGE = """
 DEAR {},
@@ -1445,20 +1456,23 @@ def MANAGE_BOOKINGS():
     def m_main():
         booking_id = FLIGHT_STATUS(1)
         detail = details(booking_id)
-        print("OPTION 1: CHANGE SEAT")
-        print("OPTION 2: UPDATE PHONE NUMBER")
-        print("OPTION 3: UPDATE EMAIL ID")
-        print("OPTION 4: CANCEL BOOKING")
-        print("OPTION 5: EXIT")
-        list = [str(i) for i in range(1, 6)]
+        opt=[]
         while True:
+            print("OPTION 1: CHANGE SEAT")
+            print("OPTION 2: UPDATE PHONE NUMBER")
+            print("OPTION 3: UPDATE EMAIL ID")
+            print("OPTION 4: CANCEL BOOKING")
+            print("OPTION 5: EXIT")
+            list = [str(i) for i in range(1, 6)]
             res = input("\nENTER OPTION NUMBER: ")
             if res in list:
+                opt.append(res)
                 pass
             else:
                 print("\n", "="*4, "ENTER VALID OPTION", "="*4, "\n")
                 continue
             if res == "1":
+                
                 if len(detail) == 2:
                     while True:
                         z = input("DO YOU WANT TO CHANGE FOR BOTH FLIGHTS (Y/N): ")
@@ -1528,8 +1542,11 @@ def MANAGE_BOOKINGS():
                                 mydb.commit()
                                 print("\n", "="*4, "SEAT CHANGED SUCCESSFULLY", "="*4, "\n")
 
+
                                 break
-            if res == '2':
+                continue
+            elif res == '2':
+                
                 seat_id = detail.loc[0, 'SEAT NO']
                 while True:  # taking input and valiation for phone number
                     customer_phone = input(
@@ -1557,8 +1574,10 @@ def MANAGE_BOOKINGS():
                 mycursor.execute(query)
                 mydb.commit()
                 print("\n", "="*4, "PHONE NUMBER CHANGED SUCCESSFULLY", "="*4, "\n")
+                continue
 
-            if res == '3':
+            elif res == '3':
+                
                 seat_id = detail.loc[0, 'SEAT NO']
                 while True:  # taking input and valiation for EMAIL
                     customer_email = input("\nENTER NEW PASSENGER EMAIL ADDRESS: ")
@@ -1582,8 +1601,10 @@ def MANAGE_BOOKINGS():
                 mycursor.execute(query)
                 mydb.commit()
                 print("\n", "="*4, "EMAIL CHANGED SUCCESSFULLY", "="*4, "\n")
+                continue
 
-            if res == '4':
+            elif res == '4':
+                
                 for i in range(len(detail)):
                     seat_id = str(detail.loc[i, "SEAT ID"])
                     seat_no = str(detail.loc[i, "SEAT NO"])
@@ -1604,12 +1625,23 @@ def MANAGE_BOOKINGS():
                 mycursor.execute(query)
                 mydb.commit()
                 print("\n", "="*4, "BOOKING CANCELED SUCCESSFULLY", "="*4, "\n")
+                continue
 
-            if res == '5':
+            elif res == '5':
+                query="select CUSTOMER_EMAIL FROM CUSTOMERS,BOOKINGS WHERE CUSTOMERS.CUSTOMER_ID=BOOKINGS.CUSTOMER_ID AND BOOKINGS.BOOKING_ID={}".format(booking_id)
+                mycursor.execute(query)
+                email=mycursor.fetchall()
+                email=res[0][0]
+                taskdone={1:"SEAT CHANGED SUCCESSFULLY",2:"PHONE NUMBER UPDATED",3:"EMAIL ADDRESS UPDATED",4:"BOOKING CANCELLED"}
+                m=""
+                
+                for i in opt:
+                    if int(i) in taskdone.keys():
+                        m=m + "\n"taskdone[int(i)]
+            
                 main()
                 break
-
-            continue
+            
 
     m_main()
 
