@@ -1,6 +1,6 @@
-""" import pandas as pd
+import pandas as pd
 import sys
-
+"""
 list = [[1, 2, 3], [7, 8, 9]]
 df = pd.DataFrame(list,columns=["a","b","c"])
 df.insert(2,"hello",["31","32"])
@@ -31,10 +31,20 @@ ll=b()
 
 print(ll) """
 
-def a():
+""" def a():
     print("a")
 def b():
     def z():
         a()
     z()
-b()
+b() """
+
+df=[["col1","col2","col3"],[1,2,3],["a","b","c"]]
+df=pd.DataFrame(df[1:],columns=df[0])
+df=df.rename(columns={"col1":"hello"})
+cols=[]
+for i in df.columns:
+    cols.append(i)
+
+print(cols[-1])
+df=df.rename(columns={"col1":"hello"})
