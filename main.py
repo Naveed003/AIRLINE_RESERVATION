@@ -76,7 +76,8 @@ def main():
         else:
             print("="*20, "ENTER VALID OPTION", "="*20)
 
-def mail(email,message):
+
+def mail(email, message):
     import smtplib
     from email.message import EmailMessage
     msg = EmailMessage()
@@ -91,6 +92,7 @@ def mail(email,message):
         smtp.login("gihs.airline@gmail.com", "gelronfuifxcyheb")
 
         smtp.send_message(msg)
+
 
 def NEW_BOOKING():
     # taking input for new booking
@@ -977,6 +979,7 @@ gihs.airline@gmail.com
         else:  # printing direct flights along with option number and uppending it to flight list
             del dirr["days"]
             print("\n", "="*8, 'DIRECT FLIGHTS', "="*8, "\n")
+            print("\n", "="*4, "*ALL TIMINGS ARE IN GULF STANDARD TIME*", "="*4, "\n")
             for i in range(1, len(dirr)+1):
                 dep1 = dirr.iloc[i-1:i, :]
                 FLIGHTS.append(dep1)
@@ -984,6 +987,7 @@ gihs.airline@gmail.com
                 print("\n", "="*4, MESSAGE, "="*4, "\n")
                 dep1 = dep1.reset_index()
                 dep1 = dep1.drop("index", axis=1)
+                time.sleep(2)
                 print(dep1)
                 OPTION.append(str(option))
                 option += 1
@@ -993,6 +997,7 @@ gihs.airline@gmail.com
             del df1["days"]
             del df3["days"]
             print("\n", "="*8, 'CONNECTING FLIGHTS', "="*8, "\n")
+            print("\n", "="*4, "*ALL TIMINGS ARE IN GULF STANDARD TIME*", "="*4, "\n")
             for i in range(1, len(df1)+1):
                 dep1 = df1.iloc[i-1:i, :]
                 for j in range(1, len(df3)+1):
@@ -1002,6 +1007,7 @@ gihs.airline@gmail.com
                     df = pd.concat([dep1, arr1], axis=0)
                     df = df.reset_index()
                     df = df.drop("index", axis=1)
+                    time.sleep(2)
                     print(df)
                     FLIGHTS.append(df)
                     OPTION.append(str(option))
@@ -1456,7 +1462,7 @@ def MANAGE_BOOKINGS():
     def m_main():
         booking_id = FLIGHT_STATUS(1)
         detail = details(booking_id)
-        opt=[]
+        opt = []
         while True:
             print("OPTION 1: CHANGE SEAT")
             print("OPTION 2: UPDATE PHONE NUMBER")
@@ -1472,7 +1478,7 @@ def MANAGE_BOOKINGS():
                 print("\n", "="*4, "ENTER VALID OPTION", "="*4, "\n")
                 continue
             if res == "1":
-                
+
                 if len(detail) == 2:
                     while True:
                         z = input("DO YOU WANT TO CHANGE FOR BOTH FLIGHTS (Y/N): ")
@@ -1542,11 +1548,10 @@ def MANAGE_BOOKINGS():
                                 mydb.commit()
                                 print("\n", "="*4, "SEAT CHANGED SUCCESSFULLY", "="*4, "\n")
 
-
                                 break
                 continue
             elif res == '2':
-                
+
                 seat_id = detail.loc[0, 'SEAT NO']
                 while True:  # taking input and valiation for phone number
                     customer_phone = input(
@@ -1577,7 +1582,7 @@ def MANAGE_BOOKINGS():
                 continue
 
             elif res == '3':
-                
+
                 seat_id = detail.loc[0, 'SEAT NO']
                 while True:  # taking input and valiation for EMAIL
                     customer_email = input("\nENTER NEW PASSENGER EMAIL ADDRESS: ")
@@ -1604,7 +1609,7 @@ def MANAGE_BOOKINGS():
                 continue
 
             elif res == '4':
-                
+
                 for i in range(len(detail)):
                     seat_id = str(detail.loc[i, "SEAT ID"])
                     seat_no = str(detail.loc[i, "SEAT NO"])
@@ -1628,19 +1633,21 @@ def MANAGE_BOOKINGS():
                 continue
 
             elif res == '5':
-                if opt!=[]:
-                    query="select CUSTOMER_NAME,CUSTOMER_EMAIL FROM CUSTOMERS,BOOKINGS WHERE CUSTOMERS.CUSTOMER_ID=BOOKINGS.CUSTOMER_ID AND BOOKINGS.BOOKING_ID={}".format(booking_id)
+                if opt != []:
+                    query = "select CUSTOMER_NAME,CUSTOMER_EMAIL FROM CUSTOMERS,BOOKINGS WHERE CUSTOMERS.CUSTOMER_ID=BOOKINGS.CUSTOMER_ID AND BOOKINGS.BOOKING_ID={}".format(
+                        booking_id)
                     mycursor.execute(query)
-                    res=mycursor.fetchall()
-                    NAME=res[0][0]
-                    EMAIL=res[0][1]
-                    taskdone={1:"SEAT CHANGED",2:"PHONE NUMBER UPDATED",3:"EMAIL ADDRESS UPDATED",4:"BOOKING CANCELLED"}
-                    m=""
+                    res = mycursor.fetchall()
+                    NAME = res[0][0]
+                    EMAIL = res[0][1]
+                    taskdone = {1: "SEAT CHANGED", 2: "PHONE NUMBER UPDATED",
+                                3: "EMAIL ADDRESS UPDATED", 4: "BOOKING CANCELLED"}
+                    m = ""
                     for i in opt:
                         if int(i) in taskdone.keys():
-                            m=m + "\n"+taskdone[int(i)]
+                            m = m + "\n"+taskdone[int(i)]
 
-                    MESSAGE="""
+                    MESSAGE = """
 DEAR {},
 
 This is to inform that you have updated your
@@ -1650,14 +1657,11 @@ CHANGES MADE:
     {}
 
 IF YOU HAVE NOT MADE ANY CHANGES PLEASE CONTACT US
-""".format(NAME,m)
-                    mail(EMAIL,MESSAGE)
-                    
-                    
-            
+""".format(NAME, m)
+                    mail(EMAIL, MESSAGE)
+
                 main()
                 break
-            
 
     m_main()
 
