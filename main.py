@@ -33,6 +33,8 @@ query = "insert into E_SCHEDULE SELECT * FROM SCHEDULE WHERE DEPATURE_TIME<'{}'"
 mycursor.execute(query)
 query = "delete from SCHEDULE where DEPATURE_TIME<'{}'".format(datee1)
 mycursor.execute(query)
+query-"delete from DELAY where DEPATURE_TIME<'{}'".format(datee1)
+mycursor.execute(query)
 query = "insert into E_BOOKINGS SELECT * FROM BOOKINGS WHERE DEPATURE_TIME<'{}'".format(
     datee1)
 mycursor.execute(query)
