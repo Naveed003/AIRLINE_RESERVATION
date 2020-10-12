@@ -147,10 +147,8 @@ def NEW_BOOKING():
         global f_date
         try:
             f_date = d.replace(year=d.year+years)
-            print(f_date)
         except ValueError:
             f_date = d + (date(d.year+years, 1, 1)-date(d.year, 1, 1))
-            print(f_date)
 
     def string_to_date(datee):  # convertting sting to date
         year = int(datee[0:4])
@@ -166,7 +164,6 @@ def NEW_BOOKING():
             day_week = day_week.upper()[0:4]
         else:
             day_week = day_week.upper()[0:3]
-        print(day_week)
 
     def date_input():  # taking input for departure date and checking validity
         current_date = date.today()
@@ -224,6 +221,47 @@ def NEW_BOOKING():
 
                     else:
                         dirr = pd.DataFrame()
+                    for i in range(len(dirr)):
+
+                        price = dirr.loc[i, 'PRICE (USD)']
+                        current_date = date.today()
+                        current_day = current_date.weekday()
+                        departure_month = depature_date.month
+                        delta = depature_date - current_date
+                        timeofdep = str(dirr.loc[i, 'dep_time'])
+                        timeofdep = timeofdep[7:-6]
+                        if delta.days <= 90:
+                            price = price + price*(15/100)
+
+                        elif delta.days <= 30:
+                            price = price + price*(20/100)
+
+                        elif delta.days <= 15:
+                            price = price + price*(30/100)
+
+                        elif delta.days <= 2:
+                            price = price + price*(50/100)
+
+                        if current_day >= 5:
+                            price = price + price*(5/100)
+
+                        if departure_month in [6, 8]:
+                            price = price + price*(25/100)
+
+                        elif departure_month in [7, 12]:
+                            price = price + price*(30/100)
+
+                        elif departure_month in [1, 2]:
+                            price = price + price*(15/100)
+
+                        if int(timeofdep) >= 20:
+                            price = price - price*(15/100)
+
+                        elif int(timeofdep) <= 6:
+                            price = price - price*(15/100)
+
+                        dirr.loc[i, 'PRICE (USD)'] = int(price)
+
                     return dirr
 
             def con():  # extracting connecting flights
@@ -313,11 +351,50 @@ def NEW_BOOKING():
 
                         # concatting all dataframes
                         conn = pd.concat([df1, df3], axis=0)
+                        for i in range(len(conn)):
+
+                            price = conn.loc[i, 'PRICE (USD)']
+                            current_date = date.today()
+                            current_day = current_date.weekday()
+                            departure_month = depature_date.month
+                            delta = depature_date - current_date
+                            timeofdep = str(conn.loc[i, 'dep_time'])
+                            timeofdep = timeofdep[7:-6]
+                            if delta.days <= 90:
+                                price = price + price*(15/100)
+
+                            elif delta.days <= 30:
+                                price = price + price*(20/100)
+
+                            elif delta.days <= 15:
+                                price = price + price*(30/100)
+
+                            elif delta.days <= 2:
+                                price = price + price*(50/100)
+
+                            if current_day >= 5:
+                                price = price + price*(5/100)
+
+                            if departure_month in [6, 8]:
+                                price = price + price*(25/100)
+
+                            elif departure_month in [7, 12]:
+                                price = price + price*(30/100)
+
+                            elif departure_month in [1, 2]:
+                                price = price + price*(15/100)
+
+                            if int(timeofdep) >= 20:
+                                price = price - price*(15/100)
+
+                            if int(timeofdep) <= 6:
+                                price = price - price*(15/100)
+
+                            conn.loc[i, 'PRICE (USD)'] = int(price)
                         return conn
                     else:
 
                         err = 1
-                        print(err)
                         query = 'select * from {},{} WHERE {}.DESTINATION = {}.ORIGIN '.format(
                             dep_1, arr_1, dep_1, arr_1)  # ignoring time constraint
                         mycursor.execute(query)
@@ -362,6 +439,46 @@ def NEW_BOOKING():
                                 df3 = df3.drop([i], axis=0)
 
                         conn = pd.concat([df1, df3], axis=0)
+                        for i in range(len(conn)):
+
+                            price = conn.loc[i, 'PRICE (USD)']
+                            current_date = date.today()
+                            current_day = current_date.weekday()
+                            departure_month = depature_date.month
+                            delta = depature_date - current_date
+                            timeofdep = str(conn.loc[i, 'dep_time'])
+                            timeofdep = timeofdep[7:-6]
+                            if delta.days <= 90:
+                                price = price + price*(15/100)
+
+                            elif delta.days <= 30:
+                                price = price + price*(20/100)
+
+                            elif delta.days <= 15:
+                                price = price + price*(30/100)
+
+                            elif delta.days <= 2:
+                                price = price + price*(50/100)
+
+                            if current_day >= 5:
+                                price = price + price*(5/100)
+
+                            if departure_month in [6, 8]:
+                                price = price + price*(25/100)
+
+                            elif departure_month in [7, 12]:
+                                price = price + price*(30/100)
+
+                            elif departure_month in [1, 2]:
+                                price = price + price*(15/100)
+
+                            if int(timeofdep) >= 20:
+                                price = price - price*(15/100)
+
+                            if int(timeofdep) <= 6:
+                                price = price - price*(15/100)
+
+                            conn.loc[i, 'PRICE (USD)'] = int(price)
                         return conn
 
             dirr = dir()  # assinging variables from func
@@ -979,7 +1096,6 @@ gihs.airline@gmail.com
             print("\n", "="*8, 'NO DIRECT FLIGHTS', "="*8, "\n")
         else:  # printing direct flights along with option number and uppending it to flight list
             del dirr["days"]
-            time.sleep(2)
             print("\n", "="*8, 'DIRECT FLIGHTS', "="*8, "\n")
             print("\n", "="*4, "*ALL TIMINGS ARE IN GULF STANDARD TIME*", "="*4, "\n")
             for i in range(1, len(dirr)+1):
@@ -989,7 +1105,6 @@ gihs.airline@gmail.com
                 print("\n", "="*4, MESSAGE, "="*4, "\n")
                 dep1 = dep1.reset_index()
                 dep1 = dep1.drop("index", axis=1)
-                time.sleep(2)
                 print(dep1)
                 OPTION.append(str(option))
                 option += 1
@@ -998,7 +1113,6 @@ gihs.airline@gmail.com
         else:  # printing connecting flights along with option number and uppending it to flight list
             del df1["days"]
             del df3["days"]
-            time.sleep(2)
             print("\n", "="*8, 'CONNECTING FLIGHTS', "="*8, "\n")
             print("\n", "="*4, "*ALL TIMINGS ARE IN GULF STANDARD TIME*", "="*4, "\n")
             for i in range(1, len(df1)+1):
@@ -1659,6 +1773,8 @@ CHANGES MADE:
     {}
 
 IF YOU HAVE NOT MADE ANY CHANGES PLEASE CONTACT US
+email us at: gihs.airlines@gmail.com
+call us at:  04-XXXXXXX
 """.format(NAME, m)
                     mail(EMAIL, MESSAGE)
 
@@ -1672,8 +1788,8 @@ def STAFF_LOGIN():
     print("\n", "="*8, "STAFF LOGIN", "="*8, "\n")
 
     def ANALYZE_DATA(x):
-        df1=pd.DataFrame()
-        temp=""
+        df1 = pd.DataFrame()
+        temp = ""
         while True:
             print("\n")
             print("OPTION 1: NO. OF FLIGHTS FLYING IN A MONTH")
@@ -1698,10 +1814,10 @@ def STAFF_LOGIN():
                 mycursor.execute(query)
                 data = mycursor.fetchall()
                 df1 = pd.DataFrame(data, columns=['YEAR', 'MONTH', 'NO. OF FLIGHTS'])
-                temp1=str(df)
-                temp2=str(df1)
-                temp="\nNUMBER OF PENDING FLIGHTS\n\n" +temp1+"\n\nNUMBER OF PAST FLIGHTS \n\n"+temp2+"\n"
-                title=["NUMBER OF PENDING FLIGHTS","NUMBER OF PAST FLIGHTS"]
+                temp1 = str(df)
+                temp2 = str(df1)
+                temp = "\nNUMBER OF PENDING FLIGHTS\n\n" + temp1+"\n\nNUMBER OF PAST FLIGHTS \n\n"+temp2+"\n"
+                title = ["NUMBER OF PENDING FLIGHTS", "NUMBER OF PAST FLIGHTS"]
             elif res == '2':
                 query = "SELECT DISTINCT YEAR(DATE_OF_BOOKING) as YEAR, MONTH(DATE_OF_BOOKING) AS MONTH , COUNT(DISTINCT SEAT_ID) FROM BOOKINGS GROUP BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING) ORDER BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING)"
                 mycursor.execute(query)
@@ -1711,114 +1827,112 @@ def STAFF_LOGIN():
                 mycursor.execute(query)
                 data = mycursor.fetchall()
                 df1 = pd.DataFrame(data, columns=['YEAR', 'MONTH', 'NO. OF BOOKINGS'])
-                temp1=str(df)
-                temp2=str(df1)
-                temp="\nNUMBER OF PENDING BOOKINGS\n\n" +temp1+"\n\nNUMBER OF PAST BOOKINGS \n\n"+temp2+"\n"
-                title=["NUMBER OF PENDING BOOKINGS","NUMBER OF PAST BOOKINGS"]
-                
-            elif res=="3":
-                query="SELECT DISTINCT ORIGIN, DESTINATION, COUNT(DISTINCT SEAT_ID) AS 'NO. OF  FLIGHTS' from SCHEDULE GROUP BY ORIGIN,DESTINATION ORDER BY COUNT(DISTINCT SEAT_ID) DESC"                
+                temp1 = str(df)
+                temp2 = str(df1)
+                temp = "\nNUMBER OF PENDING BOOKINGS\n\n" + temp1+"\n\nNUMBER OF PAST BOOKINGS \n\n"+temp2+"\n"
+                title = ["NUMBER OF PENDING BOOKINGS", "NUMBER OF PAST BOOKINGS"]
+
+            elif res == "3":
+                query = "SELECT DISTINCT ORIGIN, DESTINATION, COUNT(DISTINCT SEAT_ID) AS 'NO. OF  FLIGHTS' from SCHEDULE GROUP BY ORIGIN,DESTINATION ORDER BY COUNT(DISTINCT SEAT_ID) DESC"
                 mycursor.execute(query)
-                data= mycursor.fetchall()
-                df=pd.DataFrame(data,columns=["ORIGIN","DESTINATION","NO. OF FLIGHTS"])
-                title=["NUMBER OF FLIGHTS BOOKED IN EACH ROUTES"]
-            elif res=="4":
-                query="SELECT DISTINCT YEAR(DATE_OF_BOOKING) as YEAR, MONTH(DATE_OF_BOOKING) AS MONTH , SUM(AMOUNT_USD) FROM BOOKINGS GROUP BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING) ORDER BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING)"
+                data = mycursor.fetchall()
+                df = pd.DataFrame(data, columns=["ORIGIN", "DESTINATION", "NO. OF FLIGHTS"])
+                title = ["NUMBER OF FLIGHTS BOOKED IN EACH ROUTES"]
+            elif res == "4":
+                query = "SELECT DISTINCT YEAR(DATE_OF_BOOKING) as YEAR, MONTH(DATE_OF_BOOKING) AS MONTH , SUM(AMOUNT_USD) FROM BOOKINGS GROUP BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING) ORDER BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING)"
                 mycursor.execute(query)
-                data= mycursor.fetchall()
-                df=pd.DataFrame(data,columns=["YEAR","MONTH","INCOME"])
-                query="SELECT DISTINCT YEAR(DATE_OF_BOOKING) as YEAR, MONTH(DATE_OF_BOOKING) AS MONTH , SUM(AMOUNT_USD) FROM E_BOOKINGS GROUP BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING) ORDER BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING)"
+                data = mycursor.fetchall()
+                df = pd.DataFrame(data, columns=["YEAR", "MONTH", "INCOME"])
+                query = "SELECT DISTINCT YEAR(DATE_OF_BOOKING) as YEAR, MONTH(DATE_OF_BOOKING) AS MONTH , SUM(AMOUNT_USD) FROM E_BOOKINGS GROUP BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING) ORDER BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING)"
                 mycursor.execute(query)
-                data= mycursor.fetchall()
-                df1=pd.DataFrame(data,columns=["YEAR","MONTH","INCOME"])
-                temp1=str(df)
-                temp2=str(df1)
-                temp="\nINCOME OF PENDING FLIGHTS\n\n" +temp1+"\n\nINCOME OF PAST FLIGHTS\n\n"+temp2+"\n"
-                title=["INCOME OF PENDING FLIGHTS","INCOME OF PAST FLIGHTS"]
-            elif res=="5":
+                data = mycursor.fetchall()
+                df1 = pd.DataFrame(data, columns=["YEAR", "MONTH", "INCOME"])
+                temp1 = str(df)
+                temp2 = str(df1)
+                temp = "\nINCOME OF PENDING FLIGHTS\n\n" + temp1+"\n\nINCOME OF PAST FLIGHTS\n\n"+temp2+"\n"
+                title = ["INCOME OF PENDING FLIGHTS", "INCOME OF PAST FLIGHTS"]
+            elif res == "5":
                 break
-            if x==1:
-                if temp!="":
+            if x == 1:
+                if temp != "":
                     print(temp)
-                    temp=""
+                    temp = ""
                 else:
                     print(df)
                 continue
             else:
-                return df,df1,title,res
-                
+                return df, df1, title, res
 
-            
     def ADD_DELAY(delay, seat_id):
         query = "UPDATE DELAY SET DELAY={} WHERE SEAT_ID={}".format(res, seat_id)
         mycursor.execute(query)
         pass
 
     def VIUSALIZE_DATA():
-        data=ANALYZE_DATA(2)
-        res=data[-1]
-        titles=data[-2]
-        data=data[:-2]
-        temp=[]
+        data = ANALYZE_DATA(2)
+        res = data[-1]
+        titles = data[-2]
+        data = data[:-2]
+        temp = []
         for i in data:
             temp.append(i)
-        data=temp
-        temp=data
+        data = temp
+        temp = data
         for i in range(len(temp)):
-            a=temp[i]
+            a = temp[i]
             if a.empty:
                 data.pop(i)
-        temp=[]
-        ToPlot=[]
+        temp = []
+        ToPlot = []
         for i in range(len(data)):
-            df=data[i]
-            cols=[]
+            df = data[i]
+            cols = []
             for i in df.columns:
                 cols.append(i)
-            col_y=cols[-1]
-            if res=="3":
+            col_y = cols[-1]
+            if res == "3":
                 for i in range(len(df)):
-                    b=str(df.loc[i,"ORIGIN"])+"-"+str(df.loc[i,"DESTINATION"])
+                    b = str(df.loc[i, "ORIGIN"])+"-"+str(df.loc[i, "DESTINATION"])
                     temp.append(b)
-                df.insert(2,"x axis",temp)
-                df=df.drop(["ORIGIN","DESTINATION"],axis=1)
-                df=df.rename(columns={col_y:"y axis"})
+                df.insert(2, "x axis", temp)
+                df = df.drop(["ORIGIN", "DESTINATION"], axis=1)
+                df = df.rename(columns={col_y: "y axis"})
             else:
                 for i in range(len(df)):
-                    b=str(df.loc[i,"YEAR"])+"-"+str(df.loc[i,"MONTH"])
+                    b = str(df.loc[i, "YEAR"])+"-"+str(df.loc[i, "MONTH"])
                     temp.append(b)
-                df.insert(2,"x axis",temp)
-                df=df.drop(["YEAR","MONTH"],axis=1)
-                df=df.rename(columns={col_y:"y axis"})
-            temp=[]
+                df.insert(2, "x axis", temp)
+                df = df.drop(["YEAR", "MONTH"], axis=1)
+                df = df.rename(columns={col_y: "y axis"})
+            temp = []
             ToPlot.append(df)
         for i in range(len(titles)):
-            if res=="1":
-                ToPlot[i].plot(x="x axis",y="y axis",kind="bar")
+            if res == "1":
+                ToPlot[i].plot(x="x axis", y="y axis", kind="bar")
                 plt.xlabel("DATES")
                 plt.ylabel("NO. OF FLIGHTS")
                 plt.xticks(rotation=30)
                 plt.title(titles[i])
                 plt.show()
-            if res=="2":
-                ToPlot[i].plot(x="x axis",y="y axis",kind="bar")
+            if res == "2":
+                ToPlot[i].plot(x="x axis", y="y axis", kind="bar")
                 plt.xlabel("DATES")
                 plt.ylabel("NO. OF BOOKINGS")
                 plt.xticks(rotation=30)
                 plt.title(titles[i])
                 plt.show()
-            elif res=="3":
-                ToPlot[i].plot(x="x axis",y="y axis",kind="bar")
+            elif res == "3":
+                ToPlot[i].plot(x="x axis", y="y axis", kind="bar")
                 plt.xlabel("ROUTES")
                 plt.ylabel("NO. OF FLIGHTS")
                 plt.xticks(rotation=30)
                 plt.title(titles[i])
                 plt.show()
-            elif res=="4":
-                a=ToPlot[i]
+            elif res == "4":
+                a = ToPlot[i]
                 for b in range(len(a)):
-                    a.loc[b,"y axis"]=int(a.loc[b,"y axis"])
-                a.plot(x="x axis",y="y axis",kind="bar")
+                    a.loc[b, "y axis"] = int(a.loc[b, "y axis"])
+                a.plot(x="x axis", y="y axis", kind="bar")
                 plt.xlabel("DATES")
                 plt.ylabel("INCOME")
                 plt.xticks(rotation=30)
@@ -2003,4 +2117,4 @@ def ABOUT():
     print("="*8, "ABOUT", "="*8)
 
 
-STAFF_LOGIN()
+main()
