@@ -221,6 +221,8 @@ def NEW_BOOKING():
 
                     else:
                         dirr = pd.DataFrame()
+                    dirr= dirr.reset_index()
+                    dirr = dirr.drop("index", axis=1)
                     for i in range(len(dirr)):
 
                         price = dirr.loc[i, 'PRICE (USD)']
@@ -350,15 +352,17 @@ def NEW_BOOKING():
                                 df3 = df3.drop([i], axis=0)
 
                         # concatting all dataframes
-                        conn = pd.concat([df1, df3], axis=0)
-                        for i in range(len(conn)):
 
-                            price = conn.loc[i, 'PRICE (USD)']
+                        df1 = df1.reset_index()
+                        df1 = df1.drop("index", axis=1)
+                        for i in range(len(df1)):
+
+                            price = df1.loc[i, 'PRICE (USD)']
                             current_date = date.today()
                             current_day = current_date.weekday()
                             departure_month = depature_date.month
                             delta = depature_date - current_date
-                            timeofdep = str(conn.loc[i, 'dep_time'])
+                            timeofdep = str(df1.loc[i, 'dep_time'])
                             timeofdep = timeofdep[7:-6]
                             if delta.days <= 90:
                                 price = price + price*(15/100)
@@ -390,7 +394,50 @@ def NEW_BOOKING():
                             if int(timeofdep) <= 6:
                                 price = price - price*(15/100)
 
-                            conn.loc[i, 'PRICE (USD)'] = int(price)
+                            df1.loc[i, 'PRICE (USD)'] = int(price)
+                        df3 = df3.reset_index()
+                        df3 = df3.drop("index", axis=1)
+                        for i in range(len(df1)):
+
+                            price = df3.loc[i, 'PRICE (USD)']
+                            current_date = date.today()
+                            current_day = current_date.weekday()
+                            departure_month = depature_date.month
+                            delta = depature_date - current_date
+                            timeofdep = str(df3.loc[i, 'dep_time'])
+                            timeofdep = timeofdep[7:-6]
+                            if delta.days <= 90:
+                                price = price + price*(15/100)
+
+                            elif delta.days <= 30:
+                                price = price + price*(20/100)
+
+                            elif delta.days <= 15:
+                                price = price + price*(30/100)
+
+                            elif delta.days <= 2:
+                                price = price + price*(50/100)
+
+                            if current_day >= 5:
+                                price = price + price*(5/100)
+
+                            if departure_month in [6, 8]:
+                                price = price + price*(25/100)
+
+                            elif departure_month in [7, 12]:
+                                price = price + price*(30/100)
+
+                            elif departure_month in [1, 2]:
+                                price = price + price*(15/100)
+
+                            if int(timeofdep) >= 20:
+                                price = price - price*(15/100)
+
+                            if int(timeofdep) <= 6:
+                                price = price - price*(15/100)
+
+                            df3.loc[i, 'PRICE (USD)'] = int(price)
+                        conn=pd.concat([df1,df3],axis=1)
                         return conn
                     else:
 
@@ -439,14 +486,16 @@ def NEW_BOOKING():
                                 df3 = df3.drop([i], axis=0)
 
                         conn = pd.concat([df1, df3], axis=0)
-                        for i in range(len(conn)):
+                        df1 = df1.reset_index()
+                        df1 = df1.drop("index", axis=1)
+                        for i in range(len(df1)):
 
-                            price = conn.loc[i, 'PRICE (USD)']
+                            price = df1.loc[i, 'PRICE (USD)']
                             current_date = date.today()
                             current_day = current_date.weekday()
                             departure_month = depature_date.month
                             delta = depature_date - current_date
-                            timeofdep = str(conn.loc[i, 'dep_time'])
+                            timeofdep = str(df1.loc[i, 'dep_time'])
                             timeofdep = timeofdep[7:-6]
                             if delta.days <= 90:
                                 price = price + price*(15/100)
@@ -478,7 +527,50 @@ def NEW_BOOKING():
                             if int(timeofdep) <= 6:
                                 price = price - price*(15/100)
 
-                            conn.loc[i, 'PRICE (USD)'] = int(price)
+                            df1.loc[i, 'PRICE (USD)'] = int(price)
+                        df3 = df3.reset_index()
+                        df3 = df3.drop("index", axis=1)
+                        for i in range(len(df1)):
+
+                            price = df3.loc[i, 'PRICE (USD)']
+                            current_date = date.today()
+                            current_day = current_date.weekday()
+                            departure_month = depature_date.month
+                            delta = depature_date - current_date
+                            timeofdep = str(df3.loc[i, 'dep_time'])
+                            timeofdep = timeofdep[7:-6]
+                            if delta.days <= 90:
+                                price = price + price*(15/100)
+
+                            elif delta.days <= 30:
+                                price = price + price*(20/100)
+
+                            elif delta.days <= 15:
+                                price = price + price*(30/100)
+
+                            elif delta.days <= 2:
+                                price = price + price*(50/100)
+
+                            if current_day >= 5:
+                                price = price + price*(5/100)
+
+                            if departure_month in [6, 8]:
+                                price = price + price*(25/100)
+
+                            elif departure_month in [7, 12]:
+                                price = price + price*(30/100)
+
+                            elif departure_month in [1, 2]:
+                                price = price + price*(15/100)
+
+                            if int(timeofdep) >= 20:
+                                price = price - price*(15/100)
+
+                            if int(timeofdep) <= 6:
+                                price = price - price*(15/100)
+
+                            df3.loc[i, 'PRICE (USD)'] = int(price)
+                        conn=pd.concat([df1,df3],axis=1)
                         return conn
 
             dirr = dir()  # assinging variables from func
@@ -1816,8 +1908,8 @@ def STAFF_LOGIN():
                 df1 = pd.DataFrame(data, columns=['YEAR', 'MONTH', 'NO. OF FLIGHTS'])
                 temp1 = str(df)
                 temp2 = str(df1)
-                temp = "\nNUMBER OF PENDING FLIGHTS\n\n" + temp1+"\n\nNUMBER OF PAST FLIGHTS \n\n"+temp2+"\n"
-                title = ["NUMBER OF PENDING FLIGHTS", "NUMBER OF PAST FLIGHTS"]
+                temp = "\nNUMBER OF PENDING FLIGHTS\n\n" + temp1+"\n\nNUMBER OF FLIGHTS FLOWN \n\n"+temp2+"\n"
+                title = ["NUMBER OF PENDING FLIGHTS", "NUMBER OF FLIGHTS FLOWN"]
             elif res == '2':
                 query = "SELECT DISTINCT YEAR(DATE_OF_BOOKING) as YEAR, MONTH(DATE_OF_BOOKING) AS MONTH , COUNT(DISTINCT SEAT_ID) FROM BOOKINGS GROUP BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING) ORDER BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING)"
                 mycursor.execute(query)
@@ -1829,8 +1921,8 @@ def STAFF_LOGIN():
                 df1 = pd.DataFrame(data, columns=['YEAR', 'MONTH', 'NO. OF BOOKINGS'])
                 temp1 = str(df)
                 temp2 = str(df1)
-                temp = "\nNUMBER OF PENDING BOOKINGS\n\n" + temp1+"\n\nNUMBER OF PAST BOOKINGS \n\n"+temp2+"\n"
-                title = ["NUMBER OF PENDING BOOKINGS", "NUMBER OF PAST BOOKINGS"]
+                temp = "\nNUMBER OF BOOKINGS DONE IN EACH MONTH\n\n" + temp1+"\n\nNUMBER OF BOOKINGS DONE IN EACH MONTH (EXPIRED FLIGHTS) \n\n"+temp2+"\n"
+                title = ["NUMBER OF IN BOOKINGS DONE EACH MONTH", "NUMBER OF  BOOKINGS DONE IN EACH MONTH (EXPIRED FLIGHTS)"]
 
             elif res == "3":
                 query = "SELECT DISTINCT ORIGIN, DESTINATION, COUNT(DISTINCT SEAT_ID) AS 'NO. OF  FLIGHTS' from SCHEDULE GROUP BY ORIGIN,DESTINATION ORDER BY COUNT(DISTINCT SEAT_ID) DESC"
@@ -1849,8 +1941,8 @@ def STAFF_LOGIN():
                 df1 = pd.DataFrame(data, columns=["YEAR", "MONTH", "INCOME"])
                 temp1 = str(df)
                 temp2 = str(df1)
-                temp = "\nINCOME OF PENDING FLIGHTS\n\n" + temp1+"\n\nINCOME OF PAST FLIGHTS\n\n"+temp2+"\n"
-                title = ["INCOME OF PENDING FLIGHTS", "INCOME OF PAST FLIGHTS"]
+                temp = "\nINCOME FROM PENDING FLIGHTS\n\n" + temp1+"\n\nINCOME FROM FLIGHTS FLOWN\n\n"+temp2+"\n"
+                title = ["INCOME FROM PENDING FLIGHTS", "INCOME FROM FLIGHTS FLOWN"]
             elif res == "5":
                 break
             if x == 1:
