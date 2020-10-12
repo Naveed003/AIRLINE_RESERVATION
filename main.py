@@ -33,7 +33,8 @@ query = "insert into E_SCHEDULE SELECT * FROM SCHEDULE WHERE DEPATURE_TIME<'{}'"
 mycursor.execute(query)
 query = "delete from SCHEDULE where DEPATURE_TIME<'{}'".format(datee1)
 mycursor.execute(query)
-query-"delete from DELAY where DEPATURE_TIME<'{}'".format(datee1)
+query="delete from DELAY where DEPATURE_TIME<'{}'".format(datee1)
+print(query)
 mycursor.execute(query)
 query = "insert into E_BOOKINGS SELECT * FROM BOOKINGS WHERE DEPATURE_TIME<'{}'".format(
     datee1)
@@ -1819,7 +1820,6 @@ def MANAGE_BOOKINGS():
                 continue
 
             elif res == '4':
-
                 for i in range(len(detail)):
                     seat_id = str(detail.loc[i, "SEAT ID"])
                     seat_no = str(detail.loc[i, "SEAT NO"])
