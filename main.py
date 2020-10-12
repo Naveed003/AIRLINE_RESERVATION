@@ -1671,7 +1671,32 @@ def STAFF_LOGIN():
     print("\n", "="*8, "STAFF LOGIN", "="*8, "\n")
 
     def ANALYZE_DATA():
-        pass
+        print("OPTION 1: NO. OF FLIGHTS FLYING IN A MONTH")
+        print("OPTION 2: TIME OF BOOKING")
+        print("OPTION 3: HELLO")
+        print("OPTION 4: HELLO")
+        print("OPTION 5: HELLO")
+        print("OPTION 6: HELLO")
+        list = ['1', '2', ' 3', '4', '5', '6']
+        while True:
+            res = input("\nENTER THE OPTION NO:")
+            if res in list:
+                break
+            else:
+                print("\n", "="*4, "PLEASE ENTER A VALID OPTION", "="*4, "\n")
+                continue
+        if res == '1':
+            query = "SELECT DISTINCT YEAR(DEPATURE_TIME) as YEAR, MONTH(DEPATURE_TIME) AS MONTH , COUNT(DISTINCT SEAT_ID) FROM SCHEDULE GROUP BY YEAR(DEPATURE_TIME) , MONTH(DEPATURE_TIME) ORDER BY YEAR(DEPATURE_TIME) , MONTH(DEPATURE_TIME)"
+            mycursor.execute(query)
+            data = mycursor.fetchall()
+            df = pd.DataFrame(data, columns=['YEAR', 'MONTH', 'NO. OF FLIGHTS'])
+            print(df)
+        elif res == '2':
+            query = "SELECT DISTINCT YEAR(DATE_OF_BOOKING) as YEAR, MONTH(DATE_OF_BOOKING) AS MONTH , COUNT(DISTINCT SEAT_ID) FROM BOOKINGS GROUP BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING) ORDER BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING)"
+            mycursor.execute(query)
+            data = mycursor.fetchall()
+            df = pd.DataFrame(data, columns=['YEAR', 'MONTH', 'NO. OF BOOKINGS'])
+            print(df)
 
     def ADD_DELAY(delay, seat_id):
         query = "UPDATE DELAY SET DELAY={} WHERE SEAT_ID={}".format(res, seat_id)
