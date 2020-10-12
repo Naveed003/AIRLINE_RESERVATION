@@ -978,6 +978,7 @@ gihs.airline@gmail.com
             print("\n", "="*8, 'NO DIRECT FLIGHTS', "="*8, "\n")
         else:  # printing direct flights along with option number and uppending it to flight list
             del dirr["days"]
+            time.sleep(2)
             print("\n", "="*8, 'DIRECT FLIGHTS', "="*8, "\n")
             print("\n", "="*4, "*ALL TIMINGS ARE IN GULF STANDARD TIME*", "="*4, "\n")
             for i in range(1, len(dirr)+1):
@@ -996,6 +997,7 @@ gihs.airline@gmail.com
         else:  # printing connecting flights along with option number and uppending it to flight list
             del df1["days"]
             del df3["days"]
+            time.sleep(2)
             print("\n", "="*8, 'CONNECTING FLIGHTS', "="*8, "\n")
             print("\n", "="*4, "*ALL TIMINGS ARE IN GULF STANDARD TIME*", "="*4, "\n")
             for i in range(1, len(df1)+1):
@@ -1007,7 +1009,6 @@ gihs.airline@gmail.com
                     df = pd.concat([dep1, arr1], axis=0)
                     df = df.reset_index()
                     df = df.drop("index", axis=1)
-                    time.sleep(2)
                     print(df)
                     FLIGHTS.append(df)
                     OPTION.append(str(option))
