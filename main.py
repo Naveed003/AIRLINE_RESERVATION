@@ -27,7 +27,7 @@ date1 = datetime.now()
 datee1 = str(date1)
 datee1 = datee1[:19]
 c_date = date.today()
-datee1="2020-11-12 13:22:00"
+datee1 = "2020-11-12 13:22:00"
 query = "insert into E_SCHEDULE SELECT * FROM SCHEDULE WHERE DEPATURE_TIME<'{}'".format(
     datee1)
 mycursor.execute(query)
@@ -802,11 +802,48 @@ def NEW_BOOKING():
             return details
 
         def f_confirmation():
+            from datetime import datetime
+            from datetime import timedelta
             if len(selection1) != 1:
                 try:
                     if err == 1:
                         timee = str(selection1.iloc[0]["ARRIVAL_TIME"])[-8:]
-                        datee = dep_date[0:8]+str((int(dep_date[-2:])+1))
+                        datee
+                        if dep_date[-2] != '0' and dep_date[5] == "0":
+                            datee = datetime(int(dep_date[0:4]), int(
+                                dep_date[6:7]), int(dep_date[-1:]))
+                            datee += timedelta(days=1)
+                            datee = (str(datee))[0:10]
+                            meow = datee[0:5]
+                            meow1 = datee[5:7]
+                            meow2 = datee[7]
+                            meow1 = '0'+meow1
+                            meow2 = '0'+meow2
+                            datee = meow + meow1 + meow2
+                        elif dep_date[5] == "0":
+                            datee = datetime(int(dep_date[0:4]), int(
+                                dep_date[6:7]), int(dep_date[-2:]))
+                            datee += timedelta(days=1)
+                            datee = (str(datee))[0:10]
+                            meow = datee[0:5]
+                            meow1 = datee[5:]
+                            meow1 = '0'+meow1
+                            datee = meow + meow1
+                        elif dep_date[-2] != '0':
+                            datee = datetime(int(dep_date[0:4]), int(
+                                dep_date[5:7]), int(dep_date[-1:]))
+                            datee += timedelta(days=1)
+                            datee = (str(datee))[0:10]
+                            meow = datee[0:8]
+                            meow1 = datee[8]
+                            meow1 = '0'+meow1
+                            datee = meow + meow1
+                        else:
+                            datee = datetime(int(dep_date[0:4]), int(
+                                dep_date[5:7]), int(dep_date[-2:]))
+                            datee += timedelta(days=1)
+                            datee = (str(datee))[0:10]
+
                         dep_time = datee+" "+timee
                         sel = selection1.reset_index()
                         sel = sel.drop("index", axis=1)
@@ -831,9 +868,43 @@ def NEW_BOOKING():
                         selection1.loc[0, "DEPARTURE_TIME"] = a
 
                         if arr_time1 < dep_time1:
-                            a = int(dep_date[-2:])
+                            if dep_date[-2] != '0' and dep_date[5] == "0":
+                                date = datetime(int(dep_date[0:4]), int(
+                                    dep_date[6:7]), int(dep_date[-1:]))
+                                date += timedelta(days=1)
+                                date = (str(date))[0:10]
+                                meow = date[0:5]
+                                meow1 = date[5:7]
+                                meow2 = date[7]
+                                meow1 = '0'+meow1
+                                meow2 = '0'+meow2
+                                date = meow + meow1 + meow2
+                            elif dep_date[5] == "0":
+                                date = datetime(int(dep_date[0:4]), int(
+                                    dep_date[6:7]), int(dep_date[-2:]))
+                                date += timedelta(days=1)
+                                date = (str(date))[0:10]
+                                meow = date[0:5]
+                                meow1 = date[5:]
+                                meow1 = '0'+meow1
+                                date = meow + meow1
+                            elif dep_date[-2] != '0':
+                                date = datetime(int(dep_date[0:4]), int(
+                                    dep_date[5:7]), int(dep_date[-1:]))
+                                date += timedelta(days=1)
+                                date = (str(date))[0:10]
+                                meow = date[0:8]
+                                meow1 = date[8]
+                                meow1 = '0'+meow1
+                                date = meow + meow1
+                            else:
+                                date = datetime(int(dep_date[0:4]), int(
+                                    dep_date[5:7]), int(dep_date[-2:]))
+                                date += timedelta(days=1)
+                                date = (str(date))[0:10]
+                            '''a = int(dep_date[-2:])
                             a += 1
-                            date = date[:-2]+str(a)
+                            date = date[:-2]+str(a)'''
                             A = str(selection1.iloc[0]["ARRIVAL_TIME"])
                             a = date+" "+dep_time2
                         else:
@@ -868,9 +939,43 @@ def NEW_BOOKING():
                         sel.loc[0, "DEPARTURE_TIME"] = a
 
                         if arr_time1 < dep_time1:
-                            a = int(dep_date[-2:])
+                            if dep_date[-2] != '0' and dep_date[5] == "0":
+                                date = datetime(int(dep_date[0:4]), int(
+                                    dep_date[6:7]), int(dep_date[-1:]))
+                                date += timedelta(days=1)
+                                date = (str(date))[0:10]
+                                meow = date[0:5]
+                                meow1 = date[5:7]
+                                meow2 = date[7]
+                                meow1 = '0'+meow1
+                                meow2 = '0'+meow2
+                                date = meow + meow1 + meow2
+                            elif dep_date[5] == "0":
+                                date = datetime(int(dep_date[0:4]), int(
+                                    dep_date[6:7]), int(dep_date[-2:]))
+                                date += timedelta(days=1)
+                                date = (str(date))[0:10]
+                                meow = date[0:5]
+                                meow1 = date[5:]
+                                meow1 = '0'+meow1
+                                date = meow + meow1
+                            elif dep_date[-2] != '0':
+                                date = datetime(int(dep_date[0:4]), int(
+                                    dep_date[5:7]), int(dep_date[-1:]))
+                                date += timedelta(days=1)
+                                date = (str(date))[0:10]
+                                meow = date[0:8]
+                                meow1 = date[8]
+                                meow1 = '0'+meow1
+                                date = meow + meow1
+                            else:
+                                date = datetime(int(dep_date[0:4]), int(
+                                    dep_date[5:7]), int(dep_date[-2:]))
+                                date += timedelta(days=1)
+                                date = (str(date))[0:10]
+                            '''a = int(dep_date[-2:])
                             a += 1
-                            date = date[:-2]+str(a)
+                            date = date[:-2]+str(a)'''
                             A = str(selection1.iloc[0]["ARRIVAL_TIME"])
                             a = date+" "+dep_time2
                         else:
@@ -2203,14 +2308,14 @@ def ABOUT():
 THE PROJECT TITLED "AIRLINE RESERVATION SYSTEM" IS A MANAGMENT
 SOFTWARE FOR MONITORING THE AIRLINE.THIS PROJECT IS IS CODED
 IN IDLE AND DATABASE MANAGEMENT IS HANDLED BY MySQL.
-THIS SOFTWARE MAINLY FOCUSES ON BASIC OPERATIONS RELATED TO 
-BOOKING A FLIGHT,MANAGING BOOKINGS LIKE 
-(CHANGING SEAT,CANCELLATION OF BOOKING ,UPDATION OF CONTACT DETAILS), 
-CHECKING FLIGHT STATUS AND STAFF LOGIN WHICH 
+THIS SOFTWARE MAINLY FOCUSES ON BASIC OPERATIONS RELATED TO
+BOOKING A FLIGHT,MANAGING BOOKINGS LIKE
+(CHANGING SEAT,CANCELLATION OF BOOKING ,UPDATION OF CONTACT DETAILS),
+CHECKING FLIGHT STATUS AND STAFF LOGIN WHICH
 CONTAINS ANALYZING DATA,VISULAIZING DATA,ADDING DELAY TO A FLIGHT,
-VIEWING DATABASE. "AIRLINE RESERVATION SYSTEM" IS A PYTHON APPLICATION WRITTEN ON A macOS. 
-"AIRLINE RESERVATION SYSTEM" SUPPORTS ALL  SYSTEMS THAT HAVE PYTHON INSTALLED. 
-THIS SOFTWARE IS EASY TO USE FOR BOTH BEGINNERS AND ADVANCED USERS. 
+VIEWING DATABASE. "AIRLINE RESERVATION SYSTEM" IS A PYTHON APPLICATION WRITTEN ON A macOS.
+"AIRLINE RESERVATION SYSTEM" SUPPORTS ALL  SYSTEMS THAT HAVE PYTHON INSTALLED.
+THIS SOFTWARE IS EASY TO USE FOR BOTH BEGINNERS AND ADVANCED USERS.
 """
     print(MESSAGE)
 
