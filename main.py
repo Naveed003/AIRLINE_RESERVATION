@@ -27,14 +27,12 @@ date1 = datetime.now()
 datee1 = str(date1)
 datee1 = datee1[:19]
 c_date = date.today()
-datee1 = '2020-10-03 18:59:09'
 query = "insert into E_SCHEDULE SELECT * FROM SCHEDULE WHERE DEPATURE_TIME<'{}'".format(
     datee1)
 mycursor.execute(query)
 query = "delete from SCHEDULE where DEPATURE_TIME<'{}'".format(datee1)
 mycursor.execute(query)
 query="delete from DELAY where DEPATURE_TIME<'{}'".format(datee1)
-print(query)
 mycursor.execute(query)
 query = "insert into E_BOOKINGS SELECT * FROM BOOKINGS WHERE DEPATURE_TIME<'{}'".format(
     datee1)
@@ -76,6 +74,7 @@ def main():
             ABOUT()
             break
         elif response == "6":
+            sys.exit()
             break
         else:
             print("="*20, "ENTER VALID OPTION", "="*20)
@@ -999,12 +998,7 @@ def NEW_BOOKING():
                 DET = DET
                 booking_id = details[1]
                 total = total
-                import smtplib
-                from email.message import EmailMessage
-                msg = EmailMessage()
-                msg['Subject'] = "AIRLINE BOOKING CONFIRMATION"
-                msg['From'] = "gihs.airline@gmail.com"
-                msg['To'] = str(details[4])
+                email=str(details[4])
                 if len(sel) == 1:
                     MESSAGE = """
 DEAR {},
@@ -1152,14 +1146,7 @@ We are looking forward to your visit and hope that you enjoy your stay
 Best regards
 """.format(details[2].upper(), date, sel.loc[0, "FLIGHT NO"], sel.loc[1, "FLIGHT NO"], (str(sel.loc[0, "DEPARTURE_TIME"]))[:10], (str(sel.loc[1, "DEPARTURE_TIME"]))[:10], sel.loc[0, "ORIGIN"], sel.loc[0, "DESTINATION"], (str(sel.loc[0, "DEPARTURE_TIME"]))[-8:], sel.loc[0, "ARRIVAL_TIME"], sel.loc[1, "ORIGIN"], sel.loc[1, "DESTINATION"], (str(sel.loc[1, "DEPARTURE_TIME"]))[-8:], sel.loc[1, "ARRIVAL_TIME"], sel.loc[0, "DURATION"], sel.loc[1, "DURATION"], DET.loc[0, "SEAT"], DET.loc[1, "SEAT"], pp_details[0], pp_details[1], pp_details[2], pp_details[3], pp_details[4], pp_details[5], booking_id, total)
 
-                msg.set_content(MESSAGE)
-                with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
-                    smtp.ehlo()
-                    smtp.starttls()
-                    smtp.ehlo()
-                    smtp.login("gihs.airline@gmail.com", "gelronfuifxcyheb")
-
-                    smtp.send_message(msg)
+                mail(email,MESSAGE)
                 mydb.commit()
                 print("\n", "="*8, 'THANK YOU FOR USING OUR SERVICE', "="*8, "\n")
                 print(
@@ -2209,6 +2196,21 @@ def STAFF_LOGIN():
 
 def ABOUT():
     print("="*8, "ABOUT", "="*8)
+    MESSAGE="""
+THE PROJECT TITLED "AIRLINE RESERVATION SYSTEM" IS A MANAGMENT 
+SOFTWARE FOR MONITORING THE AIRLINE.THIS PROJECT IS IS CODED 
+IN IDLE AND DATABASE MANAGEMENT IS HANDLED BY MySQL.
+THIS SOFTWARE MAINLY FOCUSES ON BASIC OPERATIONS RELATED TO 
+BOOKING A FLIGHT,MANAGING BOOKINGS LIKE 
+(CHANGING SEAT,CANCELLATION OF BOOKING ,UPDATION OF CONTACT DETAILS), 
+CHECKING FLIGHT STATUS AND STAFF LOGIN WHICH 
+CONTAINS ANA6
+LYZING DATA,VISULAIZING DATA,ADDING DELAY TO A FLIGHT,
+VIEWING DATABASE. "AIRLINE RESERVATION SYSTEM" IS A PYTHON APPLICATION WRITTEN ON A macOS. 
+"AIRLINE RESERVATION SYSTEM" SUPPORTS ALL  SYSTEMS THAT HAVE PYTHON INSTALLED. 
+THIS SOFTWARE IS EASY TO USE FOR BOTH BEGINNERS AND ADVANCED USERS. 
+"""
+    print(MESSAGE)
 
-
-main()
+while True:
+    main()
