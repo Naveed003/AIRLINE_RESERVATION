@@ -32,7 +32,7 @@ query = "insert into E_SCHEDULE SELECT * FROM SCHEDULE WHERE DEPATURE_TIME<'{}'"
 mycursor.execute(query)
 query = "delete from SCHEDULE where DEPATURE_TIME<'{}'".format(datee1)
 mycursor.execute(query)
-query="delete from DELAY where DEPATURE_TIME<'{}'".format(datee1)
+query = "delete from DELAY where DEPATURE_TIME<'{}'".format(datee1)
 mycursor.execute(query)
 query = "insert into E_BOOKINGS SELECT * FROM BOOKINGS WHERE DEPATURE_TIME<'{}'".format(
     datee1)
@@ -223,7 +223,7 @@ def NEW_BOOKING():
 
                     else:
                         dirr = pd.DataFrame()
-                    dirr= dirr.reset_index()
+                    dirr = dirr.reset_index()
                     dirr = dirr.drop("index", axis=1)
                     for i in range(len(dirr)):
 
@@ -439,7 +439,7 @@ def NEW_BOOKING():
                                 price = price - price*(15/100)
 
                             df3.loc[i, 'PRICE (USD)'] = int(price)
-                        conn=pd.concat([df1,df3],axis=1)
+                        conn = pd.concat([df1, df3], axis=1)
                         return conn
                     else:
 
@@ -572,7 +572,7 @@ def NEW_BOOKING():
                                 price = price - price*(15/100)
 
                             df3.loc[i, 'PRICE (USD)'] = int(price)
-                        conn=pd.concat([df1,df3],axis=1)
+                        conn = pd.concat([df1, df3], axis=1)
                         return conn
 
             dirr = dir()  # assinging variables from func
@@ -998,7 +998,7 @@ def NEW_BOOKING():
                 DET = DET
                 booking_id = details[1]
                 total = total
-                email=str(details[4])
+                email = str(details[4])
                 if len(sel) == 1:
                     MESSAGE = """
 DEAR {},
@@ -1146,7 +1146,7 @@ We are looking forward to your visit and hope that you enjoy your stay
 Best regards
 """.format(details[2].upper(), date, sel.loc[0, "FLIGHT NO"], sel.loc[1, "FLIGHT NO"], (str(sel.loc[0, "DEPARTURE_TIME"]))[:10], (str(sel.loc[1, "DEPARTURE_TIME"]))[:10], sel.loc[0, "ORIGIN"], sel.loc[0, "DESTINATION"], (str(sel.loc[0, "DEPARTURE_TIME"]))[-8:], sel.loc[0, "ARRIVAL_TIME"], sel.loc[1, "ORIGIN"], sel.loc[1, "DESTINATION"], (str(sel.loc[1, "DEPARTURE_TIME"]))[-8:], sel.loc[1, "ARRIVAL_TIME"], sel.loc[0, "DURATION"], sel.loc[1, "DURATION"], DET.loc[0, "SEAT"], DET.loc[1, "SEAT"], pp_details[0], pp_details[1], pp_details[2], pp_details[3], pp_details[4], pp_details[5], booking_id, total)
 
-                mail(email,MESSAGE)
+                mail(email, MESSAGE)
                 mydb.commit()
                 print("\n", "="*8, 'THANK YOU FOR USING OUR SERVICE', "="*8, "\n")
                 print(
@@ -1875,7 +1875,7 @@ def STAFF_LOGIN():
             print("\n")
             print("OPTION 1: NO. OF FLIGHTS FLYING IN A MONTH")
             print("OPTION 2: NO. OF BOOKING DONE IN EACH MONTH")
-            print("OPTION 3: NO. FLIGHTS IN BOOKED EACH ROUTES")
+            print("OPTION 3: NO. FLIGHTS BOOKED IN EACH ROUTES")
             print("OPTION 4: EARNINGS PER MONTH")
             print("OPTION 5: EXIT")
             list = ['1', '2', '3', '4', '5', '6']
@@ -1900,18 +1900,20 @@ def STAFF_LOGIN():
                 temp = "\nNUMBER OF PENDING FLIGHTS\n\n" + temp1+"\n\nNUMBER OF FLIGHTS FLOWN \n\n"+temp2+"\n"
                 title = ["NUMBER OF PENDING FLIGHTS", "NUMBER OF FLIGHTS FLOWN"]
             elif res == '2':
-                query = "SELECT DISTINCT YEAR(DATE_OF_BOOKING) as YEAR, MONTH(DATE_OF_BOOKING) AS MONTH , COUNT(DISTINCT SEAT_ID) FROM BOOKINGS GROUP BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING) ORDER BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING)"
+                query = "SELECT DISTINCT YEAR(DATE_OF_BOOKING) as YEAR, MONTH(DATE_OF_BOOKING) AS MONTH , COUNT(DISTINCT BOOKING_ID) FROM BOOKINGS GROUP BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING) ORDER BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING)"
                 mycursor.execute(query)
                 data = mycursor.fetchall()
                 df = pd.DataFrame(data, columns=['YEAR', 'MONTH', 'NO. OF BOOKINGS'])
-                query = "SELECT DISTINCT YEAR(DATE_OF_BOOKING) as YEAR, MONTH(DATE_OF_BOOKING) AS MONTH , COUNT(DISTINCT SEAT_ID) FROM E_BOOKINGS GROUP BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING) ORDER BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING)"
+                query = "SELECT DISTINCT YEAR(DATE_OF_BOOKING) as YEAR, MONTH(DATE_OF_BOOKING) AS MONTH , COUNT(DISTINCT BOOKING_ID) FROM E_BOOKINGS GROUP BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING) ORDER BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING)"
                 mycursor.execute(query)
                 data = mycursor.fetchall()
                 df1 = pd.DataFrame(data, columns=['YEAR', 'MONTH', 'NO. OF BOOKINGS'])
                 temp1 = str(df)
                 temp2 = str(df1)
-                temp = "\nNUMBER OF BOOKINGS DONE IN EACH MONTH\n\n" + temp1+"\n\nNUMBER OF BOOKINGS DONE IN EACH MONTH (EXPIRED FLIGHTS) \n\n"+temp2+"\n"
-                title = ["NUMBER OF IN BOOKINGS DONE EACH MONTH", "NUMBER OF  BOOKINGS DONE IN EACH MONTH (EXPIRED FLIGHTS)"]
+                temp = "\nNUMBER OF BOOKINGS DONE IN EACH MONTH\n\n" + temp1 + \
+                    "\n\nNUMBER OF BOOKINGS DONE IN EACH MONTH (EXPIRED FLIGHTS) \n\n"+temp2+"\n"
+                title = ["NUMBER OF IN BOOKINGS DONE EACH MONTH",
+                         "NUMBER OF  BOOKINGS DONE IN EACH MONTH (EXPIRED FLIGHTS)"]
 
             elif res == "3":
                 query = "SELECT DISTINCT ORIGIN, DESTINATION, COUNT(DISTINCT SEAT_ID) AS 'NO. OF  FLIGHTS' from SCHEDULE GROUP BY ORIGIN,DESTINATION ORDER BY COUNT(DISTINCT SEAT_ID) DESC"
@@ -2196,21 +2198,22 @@ def STAFF_LOGIN():
 
 def ABOUT():
     print("="*8, "ABOUT", "="*8)
-    MESSAGE="""
-THE PROJECT TITLED "AIRLINE RESERVATION SYSTEM" IS A MANAGMENT 
-SOFTWARE FOR MONITORING THE AIRLINE.THIS PROJECT IS IS CODED 
+    MESSAGE = """
+THE PROJECT TITLED "AIRLINE RESERVATION SYSTEM" IS A MANAGMENT
+SOFTWARE FOR MONITORING THE AIRLINE.THIS PROJECT IS IS CODED
 IN IDLE AND DATABASE MANAGEMENT IS HANDLED BY MySQL.
-THIS SOFTWARE MAINLY FOCUSES ON BASIC OPERATIONS RELATED TO 
-BOOKING A FLIGHT,MANAGING BOOKINGS LIKE 
-(CHANGING SEAT,CANCELLATION OF BOOKING ,UPDATION OF CONTACT DETAILS), 
-CHECKING FLIGHT STATUS AND STAFF LOGIN WHICH 
+THIS SOFTWARE MAINLY FOCUSES ON BASIC OPERATIONS RELATED TO
+BOOKING A FLIGHT,MANAGING BOOKINGS LIKE
+(CHANGING SEAT,CANCELLATION OF BOOKING ,UPDATION OF CONTACT DETAILS),
+CHECKING FLIGHT STATUS AND STAFF LOGIN WHICH
 CONTAINS ANA6
 LYZING DATA,VISULAIZING DATA,ADDING DELAY TO A FLIGHT,
-VIEWING DATABASE. "AIRLINE RESERVATION SYSTEM" IS A PYTHON APPLICATION WRITTEN ON A macOS. 
-"AIRLINE RESERVATION SYSTEM" SUPPORTS ALL  SYSTEMS THAT HAVE PYTHON INSTALLED. 
-THIS SOFTWARE IS EASY TO USE FOR BOTH BEGINNERS AND ADVANCED USERS. 
+VIEWING DATABASE. "AIRLINE RESERVATION SYSTEM" IS A PYTHON APPLICATION WRITTEN ON A macOS.
+"AIRLINE RESERVATION SYSTEM" SUPPORTS ALL  SYSTEMS THAT HAVE PYTHON INSTALLED.
+THIS SOFTWARE IS EASY TO USE FOR BOTH BEGINNERS AND ADVANCED USERS.
 """
     print(MESSAGE)
+
 
 while True:
     main()
