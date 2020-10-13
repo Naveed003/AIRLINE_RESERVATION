@@ -111,7 +111,8 @@ def NEW_BOOKING():
         list = ['DXB', 'JFK', 'LHR', 'BOM', 'SYD']
         global dep
         while True:
-            dep = input('\nEnter the Respective Code: ')
+            #dep = input('\nEnter the Respective Code: ')
+            dep=random.choice(list)
             dep = dep.strip()
             dep = dep.upper()
             if dep in list:
@@ -137,7 +138,8 @@ def NEW_BOOKING():
             print(p_command)
         global arr
         while True:
-            arr = input('\nEnter the Respective Code: ')
+            #arr = input('\nEnter the Respective Code: ')
+            arr=random.choice(list)
             arr = arr.strip()
             arr = arr.upper()
             if arr in list:
@@ -174,7 +176,27 @@ def NEW_BOOKING():
         global depature_date
         global dep_date
         while True:
-            depature_date = input("\nENTER DEPARTURE DATE (YYYY-MM-DD): ")
+            #depature_date = input("\nENTER DEPARTURE DATE (YYYY-MM-DD): ")
+            year=random.choice(["2020","2021"])
+            if year=="2020":
+                month=random.choice(["10","11","12"])
+                if month=="11":
+                    day=random.choice([str(i) for i in range(1,31)])
+                else:
+                    day=random.choice([str(i) for i in range(1,32)])
+            else:
+                month=random.choice([str(i) for i in range(1,13)])
+                if month in ["04", "06", "09", "11"]:
+                    day=random.choice([str(i) for i in range(1,31)])
+                elif month in ["1","3","5","7","8","10","12"]:
+                    day=random.choice([str(i) for i in range(1,32)])
+                else:
+                    day=random.choice([str(i) for i in range(1,29)])
+            if len(month)==2:
+                depature_date=year+"-"+month+"-"+day
+            else:
+                depature_date=year+"-0"+month+"-"+day
+
             depature_date.strip()
             if len(depature_date) != 10:
                 print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
@@ -188,7 +210,7 @@ def NEW_BOOKING():
                 print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
             elif depature_date[5:7] == "02" and int(depature_date[0:4]) % 4 == 0 and depature_date[-2:] > "29":
                 print("\n", "="*4, 'Please Enter a Valid Date ', "="*4)
-            elif str(current_date) < depature_date and str(f_date) > depature_date:
+            elif str(current_date) < depature_date: #and str(f_date) > depature_date:
                 dep_date = depature_date
                 break
             else:
@@ -400,8 +422,8 @@ def NEW_BOOKING():
                             df1.loc[i, 'PRICE (USD)'] = int(price)
                         df3 = df3.reset_index()
                         df3 = df3.drop("index", axis=1)
+                        print(df3)
                         for i in range(len(df3)):
-
                             price = df3.loc[i, 'PRICE (USD)']
                             current_date = date.today()
                             current_day = current_date.weekday()
@@ -534,7 +556,6 @@ def NEW_BOOKING():
                         df3 = df3.reset_index()
                         df3 = df3.drop("index", axis=1)
                         for i in range(len(df3)):
-
                             price = df3.loc[i, 'PRICE (USD)']
                             current_date = date.today()
                             current_day = current_date.weekday()
@@ -582,7 +603,8 @@ def NEW_BOOKING():
             if dirr.empty and df1.empty:
                 print("\n", "="*4, 'NO FLIGHTS AVAILABLE', "="*4, "\n")
                 print("\n", "="*4, 'DO YOU WANT TO TRY A DIFFERENT DATE', "="*4, "\n")
-                RESPONSE = input("ENTER (Y/N): ")
+                #RESPONSE = input("ENTER (Y/N): ")
+                RESPONSE = "Y"
                 if RESPONSE.lower() == "y":
                     continue
                 else:
@@ -633,8 +655,9 @@ def NEW_BOOKING():
                     break
 
             while True:  # taking input for name
-                customer_name = input("\nENTER PASSENGER NAME: ")
+                #customer_name = input("\nENTER PASSENGER NAME: ")
 
+                customer_name = random.choice(["NAVEED","ANSH","ZIYAAN","NAVISH","FARAZ","SOORYA","AARON","JOEL"])
                 customer_name = customer_name.strip()
                 customer_name = customer_name.upper()
                 if customer_name == "":
@@ -643,7 +666,8 @@ def NEW_BOOKING():
                     continue
                 break
             while True:  # taking input and valiation for phone number
-                customer_phone = input("ENTER PASSENGER PHONE NUMBER ((COUNTRY CODE)-########): ")
+                #customer_phone = input("ENTER PASSENGER PHONE NUMBER ((COUNTRY CODE)-########): ")
+                customer_phone=random.choice(["+971558004998","+971508528596","+971554059224","+919566265537","+971569700565"])
                 try:
                     z = phonenumbers.parse(customer_phone)
                     if phonenumbers.is_valid_number(z) == False:
@@ -658,7 +682,8 @@ def NEW_BOOKING():
 
                     continue
             while True:  # taking input and valiation for EMAIL
-                customer_email = input("\nENTER PASSENGER EMAIL ADDRESS: ")
+                customer_email = random.choice(["imnaveed2003@gmail.com","mirziyaan@gmail.com","batmanthanoshere@gmail.com"])
+                #customer_email = input("\nENTER PASSENGER EMAIL ADDRESS: ")
                 customer_email = customer_email.strip()
                 customer_email = customer_email.lower()
                 regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
@@ -671,7 +696,8 @@ def NEW_BOOKING():
                     continue
 
             while True:  # taking input and valiation for SEX
-                customer_sex = input("\nENTER PASSENGER SEX (M/F): ")
+                #customer_sex = input("\nENTER PASSENGER SEX (M/F): ")
+                customer_sex=random.choice(["M","F"])
                 customer_sex = customer_sex.strip()
                 customer_sex = customer_sex.upper()
                 if customer_sex.upper() not in ["M", "F"]:
@@ -682,7 +708,9 @@ def NEW_BOOKING():
                     break
             while True:  # taking input and valiation for DOB
                 import datetime
-                customer_dob = input("\nENTER PASSENGER DATE OF BIRTH (YYYY-MM-DD): ")
+
+                #customer_dob = input("\nENTER PASSENGER DATE OF BIRTH (YYYY-MM-DD): ")
+                customer_dob= random.choice(["2003-04-20","2011-03-01","2003-05-16","2003-10-16"])
                 try:
                     date_of_birth = datetime.datetime.strptime(
                         customer_dob, "%Y-%m-%d")
@@ -714,7 +742,10 @@ def NEW_BOOKING():
                     continue
 
             while True:
-                customer_pp_num = input("\nENTER PASSPORT NUMBER OF PASSENGER: ")
+                #customer_pp_num = input("\nENTER PASSPORT NUMBER OF PASSENGER: ")
+                digit=str(random.randint(100000,999999))
+                alpha=str(random.choice(["A","B","C","D","E","F","J","K","L","M","N"]))
+                customer_pp_num = digit+alpha
                 query = "select P_NUMBER,P_NAME,P_EXPIRY FROM PASSPORT WHERE P_NUMBER='{}'".format(
                     customer_pp_num)
                 mycursor.execute(query)
@@ -726,14 +757,16 @@ def NEW_BOOKING():
                 else:
                     if res != []:
                         while True:
-                            customer_pp_name = input(
-                                "\nENTER NAME ACCORDING TO PASSPORT: ")
+                            #customer_pp_name = input(
+                            #    "\nENTER NAME ACCORDING TO PASSPORT: ")
+                            customer_pp_name = customer_name
                             customer_pp_name = customer_pp_name.strip()
                             customer_pp_name = customer_pp_name.upper()
                             if res[0][1] == customer_pp_name:
                                 while True:
-                                    customer_pp_expiry = input(
-                                        "\nENTER EXPIRY OF PASSPORT (YYYY-MM-DD): ")
+                                    """ customer_pp_expiry = input(
+                                        "\nENTER EXPIRY OF PASSPORT (YYYY-MM-DD): ") """
+                                    customer_pp_expiry=random.choice(["2022-01-01","2022-02-01","2022-03-01","2022-04-01","2022-05-01","2022-06-01","2022-07-01","2022-08-01","2022-09-01","2022-10-01","2022-11-01","2022-12-01"])
                                     try:
                                         customer_pp_expiry = datetime.datetime.strptime(
                                             customer_pp_expiry, "%Y-%m-%d")
@@ -761,14 +794,14 @@ def NEW_BOOKING():
                     else:
 
                         while True:
-                            customer_pp_name = input(
-                                "\nENTER NAME ACCORDING TO PASSPORT: ")
+                            customer_pp_name=customer_name
                             customer_pp_name = customer_pp_name.strip()
                             customer_pp_name = customer_pp_name.upper()
                             if customer_pp_name != "":
                                 while True:
-                                    customer_pp_expiry = input(
-                                        "\nENTER EXPIRY OF PASSPORT (YYYY-MM-DD): ")
+                                    """ customer_pp_expiry = input(
+                                        "\nENTER EXPIRY OF PASSPORT (YYYY-MM-DD): ") """
+                                    customer_pp_expiry=random.choice(["2022-01-01","2022-02-01","2022-03-01","2022-04-01","2022-05-01","2022-06-01","2022-07-01","2022-08-01","2022-09-01","2022-10-01","2022-11-01","2022-12-01"])
                                     try:
                                         customer_pp_expiry = datetime.datetime.strptime(
                                             customer_pp_expiry, "%Y-%m-%d")
@@ -909,7 +942,8 @@ def NEW_BOOKING():
             sel.insert(6, "PRICE (USD)", price)
             print("\nTOTAL FARE: ${:,.2f}".format(total))
             while True:
-                response = input("\nDO YOU WANT TO CONFIRM (Y/N): ")
+                #response = input("\nDO YOU WANT TO CONFIRM (Y/N): ")
+                response = "Y"
                 response = response.strip()
                 if response.upper() == "Y":
                     break
@@ -1169,7 +1203,6 @@ gihs.airline@gmail.com
 """
                 print(message)
                 time.sleep(3)
-                main()
 
         option = 1
         details = []
@@ -1215,7 +1248,8 @@ gihs.airline@gmail.com
         if option > 1:  # continue only if flights found
             while True:
                 # asking for confirmation to continue
-                exit = input('\nDO YOU WANT TO CONTINUE BOOKING(Y/N): ')
+                #exit = input('\nDO YOU WANT TO CONTINUE BOOKING(Y/N): ')
+                exit = "y"
                 exit = exit.strip()
                 exit = exit.upper()
                 if exit == "Y":
@@ -1226,7 +1260,8 @@ gihs.airline@gmail.com
                 # asking for which flight
             while True:
                 SEATS_1 = []
-                flight_booking = input('\nENTER THE OPTION NO.: ')
+                #flight_booking = input('\nENTER THE OPTION NO.: ')
+                flight_booking = random.choice(OPTION)
                 res = []
                 try:
                     selection = FLIGHTS[int(flight_booking)-1]
@@ -1306,7 +1341,8 @@ gihs.airline@gmail.com
                         if True not in b:
                             print("\n", "="*4,
                                   'NO SEATS AVAILABLE IN THE SELECTED FLIGHT', "="*4, "\n")
-                            a = input("DO YOU WANT TO CONTIUNE BOOKING(Y/N): ")
+                            #a = input("DO YOU WANT TO CONTIUNE BOOKING(Y/N): ")
+                            a="Y"
                             a.strip()
                             a.upper()
                             if a == "Y":
@@ -1321,12 +1357,14 @@ gihs.airline@gmail.com
                             print("\t0=AVAILABLE AND X=BOOKED\n")
                             print(df)
                             while True:
-                                COLUMN = input("ENTER THE COLUMN: ")
+                                #COLUMN = input("ENTER THE COLUMN: ")
+                                COLUMN = random.choice(["A", "B", "C", "D", "E", "F", "G", "H"])
                                 COLUMN = COLUMN.strip()
                                 COLUMN = COLUMN.upper()
                                 if COLUMN in ["A", "B", "C", "D", "E", "F", "G", "H"]:
                                     while True:
-                                        ROW = input("ENTER THE ROW NUMBER: ")
+                                        #ROW = input("ENTER THE ROW NUMBER: ")
+                                        ROW = random.choice([str(i) for i in range(1, 39)])
                                         if ROW in [str(i) for i in range(1, 39)]:
                                             break
 
@@ -1408,12 +1446,14 @@ gihs.airline@gmail.com
                             print("\t0=AVAILABLE AND X=BOOKED\n")
                             print(seat1)
                             while True:
-                                COLUMN = input("ENTER THE COLUMN: ")
+                                #COLUMN = input("ENTER THE COLUMN: ")
+                                COLUMN = random.choice(["A", "B", "C", "D", "E", "F", "G", "H"])
                                 COLUMN = COLUMN.strip()
                                 COLUMN = COLUMN.upper()
                                 if COLUMN in ["A", "B", "C", "D", "E", "F", "G", "H"]:
                                     while True:
-                                        ROW = input("ENTER THE ROW NUMBER: ")
+                                        #ROW = input("ENTER THE ROW NUMBER: ")
+                                        ROW = random.choice([str(i) for i in range(1, 39)])
                                         if ROW in [str(i) for i in range(1, 39)]:
                                             break
 
@@ -1445,12 +1485,14 @@ gihs.airline@gmail.com
                             print("\t0=AVAILABLE AND X=BOOKED\n")
                             print(seat2)
                             while True:
-                                COLUMN = input("ENTER THE COLUMN: ")
+                                #COLUMN = input("ENTER THE COLUMN: ")
+                                COLUMN = random.choice(["A", "B", "C", "D", "E", "F", "G", "H"])
                                 COLUMN = COLUMN.strip()
                                 COLUMN = COLUMN.upper()
                                 if COLUMN in ["A", "B", "C", "D", "E", "F", "G", "H"]:
                                     while True:
-                                        ROW = input("ENTER THE ROW NUMBER: ")
+                                        #ROW = input("ENTER THE ROW NUMBER: ")
+                                        ROW = random.choice([str(i) for i in range(1, 39)])
                                         if ROW in [str(i) for i in range(1, 39)]:
                                             break
 
@@ -1517,12 +1559,14 @@ gihs.airline@gmail.com
                         df = flight_seat(1)
                         print(df)
                         while True:
-                            COLUMN = input("ENTER THE COLUMN: ")
+                            #COLUMN = input("ENTER THE COLUMN: ")
+                            COLUMN = random.choice(["A", "B", "C", "D", "E", "F", "G", "H"])
                             COLUMN = COLUMN.strip()
                             COLUMN = COLUMN.upper()
                             if COLUMN in ["A", "B", "C", "D", "E", "F", "G", "H"]:
                                 while True:
-                                    ROW = input("ENTER THE ROW NUMBER: ")
+                                    #ROW = input("ENTER THE ROW NUMBER: ")
+                                    ROW = random.choice([str(i) for i in range(1, 39)])
                                     if ROW in [str(i) for i in range(1, 39)]:
                                         break
 
@@ -1720,12 +1764,14 @@ def MANAGE_BOOKINGS():
                     print("\t0=AVAILABLE AND X=BOOKED\n")
                     print(df)
                     while True:
-                        COLUMN = input("ENTER THE COLUMN: ")
+                        #COLUMN = input("ENTER THE COLUMN: ")
+                        COLUMN = random.choice(["A", "B", "C", "D", "E", "F", "G", "H"])
                         COLUMN = COLUMN.strip()
                         COLUMN = COLUMN.upper()
                         if COLUMN in ["A", "B", "C", "D", "E", "F", "G", "H"]:
                             while True:
-                                ROW = input("ENTER THE ROW NUMBER: ")
+                                #ROW = input("ENTER THE ROW NUMBER: ")
+                                ROW = random.choice([str(i) for i in range(1, 39)])
                                 if ROW in [str(i) for i in range(1, 39)]:
                                     break
 
@@ -2006,7 +2052,7 @@ def STAFF_LOGIN():
                 plt.title(titles[i])
                 plt.show()
             elif res == "3":
-                ToPlot[i].plot(x="x axis", y="y axis", kind="line")
+                ToPlot[i].plot(x="x axis", y="y axis", kind="bar")
                 plt.xlabel("ROUTES")
                 plt.ylabel("NO. OF FLIGHTS")
                 plt.xticks(rotation=30)
@@ -2214,6 +2260,7 @@ THIS SOFTWARE IS EASY TO USE FOR BOTH BEGINNERS AND ADVANCED USERS.
 """
     print(MESSAGE)
 
-
-while True:
-    main()
+count=0
+while count<50:
+    NEW_BOOKING()
+    count+=1

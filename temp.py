@@ -39,7 +39,7 @@ def b():
     z()
 b() """
 
-df=[["col1","col2","col3"],[1,2,3],["a","b","c"]]
+""" df=[["col1","col2","col3"],[1,2,3],["a","b","c"]]
 df=pd.DataFrame(df[1:],columns=df[0])
 df=df.rename(columns={"col1":"hello"})
 cols=[]
@@ -47,4 +47,9 @@ for i in df.columns:
     cols.append(i)
 
 print(cols[-1])
-df=df.rename(columns={"col1":"hello"})
+df=df.rename(columns={"col1":"hello"}) """
+
+import random
+while True:
+    a=random.choice(["a","b","c"])
+    print(a)
