@@ -808,8 +808,14 @@ def NEW_BOOKING():
                 try:
                     if err == 1:
                         timee = str(selection1.iloc[0]["ARRIVAL_TIME"])[-8:]
-                        datee
-                        if dep_date[-2] != '0' and dep_date[5] == "0":
+                        day = int(dep_date[-2:].lstrip("0"))
+                        month = int(dep_date[5:7].lstrip("0"))
+                        year = int(dep_date[0:4])
+                        datee = datetime(year, month, day)
+                        datee += timedelta(days=1)
+                        datee = (str(datee))[0:10]
+                        print(datee)
+                        '''if dep_date[-2] != '0' and dep_date[5] == "0":
                             datee = datetime(int(dep_date[0:4]), int(
                                 dep_date[6:7]), int(dep_date[-1:]))
                             datee += timedelta(days=1)
@@ -842,7 +848,7 @@ def NEW_BOOKING():
                             datee = datetime(int(dep_date[0:4]), int(
                                 dep_date[5:7]), int(dep_date[-2:]))
                             datee += timedelta(days=1)
-                            datee = (str(datee))[0:10]
+                            datee = (str(datee))[0:10]'''
 
                         dep_time = datee+" "+timee
                         sel = selection1.reset_index()
@@ -868,7 +874,13 @@ def NEW_BOOKING():
                         selection1.loc[0, "DEPARTURE_TIME"] = a
 
                         if arr_time1 < dep_time1:
-                            if dep_date[-2] != '0' and dep_date[5] == "0":
+                            day = int(dep_date[-2:].lstrip("0"))
+                            month = int(dep_date[5:7].lstrip("0"))
+                            year = int(dep_date[0:4])
+                            date = datetime(year, month, day)
+                            date += timedelta(days=1)
+                            date = (str(date))[0:10]
+                            '''if dep_date[-2] != '0' and dep_date[5] == "0":
                                 date = datetime(int(dep_date[0:4]), int(
                                     dep_date[6:7]), int(dep_date[-1:]))
                                 date += timedelta(days=1)
@@ -901,7 +913,7 @@ def NEW_BOOKING():
                                 date = datetime(int(dep_date[0:4]), int(
                                     dep_date[5:7]), int(dep_date[-2:]))
                                 date += timedelta(days=1)
-                                date = (str(date))[0:10]
+                                date = (str(date))[0:10]'''
                             '''a = int(dep_date[-2:])
                             a += 1
                             date = date[:-2]+str(a)'''
@@ -939,7 +951,13 @@ def NEW_BOOKING():
                         sel.loc[0, "DEPARTURE_TIME"] = a
 
                         if arr_time1 < dep_time1:
-                            if dep_date[-2] != '0' and dep_date[5] == "0":
+                            day = int(dep_date[-2:].lstrip("0"))
+                            month = int(dep_date[5:7].lstrip("0"))
+                            year = int(dep_date[0:4])
+                            date = datetime(year, month, day)
+                            date += timedelta(days=1)
+                            date = (str(date))[0:10]
+                            '''if dep_date[-2] != '0' and dep_date[5] == "0":
                                 date = datetime(int(dep_date[0:4]), int(
                                     dep_date[6:7]), int(dep_date[-1:]))
                                 date += timedelta(days=1)
@@ -972,7 +990,7 @@ def NEW_BOOKING():
                                 date = datetime(int(dep_date[0:4]), int(
                                     dep_date[5:7]), int(dep_date[-2:]))
                                 date += timedelta(days=1)
-                                date = (str(date))[0:10]
+                                date = (str(date))[0:10]'''
                             '''a = int(dep_date[-2:])
                             a += 1
                             date = date[:-2]+str(a)'''
