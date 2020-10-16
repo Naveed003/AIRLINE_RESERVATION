@@ -21,13 +21,12 @@ import matplotlib.pyplot as plt
 pd.options.mode.chained_assignment = None
 # my sql connction
 mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
-                               passwd="Kf0GcKV5sh", port=3306, database="QxKi8MQlUR")
+                               passwd="YicMABk9k7", port=3306, database="QxKi8MQlUR")
 mycursor = mydb.cursor()
 date1 = datetime.now()
 datee1 = str(date1)
 datee1 = datee1[:19]
 c_date = date.today()
-datee1 = "2020-11-12 13:22:00"
 query = "insert into E_SCHEDULE SELECT * FROM SCHEDULE WHERE DEPATURE_TIME<'{}'".format(
     datee1)
 mycursor.execute(query)
@@ -199,7 +198,6 @@ def NEW_BOOKING():
     def flights_extract():  # extracting flights from database
         while True:
             date_input()
-
             def dir():  # extracting direct flights
                 query = "select * from SCHEDULE"
                 mycursor.execute(query)
@@ -315,7 +313,7 @@ def NEW_BOOKING():
                         df = pd.DataFrame(list, columns=[
                             "flight_no", "origin", "dest", "dep_time", "arr_time", "days", "type", "duration", "PRICE (USD)", "flight_no1", "origin1", "dest1", "dep_time1", "arr_time1", "days1", "type1", "duration1", "PRICE (USD)1"])
                         # splitting df
-
+        
                         df1 = pd.concat([df["flight_no"], df["origin"], df["dest"],
                                          df["dep_time"], df["arr_time"], df["days"], df["duration"], df["PRICE (USD)"]], axis=1)
 
@@ -329,11 +327,9 @@ def NEW_BOOKING():
                                 df1 = df1.drop([i], axis=0)
                             else:
                                 flight_no.append(df1["flight_no"][i])
-
                         # renaming coloums and assinging it to new dataframe
                         df3 = df2.rename(columns={'flight_no1': 'flight_no', 'origin1': 'origin', 'dest1': 'dest',
                                                   'dep_time1': 'dep_time', 'arr_time1': 'arr_time', 'days1': 'days', "duration1": "duration", "PRICE (USD)1": "PRICE (USD)"}, inplace=False)
-
                         flight_no = []
                         # removing unwanted flights
                         for i in df3.index:
@@ -440,7 +436,7 @@ def NEW_BOOKING():
                                 price = price - price*(15/100)
 
                             df3.loc[i, 'PRICE (USD)'] = int(price)
-                        conn = pd.concat([df1, df3], axis=1)
+                        conn = pd.concat([df1, df3], axis=0)
                         return conn
                     else:
 
@@ -573,13 +569,13 @@ def NEW_BOOKING():
                                 price = price - price*(15/100)
 
                             df3.loc[i, 'PRICE (USD)'] = int(price)
-                        conn = pd.concat([df1, df3], axis=1)
+                        conn = pd.concat([df1, df3], axis=0)
                         return conn
 
             dirr = dir()  # assinging variables from func
             conn = con()
             # checking if flights found
-            if dirr.empty and df1.empty:
+            if dirr.empty and df1.empty or df3.empty:
                 print("\n", "="*4, 'NO FLIGHTS AVAILABLE', "="*4, "\n")
                 print("\n", "="*4, 'DO YOU WANT TO TRY A DIFFERENT DATE', "="*4, "\n")
                 RESPONSE = input("ENTER (Y/N): ")
@@ -643,7 +639,7 @@ def NEW_BOOKING():
                     continue
                 break
             while True:  # taking input and valiation for phone number
-                customer_phone = input("ENTER PASSENGER PHONE NUMBER ((COUNTRY CODE)-########): ")
+                customer_phone = input("\nENTER PASSENGER PHONE NUMBER ((COUNTRY CODE)-########): ")
                 try:
                     z = phonenumbers.parse(customer_phone)
                     if phonenumbers.is_valid_number(z) == False:
@@ -702,7 +698,7 @@ def NEW_BOOKING():
                     continue
             while True:  # taking input and valiation for Nationality
 
-                a = "INDIA"
+                a = input("\nENTER YOUR COUNTRY OF NATIONALITY: ")
                 b = list(pycountry.countries)
                 a = a.strip()
                 a = a.upper()
@@ -733,7 +729,7 @@ def NEW_BOOKING():
                             if res[0][1] == customer_pp_name:
                                 while True:
                                     customer_pp_expiry = input(
-                                        "\nENTER EXPIRY OF PASSPORT (YYYY-MM-DD): ")
+                                        "\nENTER EXPIRY OF PASSPORT (YYYY-MM2020-DD): ")
                                     try:
                                         customer_pp_expiry = datetime.datetime.strptime(
                                             customer_pp_expiry, "%Y-%m-%d")
@@ -765,28 +761,30 @@ def NEW_BOOKING():
                                 "\nENTER NAME ACCORDING TO PASSPORT: ")
                             customer_pp_name = customer_pp_name.strip()
                             customer_pp_name = customer_pp_name.upper()
+                            print(customer_pp_name)
                             if customer_pp_name != "":
                                 while True:
                                     customer_pp_expiry = input(
-                                        "\nENTER EXPIRY OF PASSPORT (YYYY-MM-DD): ")
+                                        "\nENTER EXPIRY OF PASSPORT (YYYY-MMM-DD): ")
                                     try:
                                         customer_pp_expiry = datetime.datetime.strptime(
                                             customer_pp_expiry, "%Y-%m-%d")
                                         customer_pp_expiry = str(
                                             customer_pp_expiry)
                                         customer_pp_expiry = customer_pp_expiry[0:10]
+                                        print(customer_pp_expiry)
                                         break
                                     except:
                                         print(
                                             "\n", "="*4, 'ENTER A VALID PASSPORT EXPIRY', "="*4, "\n")
                                         continue
-                                    if str(customer_pp_expiry) >= dep_date:
-                                        break
-                                    else:
-                                        print(
-                                            "\n", "="*4, 'SORRY YOUR PASSPORT IS EXPIRED', "="*4, "\n")
-                                        time.sleep(4)
-                                        sys.exit()
+                                if str(customer_pp_expiry) >= dep_date:
+                                    break
+                                else:
+                                    print(
+                                        "\n", "="*4, 'SORRY YOUR PASSPORT IS EXPIRED', "="*4, "\n")
+                                    time.sleep(4)
+                                    sys.exit()
                                 break
 
                             else:
@@ -814,42 +812,6 @@ def NEW_BOOKING():
                         datee = datetime(year, month, day)
                         datee += timedelta(days=1)
                         datee = (str(datee))[0:10]
-                        print(datee)
-                        '''if dep_date[-2] != '0' and dep_date[5] == "0":
-                            datee = datetime(int(dep_date[0:4]), int(
-                                dep_date[6:7]), int(dep_date[-1:]))
-                            datee += timedelta(days=1)
-                            datee = (str(datee))[0:10]
-                            meow = datee[0:5]
-                            meow1 = datee[5:7]
-                            meow2 = datee[7]
-                            meow1 = '0'+meow1
-                            meow2 = '0'+meow2
-                            datee = meow + meow1 + meow2
-                        elif dep_date[5] == "0":
-                            datee = datetime(int(dep_date[0:4]), int(
-                                dep_date[6:7]), int(dep_date[-2:]))
-                            datee += timedelta(days=1)
-                            datee = (str(datee))[0:10]
-                            meow = datee[0:5]
-                            meow1 = datee[5:]
-                            meow1 = '0'+meow1
-                            datee = meow + meow1
-                        elif dep_date[-2] != '0':
-                            datee = datetime(int(dep_date[0:4]), int(
-                                dep_date[5:7]), int(dep_date[-1:]))
-                            datee += timedelta(days=1)
-                            datee = (str(datee))[0:10]
-                            meow = datee[0:8]
-                            meow1 = datee[8]
-                            meow1 = '0'+meow1
-                            datee = meow + meow1
-                        else:
-                            datee = datetime(int(dep_date[0:4]), int(
-                                dep_date[5:7]), int(dep_date[-2:]))
-                            datee += timedelta(days=1)
-                            datee = (str(datee))[0:10]'''
-
                         dep_time = datee+" "+timee
                         sel = selection1.reset_index()
                         sel = sel.drop("index", axis=1)
@@ -880,43 +842,6 @@ def NEW_BOOKING():
                             date = datetime(year, month, day)
                             date += timedelta(days=1)
                             date = (str(date))[0:10]
-                            '''if dep_date[-2] != '0' and dep_date[5] == "0":
-                                date = datetime(int(dep_date[0:4]), int(
-                                    dep_date[6:7]), int(dep_date[-1:]))
-                                date += timedelta(days=1)
-                                date = (str(date))[0:10]
-                                meow = date[0:5]
-                                meow1 = date[5:7]
-                                meow2 = date[7]
-                                meow1 = '0'+meow1
-                                meow2 = '0'+meow2
-                                date = meow + meow1 + meow2
-                            elif dep_date[5] == "0":
-                                date = datetime(int(dep_date[0:4]), int(
-                                    dep_date[6:7]), int(dep_date[-2:]))
-                                date += timedelta(days=1)
-                                date = (str(date))[0:10]
-                                meow = date[0:5]
-                                meow1 = date[5:]
-                                meow1 = '0'+meow1
-                                date = meow + meow1
-                            elif dep_date[-2] != '0':
-                                date = datetime(int(dep_date[0:4]), int(
-                                    dep_date[5:7]), int(dep_date[-1:]))
-                                date += timedelta(days=1)
-                                date = (str(date))[0:10]
-                                meow = date[0:8]
-                                meow1 = date[8]
-                                meow1 = '0'+meow1
-                                date = meow + meow1
-                            else:
-                                date = datetime(int(dep_date[0:4]), int(
-                                    dep_date[5:7]), int(dep_date[-2:]))
-                                date += timedelta(days=1)
-                                date = (str(date))[0:10]'''
-                            '''a = int(dep_date[-2:])
-                            a += 1
-                            date = date[:-2]+str(a)'''
                             A = str(selection1.iloc[0]["ARRIVAL_TIME"])
                             a = date+" "+dep_time2
                         else:
@@ -957,43 +882,6 @@ def NEW_BOOKING():
                             date = datetime(year, month, day)
                             date += timedelta(days=1)
                             date = (str(date))[0:10]
-                            '''if dep_date[-2] != '0' and dep_date[5] == "0":
-                                date = datetime(int(dep_date[0:4]), int(
-                                    dep_date[6:7]), int(dep_date[-1:]))
-                                date += timedelta(days=1)
-                                date = (str(date))[0:10]
-                                meow = date[0:5]
-                                meow1 = date[5:7]
-                                meow2 = date[7]
-                                meow1 = '0'+meow1
-                                meow2 = '0'+meow2
-                                date = meow + meow1 + meow2
-                            elif dep_date[5] == "0":
-                                date = datetime(int(dep_date[0:4]), int(
-                                    dep_date[6:7]), int(dep_date[-2:]))
-                                date += timedelta(days=1)
-                                date = (str(date))[0:10]
-                                meow = date[0:5]
-                                meow1 = date[5:]
-                                meow1 = '0'+meow1
-                                date = meow + meow1
-                            elif dep_date[-2] != '0':
-                                date = datetime(int(dep_date[0:4]), int(
-                                    dep_date[5:7]), int(dep_date[-1:]))
-                                date += timedelta(days=1)
-                                date = (str(date))[0:10]
-                                meow = date[0:8]
-                                meow1 = date[8]
-                                meow1 = '0'+meow1
-                                date = meow + meow1
-                            else:
-                                date = datetime(int(dep_date[0:4]), int(
-                                    dep_date[5:7]), int(dep_date[-2:]))
-                                date += timedelta(days=1)
-                                date = (str(date))[0:10]'''
-                            '''a = int(dep_date[-2:])
-                            a += 1
-                            date = date[:-2]+str(a)'''
                             A = str(selection1.iloc[0]["ARRIVAL_TIME"])
                             a = date+" "+dep_time2
                         else:
@@ -1039,8 +927,8 @@ def NEW_BOOKING():
                 else:
                     main()
                     break
+            
             try:
-
                 for i in range(len(sel)):
                     a = str(sel.loc[i, 'ARRIVAL_TIME'])[-8:]
                     sel.loc[i, 'ARRIVAL_TIME'] = a
@@ -1131,17 +1019,91 @@ This email is to confirm your booking on {}.
 
 FLIGHT DETAILS
 
-    FLIGHT NUMBERS: {}
+FLIGHT NUMBERS: {}
 
-    DEPATURE DATES: {}
+DEPATURE DATES: {}
 
-     DEPARTURE      ARRIVAL
+    DEPARTURE      ARRIVAL
+        {}               {}
+        {}         {}
+
+DURATION: {}
+
+SEAT: {}
+
+
+
+PASSENGER DETAILS
+
+PASSPORT NUMBER: {}
+NAME: {}
+DOB: {}
+SEX: {}
+PHONE: {}
+PNR: : {}
+
+Further details of your bookings are listed below:
+
+BOOKING ID: {}
+TOTAL FARE: {}
+
+Amenities: Complementary Wifi,InFlight Entertainment,
+        Airport Lounge,Inflight Gym
+
+Baggage info: Free check-in baggage allowance is 30 kg per adult & child.
+            Each bag must not exceed 32 kg and overall dimensions of
+            checked baggage should not exceed 62 inches.
+
+Cancellation policy: Cancellations made 7 days or more in advance of
+                the check-in day, will receive a 100% refund.
+                Cancellations made within 3 - 6 days will incur
+                a 20% fee. Cancellations made within 48 hours
+                to the check-in day will incur a 30% fee.
+                Cancellation made within 24 Hrs to the check-in
+                day will incur a 50% fee.
+
+ABOUT THIS TRIP:
+
+        Use your Trip ID for all communication
+
+        Check-in counters for International flights
+            close 75 minutes before departure
+
+        Your carry-on baggage shouldn't weigh more than 7kgs
+
+        Carry photo identification, you will need it as proof of
+            identity while checking-in
+
+        Kindly ensure that you have the relevant visa, immigration
+            clearance and travel with a passport, with a validity of at least 6 months.
+
+If you have any inqueries, Please do not hesitate to contact
+or call the AIRLINE directly
+
+We are looking forward to your visit and hope that you enjoy your stay
+Best regards
+""".format(details[2].upper(), date, sel.loc[0, "FLIGHT NO"], (str(sel.loc[0, "DEPARTURE_TIME"]))[:10], sel.loc[0, "ORIGIN"], sel.loc[0, "DESTINATION"], (str(sel.loc[0, "DEPARTURE_TIME"]))[-8:], sel.loc[0, "ARRIVAL_TIME"], sel.loc[0, "DURATION"], DET.loc[0, "SEAT"], pp_details[0], pp_details[1], pp_details[2], pp_details[3], pp_details[4], pp_details[5], booking_id, total)
+                else:
+                    MESSAGE = """
+DEAR {},
+
+This email is to confirm your booking on {}.
+
+FLIGHT DETAILS
+
+    FLIGHT NUMBER: {} and {}
+
+    DEPATURE DATE: {} and {}
+
+    DEPARTURE      ARRIVAL
             {}               {}
-         {}         {}
+        {}         {}
+            {}               {}
+        {}         {}
 
-    DURATION: {}
+    DURATIONS: {} and {}
 
-    SEAT: {}
+    SEATS: {} and {}
 
 
 
@@ -1160,108 +1122,34 @@ BOOKING ID: {}
 TOTAL FARE: {}
 
 Amenities: Complementary Wifi,InFlight Entertainment,
-            Airport Lounge,Inflight Gym
+        Airport Lounge,Inflight Gym
 
 Baggage info: Free check-in baggage allowance is 30 kg per adult & child.
-                Each bag must not exceed 32 kg and overall dimensions of
-                checked baggage should not exceed 62 inches.
+            Each bag must not exceed 32 kg and overall dimensions of
+            checked baggage should not exceed 62 inches.
 
 Cancellation policy: Cancellations made 7 days or more in advance of
-                    the check-in day, will receive a 100% refund.
-                    Cancellations made within 3 - 6 days will incur
-                    a 20% fee. Cancellations made within 48 hours
-                    to the check-in day will incur a 30% fee.
-                    Cancellation made within 24 Hrs to the check-in
-                    day will incur a 50% fee.
+                the check-in day, will receive a 100% refund.
+                Cancellations made within 3 - 6 days will incur
+                a 20% fee. Cancellations made within 48 hours
+                to the check-in day will incur a 30% fee.
+                Cancellation made within 24 Hrs to the check-in
+                day will incur a 50% fee.
 
 ABOUT THIS TRIP:
 
-            Use your Trip ID for all communication
+        Use your Trip ID for all communication
 
-            Check-in counters for International flights
-                close 75 minutes before departure
+        Check-in counters for International flights
+            close 75 minutes before departure
 
-            Your carry-on baggage shouldn't weigh more than 7kgs
+        Your carry-on baggage shouldn't weigh more than 7kgs
 
-            Carry photo identification, you will need it as proof of
-                identity while checking-in
+        Carry photo identification, you will need it as proof of
+            identity while checking-in
 
-            Kindly ensure that you have the relevant visa, immigration
-                clearance and travel with a passport, with a validity of at least 6 months.
-
-If you have any inqueries, Please do not hesitate to contact
-or call the AIRLINE directly
-
-We are looking forward to your visit and hope that you enjoy your stay
-Best regards
-""".format(details[2].upper(), date, sel.loc[0, "FLIGHT NO"], (str(sel.loc[0, "DEPARTURE_TIME"]))[:10], sel.loc[0, "ORIGIN"], sel.loc[0, "DESTINATION"], (str(sel.loc[0, "DEPARTURE_TIME"]))[-8:], sel.loc[0, "ARRIVAL_TIME"], sel.loc[0, "DURATION"], DET.loc[0, "SEAT"], pp_details[0], pp_details[1], pp_details[2], pp_details[3], pp_details[4], pp_details[5], booking_id, total)
-                else:
-                    MESSAGE = """
-DEAR {},
-
-This email is to confirm your booking on {}.
-
-FLIGHT DETAILS
-
-        FLIGHT NUMBER: {} and {}
-
-        DEPATURE DATE: {} and {}
-
-        DEPARTURE      ARRIVAL
-                {}               {}
-            {}         {}
-                {}               {}
-            {}         {}
-
-        DURATIONS: {} and {}
-
-        SEATS: {} and {}
-
-
-
-PASSENGER DETAILS
-
-        PASSPORT NUMBER: {}
-        NAME: {}
-        DOB: {}
-        SEX: {}
-        PHONE: {}
-        PNR: : {}
-
-Further details of your bookings are listed below:
-
-BOOKING ID: {}
-TOTAL FARE: {}
-
-Amenities: Complementary Wifi,InFlight Entertainment,
-            Airport Lounge,Inflight Gym
-
-Baggage info: Free check-in baggage allowance is 30 kg per adult & child.
-                Each bag must not exceed 32 kg and overall dimensions of
-                checked baggage should not exceed 62 inches.
-
-Cancellation policy: Cancellations made 7 days or more in advance of
-                    the check-in day, will receive a 100% refund.
-                    Cancellations made within 3 - 6 days will incur
-                    a 20% fee. Cancellations made within 48 hours
-                    to the check-in day will incur a 30% fee.
-                    Cancellation made within 24 Hrs to the check-in
-                    day will incur a 50% fee.
-
-ABOUT THIS TRIP:
-
-            Use your Trip ID for all communication
-
-            Check-in counters for International flights
-                close 75 minutes before departure
-
-            Your carry-on baggage shouldn't weigh more than 7kgs
-
-            Carry photo identification, you will need it as proof of
-                identity while checking-in
-
-            Kindly ensure that you have the relevant visa, immigration
-                clearance and travel with a passport, with a validity of at least 6 months.
+        Kindly ensure that you have the relevant visa, immigration
+            clearance and travel with a passport, with a validity of at least 6 months.
 
 If you have any inqueries, Please do not hesitate to contact
 or call the AIRLINE directly
@@ -1277,7 +1165,6 @@ Best regards
                     "\n", "="*8, 'TO CONFIRM YOUR BOOKING PLEASE PAY THE MENTIONED AMOUNT', "="*8, "\n")
                 print(
                     "\n", "="*8, 'PLEASE CHECK YOUR MAIL FOR FURTHER PROCEDURES', "="*8, "\n")
-
             except Exception:
                 print("\n", "="*8, 'ERROR WHILE BOOKING FLIGHTS', "="*8, "\n")
                 message = """
@@ -1293,6 +1180,8 @@ gihs.airline@gmail.com
                 print(message)
                 time.sleep(3)
                 main()
+
+
 
         option = 1
         details = []
@@ -1314,6 +1203,7 @@ gihs.airline@gmail.com
                 print(dep1)
                 OPTION.append(str(option))
                 option += 1
+
         if conn.empty:
             print("\n", "="*8, 'NO CONNECTING FLIGHTS AVAILABLE', "="*8, "\n")
         else:  # printing connecting flights along with option number and uppending it to flight list
@@ -2115,34 +2005,40 @@ def STAFF_LOGIN():
             ToPlot.append(df)
         for i in range(len(titles)):
             if res == "1":
-                ToPlot[i].plot(x="x axis", y="y axis", kind="bar")
+                ToPlot[i].plot(x="x axis", y="y axis", kind="bar",color="y",label="FLIGHTS")
                 plt.xlabel("DATES")
                 plt.ylabel("NO. OF FLIGHTS")
-                plt.xticks(rotation=30)
+                #plt.xticks(rotation=30)
+                plt.subplots_adjust(bottom=0.20)
+
                 plt.title(titles[i])
                 plt.show()
-            if res == "2":
-                ToPlot[i].plot(x="x axis", y="y axis", kind="bar")
+            elif res == "2":
+                ToPlot[i].plot(x="x axis", y="y axis", kind="bar",color="r",label="BOOKINGS")
                 plt.xlabel("DATES")
                 plt.ylabel("NO. OF BOOKINGS")
-                plt.xticks(rotation=30)
+                #plt.xticks(rotation=30)
+                plt.subplots_adjust(bottom=0.20)
                 plt.title(titles[i])
                 plt.show()
             elif res == "3":
-                ToPlot[i].plot(x="x axis", y="y axis", kind="line")
+                ToPlot[i].plot(x="x axis", y="y axis", kind="bar",color="g",label="FLIGHTS")
                 plt.xlabel("ROUTES")
                 plt.ylabel("NO. OF FLIGHTS")
-                plt.xticks(rotation=30)
+                #plt.xticks(rotation=30)
+                plt.subplots_adjust(bottom=0.20)
+
                 plt.title(titles[i])
                 plt.show()
             elif res == "4":
                 a = ToPlot[i]
                 for b in range(len(a)):
                     a.loc[b, "y axis"] = int(a.loc[b, "y axis"])
-                a.plot(x="x axis", y="y axis", kind="line")
+                a.plot(x="x axis", y="y axis", kind="bar",color="#5c281d",label="INCOME")
                 plt.xlabel("DATES")
                 plt.ylabel("INCOME")
-                plt.xticks(rotation=30)
+                #plt.xticks(rotation=30)
+                plt.subplots_adjust(bottom=0.20)
                 plt.title(titles[i])
                 plt.show()
         pass
@@ -2325,18 +2221,18 @@ def ABOUT():
     MESSAGE = """
 THE PROJECT TITLED "AIRLINE RESERVATION SYSTEM" IS A MANAGMENT
 SOFTWARE FOR MONITORING THE AIRLINE.THIS PROJECT IS IS CODED
-IN IDLE AND DATABASE MANAGEMENT IS HANDLED BY MySQL.
-THIS SOFTWARE MAINLY FOCUSES ON BASIC OPERATIONS RELATED TO
+IN IDLE AND DATABASE MANAGEMENT IS HANDLED BY MySQL.THIS 
+SOFTWARE MAINLY FOCUSES ON BASIC OPERATIONS RELATED TO
 BOOKING A FLIGHT,MANAGING BOOKINGS LIKE
 (CHANGING SEAT,CANCELLATION OF BOOKING ,UPDATION OF CONTACT DETAILS),
-CHECKING FLIGHT STATUS AND STAFF LOGIN WHICH
-CONTAINS ANALYZING DATA,VISULAIZING DATA,ADDING DELAY TO A FLIGHT,
-VIEWING DATABASE. "AIRLINE RESERVATION SYSTEM" IS A PYTHON APPLICATION WRITTEN ON A macOS.
-"AIRLINE RESERVATION SYSTEM" SUPPORTS ALL  SYSTEMS THAT HAVE PYTHON INSTALLED.
+CHECKING FLIGHT STATUS AND STAFF LOGIN WHICH CONTAINS ANALYZING DATA,
+VISULAIZING DATA,ADDING DELAY TO A FLIGHT, VIEWING DATABASE. 
+"AIRLINE RESERVATION SYSTEM" IS A PYTHON APPLICATION WRITTEN ON A macOS.
+"AIRLINE RESERVATION SYSTEM" SUPPORTS ALL SYSTEMS THAT HAVE PYTHON INSTALLED.
 THIS SOFTWARE IS EASY TO USE FOR BOTH BEGINNERS AND ADVANCED USERS.
 """
     print(MESSAGE)
-
-
+    time.sleep(5)
+    
 while True:
     main()

@@ -49,7 +49,36 @@ for i in df.columns:
 print(cols[-1])
 df=df.rename(columns={"col1":"hello"}) """
 
-import random
+""" import random
 while True:
     a=random.choice(["a","b","c"])
-    print(a)
+    print(a) """
+
+import pycountry
+from datetime import date
+""" 
+a=list(pycountry.countries)
+for i in a:
+    print(a) """
+""" a=date.today()
+print(int((str(a))[-2:])) """
+
+# libraries
+import numpy as np
+import matplotlib.pyplot as plt
+ 
+# Create data
+height = [3, 12, 5, 18, 45]
+bars = ("very long group name 1","very long group name 2","very long group name 3","very long group name 4","very long group name 5")
+ 
+# Create bars
+plt.bar([1,2,3,4,5],height)
+ 
+# Rotation of the bars names
+plt.xticks([1,2,3,4,5], bars, rotation=90)
+ 
+# Custom the subplot layout
+plt.subplots_adjust(bottom=0.7, top=0.99)
+ 
+# Show graphic
+plt.show()

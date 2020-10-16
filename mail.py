@@ -1,3 +1,12 @@
+
+
+import smtplib
+from email.message import EmailMessage
+msg = EmailMessage()
+msg['Subject'] = "AIRLINE BOOKING CONFIRMATION"
+msg['From'] = "gihs.airline@gmail.com"
+msg['To'] = "imnaveed2003@gmail.com"
+
 MESSAGE="""
 DEAR {},
 
@@ -70,4 +79,10 @@ or call the AIRLINE directly
 We are looking forward to your visit and hope that you enjoy your stay
 Best regards
 """.format('NAVEED', "datetime.date(2020, 10, 2)", 'G310', 'G281', '2020-11-11', '2020-11-12', 'DXB', 'SYD', '00:00:00', '13:45:00', 'SYD', 'BOM', '13:45:00', '01:45:00', '13:45:00', '12:00:00', 'A35', 'A35', '12345678', 'NAVE', '2003-04-20', 'M', '+971558004998', 3398, 3398, 2205)
-print(MESSAGE)
+msg.set_content(MESSAGE)
+with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
+    smtp.ehlo()
+    smtp.starttls()
+    smtp.ehlo()
+    smtp.login("gihs.airline@gmail.com", "gelronfuifxcyheb")
+    smtp.send_message(msg)
