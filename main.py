@@ -2238,13 +2238,13 @@ def ABOUT():
     print("="*8, "ABOUT", "="*8)
     MESSAGE = """
 Airline Reservation  System is a Management Software  for  Airlines. It
-includes various  features such as ‘Flight Booking  for both Direct and
-Connecting   Flights’  including  ‘Seat Booking’,  ‘Automated Price
-Fluctuation’ for changing the Price of the Flight, according to many pre-
-set  conditions. ‘Flight Status’ for checking the  status of the flight
-(Delayed/On-time) .  ‘Manage bookings’ for  changing customer  info and
+includes various  features such as 'Flight Booking  for both Direct and
+Connecting   Flights'  including  'Seat Booking',  'Automated Price
+Fluctuation' for changing the Price of the Flight, according to many pre-
+set  conditions. 'Flight Status' for checking the  status of the flight
+(Delayed/On-time) .  'Manage bookings' for  changing customer  info and
 seats. ‘Staff Login’ to give the staff more access to the bookings, the
-staff has access to ‘add delay’ to the flights ‘Analyze and Visualize the
+staff has access to 'add delay' to the flights 'Analyze and Visualize the
 Data’ collected by the Airline, and also to View all Tables Present in the
 Database. This Project is coded in Python and Database Management is
 handled by MySQL.
