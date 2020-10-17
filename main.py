@@ -1,6 +1,4 @@
 # main menu
-from datetime import date
-import sqlite3
 import pandas as pd
 import time
 import random
@@ -12,13 +10,17 @@ import mysql.connector
 import calendar
 import os
 import re
-from FLIGHT_SEATS import *
 import phonenumbers
 import pycountry
 import sys
 import json
 import matplotlib.pyplot as plt
+import warnings
+from FLIGHT_SEATS import *
 pd.options.mode.chained_assignment = None
+pd.set_option('display.max_rows', 500)
+pd.set_option('display.max_columns', 500)
+pd.set_option('display.width', 1000)
 # my sql connction
 mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
                                passwd="YicMABk9k7", port=3306, database="QxKi8MQlUR")
@@ -198,6 +200,7 @@ def NEW_BOOKING():
     def flights_extract():  # extracting flights from database
         while True:
             date_input()
+
             def dir():  # extracting direct flights
                 query = "select * from SCHEDULE"
                 mycursor.execute(query)
@@ -313,7 +316,7 @@ def NEW_BOOKING():
                         df = pd.DataFrame(list, columns=[
                             "flight_no", "origin", "dest", "dep_time", "arr_time", "days", "type", "duration", "PRICE (USD)", "flight_no1", "origin1", "dest1", "dep_time1", "arr_time1", "days1", "type1", "duration1", "PRICE (USD)1"])
                         # splitting df
-        
+
                         df1 = pd.concat([df["flight_no"], df["origin"], df["dest"],
                                          df["dep_time"], df["arr_time"], df["days"], df["duration"], df["PRICE (USD)"]], axis=1)
 
@@ -761,7 +764,6 @@ def NEW_BOOKING():
                                 "\nENTER NAME ACCORDING TO PASSPORT: ")
                             customer_pp_name = customer_pp_name.strip()
                             customer_pp_name = customer_pp_name.upper()
-                            print(customer_pp_name)
                             if customer_pp_name != "":
                                 while True:
                                     customer_pp_expiry = input(
@@ -772,7 +774,6 @@ def NEW_BOOKING():
                                         customer_pp_expiry = str(
                                             customer_pp_expiry)
                                         customer_pp_expiry = customer_pp_expiry[0:10]
-                                        print(customer_pp_expiry)
                                         break
                                     except:
                                         print(
@@ -927,7 +928,7 @@ def NEW_BOOKING():
                 else:
                     main()
                     break
-            
+
             try:
                 for i in range(len(sel)):
                     a = str(sel.loc[i, 'ARRIVAL_TIME'])[-8:]
@@ -1172,7 +1173,7 @@ ERROR WHILE BOOKING FLIGHTS
 PLEASE TRY AGAIN LATER
 
 IF ERROR CONTINUES
-FEEL FREE TO CONTACT USAT
+FEEL FREE TO CONTACT US AT
 
 gihs.airline@gmail.com
 
@@ -1180,8 +1181,6 @@ gihs.airline@gmail.com
                 print(message)
                 time.sleep(3)
                 main()
-
-
 
         option = 1
         details = []
@@ -1200,7 +1199,13 @@ gihs.airline@gmail.com
                 print("\n", "="*4, MESSAGE, "="*4, "\n")
                 dep1 = dep1.reset_index()
                 dep1 = dep1.drop("index", axis=1)
-                print(dep1)
+                meow = dep1
+                meow = meow.rename(columns={'flight_no': 'FLIGHT NO.', 'origin': 'ORIGIN',
+                                            'dest': 'DESTINATION', 'dep_time': 'DEPARTURE TIME', 'arr_time': 'ARRIVAL TIME'})
+                meow.loc[0, "DEPARTURE TIME"] = (str(meow.loc[0, "DEPARTURE TIME"]))[-8:]
+                meow.loc[0, "ARRIVAL TIME"] = (str(meow.loc[0, "ARRIVAL TIME"]))[-8:]
+                meow.loc[0, "DURATION"] = (str(meow.loc[0, "DURATION"]))[-8:]
+                print(meow)
                 OPTION.append(str(option))
                 option += 1
 
@@ -1220,7 +1225,14 @@ gihs.airline@gmail.com
                     df = pd.concat([dep1, arr1], axis=0)
                     df = df.reset_index()
                     df = df.drop("index", axis=1)
-                    print(df)
+                    meow = df
+                    for z in range(len(meow)):
+                        meow = meow.rename(columns={'flight_no': 'FLIGHT NO.', 'origin': 'ORIGIN',
+                                                    'dest': 'DESTINATION', 'dep_time': 'DEPARTURE TIME', 'arr_time': 'ARRIVAL TIME', 'duration': 'DURATION'})
+                        meow.loc[z, "DEPARTURE TIME"] = (str(meow.loc[z, "DEPARTURE TIME"]))[-8:]
+                        meow.loc[z, "ARRIVAL TIME"] = (str(meow.loc[z, "ARRIVAL TIME"]))[-8:]
+                        meow.loc[z, "DURATION"] = (str(meow.loc[z, "DURATION"]))[-8:]
+                    print(meow)
                     FLIGHTS.append(df)
                     OPTION.append(str(option))
                     option = option+1
@@ -1606,7 +1618,7 @@ def FLIGHT_STATUS(xyz):
                 print("\n", "="*4, "ENTER VALID BOOKING ID", "="*4, "\n")
                 continue
         except Exception:
-            print("\n", "="*4, "ENTER VALID SEAT ID", "="*4, "\n")
+            print("\n", "="*4, "ENTER VALID BOOKING ID", "="*4, "\n")
             continue
 
     query = "select SEAT_ID FROM BOOKINGS WHERE BOOKING_ID={}".format(res)
@@ -2005,39 +2017,41 @@ def STAFF_LOGIN():
             ToPlot.append(df)
         for i in range(len(titles)):
             if res == "1":
-                ToPlot[i].plot(x="x axis", y="y axis", kind="bar",color="y",label="FLIGHTS")
+                ToPlot[i].plot(x="x axis", y="y axis", kind="bar", color="y", label="FLIGHTS")
                 plt.xlabel("DATES")
                 plt.ylabel("NO. OF FLIGHTS")
-                #plt.xticks(rotation=30)
+                # plt.xticks(rotation=30)
                 plt.subplots_adjust(bottom=0.20)
 
                 plt.title(titles[i])
                 plt.show()
             elif res == "2":
-                ToPlot[i].plot(x="x axis", y="y axis", kind="bar",color="r",label="BOOKINGS")
+                ToPlot[i].plot(x="x axis", y="y axis", kind="bar", color="r", label="BOOKINGS")
                 plt.xlabel("DATES")
                 plt.ylabel("NO. OF BOOKINGS")
-                #plt.xticks(rotation=30)
+                # plt.xticks(rotation=30)
                 plt.subplots_adjust(bottom=0.20)
                 plt.title(titles[i])
                 plt.show()
             elif res == "3":
-                ToPlot[i].plot(x="x axis", y="y axis", kind="bar",color="g",label="FLIGHTS")
+                ToPlot[i].plot(x="x axis", y="y axis", kind="bar", color="g", label="FLIGHTS")
                 plt.xlabel("ROUTES")
                 plt.ylabel("NO. OF FLIGHTS")
-                #plt.xticks(rotation=30)
+                # plt.xticks(rotation=30)
                 plt.subplots_adjust(bottom=0.20)
 
                 plt.title(titles[i])
                 plt.show()
             elif res == "4":
+                warnings.filterwarnings(
+                    "ignore")
+                warnings.warn("FixedFormatter should only be used together with FixedLocator")
                 a = ToPlot[i]
                 for b in range(len(a)):
                     a.loc[b, "y axis"] = int(a.loc[b, "y axis"])
-                a.plot(x="x axis", y="y axis", kind="bar",color="#5c281d",label="INCOME")
+                a.plot(x="x axis", y="y axis", kind="line", color="#5c281d", label="INCOME")
                 plt.xlabel("DATES")
                 plt.ylabel("INCOME")
-                #plt.xticks(rotation=30)
                 plt.subplots_adjust(bottom=0.20)
                 plt.title(titles[i])
                 plt.show()
@@ -2159,7 +2173,7 @@ def STAFF_LOGIN():
         print("\n")
         print("OPTION 1: ANALYZE DATA")
         print("OPTION 2: ADD DELAY")
-        print("OPTION 3: VIUSALIZE DATA")
+        print("OPTION 3: VISUALIZE DATA")
         print("OPTION 4: VIEW DB")
         print("OPTION 5: EXIT")
         list = ["1", "2", "3", "4", "5"]
@@ -2219,20 +2233,28 @@ def STAFF_LOGIN():
 def ABOUT():
     print("="*8, "ABOUT", "="*8)
     MESSAGE = """
-THE PROJECT TITLED "AIRLINE RESERVATION SYSTEM" IS A MANAGMENT
-SOFTWARE FOR MONITORING THE AIRLINE.THIS PROJECT IS IS CODED
-IN IDLE AND DATABASE MANAGEMENT IS HANDLED BY MySQL.THIS 
-SOFTWARE MAINLY FOCUSES ON BASIC OPERATIONS RELATED TO
-BOOKING A FLIGHT,MANAGING BOOKINGS LIKE
-(CHANGING SEAT,CANCELLATION OF BOOKING ,UPDATION OF CONTACT DETAILS),
-CHECKING FLIGHT STATUS AND STAFF LOGIN WHICH CONTAINS ANALYZING DATA,
-VISULAIZING DATA,ADDING DELAY TO A FLIGHT, VIEWING DATABASE. 
-"AIRLINE RESERVATION SYSTEM" IS A PYTHON APPLICATION WRITTEN ON A macOS.
-"AIRLINE RESERVATION SYSTEM" SUPPORTS ALL SYSTEMS THAT HAVE PYTHON INSTALLED.
-THIS SOFTWARE IS EASY TO USE FOR BOTH BEGINNERS AND ADVANCED USERS.
+Airline Reservation  System is a Management Software  for  Airlines. It
+includes various  features such as ‘Flight Booking  for both Direct and
+Connecting   Flights’  including  ‘Seat Booking’,  ‘Automated Price
+Fluctuation’ for changing the Price of the Flight, according to many pre-
+set  conditions. ‘Flight Status’ for checking the  status of the flight
+(Delayed/On-time) .  ‘Manage bookings’ for  changing customer  info and
+seats. ‘Staff Login’ to give the staff more access to the bookings, the
+staff has access to ‘add delay’ to the flights ‘Analyze and Visualize the
+Data’ collected by the Airline, and also to View all Tables Present in the
+Database. This Project is coded in Python and Database Management is
+handled by MySQL.
+
+Developers:
+Naveed
+Ziyaan
+Ansh
+
+
 """
     print(MESSAGE)
     time.sleep(5)
-    
+
+
 while True:
     main()
