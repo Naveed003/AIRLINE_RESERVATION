@@ -732,7 +732,7 @@ def NEW_BOOKING():
                             if res[0][1] == customer_pp_name:
                                 while True:
                                     customer_pp_expiry = input(
-                                        "\nENTER EXPIRY OF PASSPORT (YYYY-MM2020-DD): ")
+                                        "\nENTER EXPIRY OF PASSPORT (YYYY-MM-DD): ")
                                     try:
                                         customer_pp_expiry = datetime.datetime.strptime(
                                             customer_pp_expiry, "%Y-%m-%d")
@@ -1660,6 +1660,7 @@ def FLIGHT_STATUS(xyz):
 
 
 def MANAGE_BOOKINGS():
+    print("\n")
     print("="*8, "MANAGE BOOKINGS", "="*8)
 
     def details(B):
@@ -1678,12 +1679,21 @@ def MANAGE_BOOKINGS():
             for i in range(len(a)):
                 a.loc[i, "ARRIVAL TIME"] = (str(a.loc[i, "ARRIVAL TIME"]))[-8:]
                 a.loc[i, "DURATION"] = (str(a.loc[i, "DURATION"]))[-8:]
-            return a
+            query="select DISTINCT CUSTOMER_ID from BOOKINGS WHERE BOOKING_ID={}".format(booking_id)
+            mycursor.execute(query)
+            customer_id = []
+            for i in mycursor.fetchall():
+                for j in i:
+                    customer_id.append(j)
+            return a,customer_id
 
     def m_main():
         booking_id = FLIGHT_STATUS(1)
-        detail = details(booking_id)
+        aa = details(booking_id)
+        detail=aa[0]
+        customer_id=aa[1][0]
         opt = []
+        print("\n")
         while True:
             print("OPTION 1: CHANGE SEAT")
             print("OPTION 2: UPDATE PHONE NUMBER")
@@ -1728,7 +1738,6 @@ def MANAGE_BOOKINGS():
                 for i in range(len(detail)):
                     seat_id = str(detail.loc[i, "SEAT ID"])
                     seat_no = str(detail.loc[i, "SEAT NO"])
-                    print(seat_no)
                     with open(os.getcwd()+'/SEATS/{}.txt'.format(seat_id), 'r') as f:
                         seat_list = json.loads(f.read())
                     indexx = [0, 1, 2, 3, 4, 5, 0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0, 16, 17, 18, 19, 20, 21,
@@ -1846,6 +1855,7 @@ def MANAGE_BOOKINGS():
                     with open('seats/{}.txt'.format(seat_id), 'w') as f:
                         f.write(json.dumps(seats))
                 query = "delete from BOOKINGS where BOOKING_ID={}".format(booking_id)
+                mycursor.reset()
                 mycursor.execute(query)
                 mydb.commit()
                 print("\n", "="*4, "BOOKING CANCELED SUCCESSFULLY", "="*4, "\n")
@@ -1853,8 +1863,8 @@ def MANAGE_BOOKINGS():
 
             elif res == '5':
                 if opt != []:
-                    query = "select CUSTOMER_NAME,CUSTOMER_EMAIL FROM CUSTOMERS,BOOKINGS WHERE CUSTOMERS.CUSTOMER_ID=BOOKINGS.CUSTOMER_ID AND BOOKINGS.BOOKING_ID={}".format(
-                        booking_id)
+                    query = "select CUSTOMER_NAME,CUSTOMER_EMAIL FROM CUSTOMERS WHERE  CUSTOMER_ID={}".format(
+                        customer_id)
                     mycursor.execute(query)
                     res = mycursor.fetchall()
                     NAME = res[0][0]
