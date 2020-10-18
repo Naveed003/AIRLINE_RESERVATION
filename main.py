@@ -1048,24 +1048,24 @@ Further details of your bookings are listed below:
 BOOKING ID: {}
 TOTAL FARE: {}
 
-Amenities: Complementary Wifi,InFlight Entertainment,
-        Airport Lounge,Inflight Gym
+Amenities: Complementary Wifi,In-Flight Entertainment,Complementary Food,
+           Airport Lounge
 
 Baggage info: Free check-in baggage allowance is 30 kg per adult & child.
-            Each bag must not exceed 32 kg and overall dimensions of
-            checked baggage should not exceed 62 inches.
+              Each bag must not exceed 32 kg and overall dimensions of
+              checked baggage should not exceed 62 inches.
 
 Cancellation policy: Cancellations made 7 days or more in advance of
-                the check-in day, will receive a 100% refund.
-                Cancellations made within 3 - 6 days will incur
-                a 20% fee. Cancellations made within 48 hours
-                to the check-in day will incur a 30% fee.
-                Cancellation made within 24 Hrs to the check-in
-                day will incur a 50% fee.
+                     the check-in day, will receive a 100% refund.
+                     Cancellations made within 3 - 6 days will incur
+                     a 20% fee. Cancellations made within 48 hours
+                     to the check-in day will incur a 30% fee.
+                     Cancellation made within 24 Hrs to the check-in
+                     day will incur a 50% fee.
 
 ABOUT THIS TRIP:
 
-        Use your Trip ID for all communication
+        Use your 'BOOKING ID' for all communication
 
         Check-in counters for International flights
             close 75 minutes before departure
@@ -1122,20 +1122,20 @@ Further details of your bookings are listed below:
 BOOKING ID: {}
 TOTAL FARE: {}
 
-Amenities: Complementary Wifi,InFlight Entertainment,
-        Airport Lounge,Inflight Gym
+Amenities: Complementary Wifi,In-Flight Entertainment,Complementary Food,
+           Airport Lounge
 
 Baggage info: Free check-in baggage allowance is 30 kg per adult & child.
-            Each bag must not exceed 32 kg and overall dimensions of
-            checked baggage should not exceed 62 inches.
+              Each bag must not exceed 32 kg and overall dimensions of
+              checked baggage should not exceed 62 inches.
 
 Cancellation policy: Cancellations made 7 days or more in advance of
-                the check-in day, will receive a 100% refund.
-                Cancellations made within 3 - 6 days will incur
-                a 20% fee. Cancellations made within 48 hours
-                to the check-in day will incur a 30% fee.
-                Cancellation made within 24 Hrs to the check-in
-                day will incur a 50% fee.
+                     the check-in day, will receive a 100% refund.
+                     Cancellations made within 3 - 6 days will incur
+                     a 20% fee. Cancellations made within 48 hours
+                     to the check-in day will incur a 30% fee.
+                     Cancellation made within 24 Hrs to the check-in
+                     day will incur a 50% fee.
 
 ABOUT THIS TRIP:
 
@@ -1878,6 +1878,9 @@ flight details.
 CHANGES MADE:
     {}
 
+ANY CHANGES MADE UNDER 7 DAYS BEFORE THE FLIGHT WILL ONLY BE VALID IF REQUIRED AMOUNT IS PAID
+CANCELLATIONS UNDER 7 DAYS BEFORE THE FLIGHT WILL NOT BE REFUNDED
+FOR REFUNDS CONTACT US
 IF YOU HAVE NOT MADE ANY CHANGES PLEASE CONTACT US
 email us at: gihs.airlines@gmail.com
 call us at:  04-XXXXXXX
@@ -1903,7 +1906,7 @@ def STAFF_LOGIN():
             print("OPTION 3: NO. FLIGHTS BOOKED IN EACH ROUTES")
             print("OPTION 4: EARNINGS PER MONTH")
             print("OPTION 5: EXIT")
-            list = ['1', '2', '3', '4', '5', '6']
+            list = ['1', '2', '3', '4', '5']
             while True:
                 res = input("\nENTER THE OPTION NO: ")
                 if res in list:
@@ -1978,83 +1981,84 @@ def STAFF_LOGIN():
 
     def VIUSALIZE_DATA():
         data = ANALYZE_DATA(2)
-        res = data[-1]
-        titles = data[-2]
-        data = data[:-2]
-        temp = []
-        for i in data:
-            temp.append(i)
-        data = temp
-        temp = data
-        for i in range(len(temp)):
-            a = temp[i]
-            if a.empty:
-                data.pop(i)
-        temp = []
-        ToPlot = []
-        for i in range(len(data)):
-            df = data[i]
-            cols = []
-            for i in df.columns:
-                cols.append(i)
-            col_y = cols[-1]
-            if res == "3":
-                for i in range(len(df)):
-                    b = str(df.loc[i, "ORIGIN"])+"-"+str(df.loc[i, "DESTINATION"])
-                    temp.append(b)
-                df.insert(2, "x axis", temp)
-                df = df.drop(["ORIGIN", "DESTINATION"], axis=1)
-                df = df.rename(columns={col_y: "y axis"})
-            else:
-                for i in range(len(df)):
-                    b = str(df.loc[i, "YEAR"])+"-"+str(df.loc[i, "MONTH"])
-                    temp.append(b)
-                df.insert(2, "x axis", temp)
-                df = df.drop(["YEAR", "MONTH"], axis=1)
-                df = df.rename(columns={col_y: "y axis"})
+        if data != None:
+
+            res = data[-1]
+            titles = data[-2]
+            data = data[:-2]
             temp = []
-            ToPlot.append(df)
-        for i in range(len(titles)):
-            if res == "1":
-                ToPlot[i].plot(x="x axis", y="y axis", kind="bar", color="y", label="FLIGHTS")
-                plt.xlabel("DATES")
-                plt.ylabel("NO. OF FLIGHTS")
-                # plt.xticks(rotation=30)
-                plt.subplots_adjust(bottom=0.20)
+            for i in data:
+                temp.append(i)
+            data = temp
+            temp = data
+            for i in range(len(temp)):
+                a = temp[i]
+                if a.empty:
+                    data.pop(i)
+            temp = []
+            ToPlot = []
+            for i in range(len(data)):
+                df = data[i]
+                cols = []
+                for i in df.columns:
+                    cols.append(i)
+                col_y = cols[-1]
+                if res == "3":
+                    for i in range(len(df)):
+                        b = str(df.loc[i, "ORIGIN"])+"-"+str(df.loc[i, "DESTINATION"])
+                        temp.append(b)
+                    df.insert(2, "x axis", temp)
+                    df = df.drop(["ORIGIN", "DESTINATION"], axis=1)
+                    df = df.rename(columns={col_y: "y axis"})
+                else:
+                    for i in range(len(df)):
+                        b = str(df.loc[i, "YEAR"])+"-"+str(df.loc[i, "MONTH"])
+                        temp.append(b)
+                    df.insert(2, "x axis", temp)
+                    df = df.drop(["YEAR", "MONTH"], axis=1)
+                    df = df.rename(columns={col_y: "y axis"})
+                temp = []
+                ToPlot.append(df)
+            for i in range(len(titles)):
+                if res == "1":
+                    ToPlot[i].plot(x="x axis", y="y axis", kind="bar", color="y", label="FLIGHTS")
+                    plt.xlabel("DATES")
+                    plt.ylabel("NO. OF FLIGHTS")
+                    # plt.xticks(rotation=30)
+                    plt.subplots_adjust(bottom=0.20)
 
-                plt.title(titles[i])
-                plt.show()
-            elif res == "2":
-                ToPlot[i].plot(x="x axis", y="y axis", kind="bar", color="r", label="BOOKINGS")
-                plt.xlabel("DATES")
-                plt.ylabel("NO. OF BOOKINGS")
-                # plt.xticks(rotation=30)
-                plt.subplots_adjust(bottom=0.20)
-                plt.title(titles[i])
-                plt.show()
-            elif res == "3":
-                ToPlot[i].plot(x="x axis", y="y axis", kind="bar", color="g", label="FLIGHTS")
-                plt.xlabel("ROUTES")
-                plt.ylabel("NO. OF FLIGHTS")
-                # plt.xticks(rotation=30)
-                plt.subplots_adjust(bottom=0.20)
+                    plt.title(titles[i])
+                    plt.show()
+                elif res == "2":
+                    ToPlot[i].plot(x="x axis", y="y axis", kind="bar", color="r", label="BOOKINGS")
+                    plt.xlabel("DATES")
+                    plt.ylabel("NO. OF BOOKINGS")
+                    # plt.xticks(rotation=30)
+                    plt.subplots_adjust(bottom=0.20)
+                    plt.title(titles[i])
+                    plt.show()
+                elif res == "3":
+                    ToPlot[i].plot(x="x axis", y="y axis", kind="bar", color="g", label="FLIGHTS")
+                    plt.xlabel("ROUTES")
+                    plt.ylabel("NO. OF FLIGHTS")
+                    # plt.xticks(rotation=30)
+                    plt.subplots_adjust(bottom=0.20)
 
-                plt.title(titles[i])
-                plt.show()
-            elif res == "4":
-                warnings.filterwarnings(
-                    "ignore")
-                warnings.warn("FixedFormatter should only be used together with FixedLocator")
-                a = ToPlot[i]
-                for b in range(len(a)):
-                    a.loc[b, "y axis"] = int(a.loc[b, "y axis"])
-                a.plot(x="x axis", y="y axis", kind="line", color="#5c281d", label="INCOME")
-                plt.xlabel("DATES")
-                plt.ylabel("INCOME")
-                plt.subplots_adjust(bottom=0.20)
-                plt.title(titles[i])
-                plt.show()
-        pass
+                    plt.title(titles[i])
+                    plt.show()
+                elif res == "4":
+                    warnings.filterwarnings(
+                        "ignore")
+                    warnings.warn("FixedFormatter should only be used together with FixedLocator")
+                    a = ToPlot[i]
+                    for b in range(len(a)):
+                        a.loc[b, "y axis"] = int(a.loc[b, "y axis"])
+                    a.plot(x="x axis", y="y axis", kind="line", color="#5c281d", label="INCOME")
+                    plt.xlabel("DATES")
+                    plt.ylabel("INCOME")
+                    plt.subplots_adjust(bottom=0.20)
+                    plt.title(titles[i])
+                    plt.show()
 
     def data_check(value, table, column):
         try:
