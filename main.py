@@ -1120,7 +1120,7 @@ PASSENGER DETAILS
 Further details of your bookings are listed below:
 
 BOOKING ID: {}
-TOTAL FARE: {}
+TOTAL FARE: {}$
 
 Amenities: Complementary Wifi,In-Flight Entertainment,Complementary Food,
            Airport Lounge
