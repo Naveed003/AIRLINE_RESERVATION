@@ -1282,7 +1282,7 @@ gihs.airline@gmail.com
                             query = "select * from SCHEDULE WHERE FLIGHT_NO='{}' AND ORIGIN='{}' AND DESTINATION='{}' AND DEPATURE_TIME='{}'".format(
                                 flight_no, origin, destination, dep_time)
                             mycursor.execute(query)
-                            naveed=mycursor.fetchall()
+                            naveed = mycursor.fetchall()
                             for i in naveed:
                                 res.append(i)
                 except Exception:
@@ -1381,7 +1381,7 @@ gihs.airline@gmail.com
                                 columns.append(i)
                             selection1 = pd.DataFrame(columns=columns)
                             ORIGIN = zzz.iloc[0]["ORIGIN"]
-                            x = selection[selection["ORIGIN"]== ORIGIN].index.values
+                            x = selection[selection["ORIGIN"] == ORIGIN].index.values
                             selection1 = pd.concat([selection1, zzz], axis=0)
                             selection1 = selection1.drop("SEAT_ID", axis=1)
                             selection = selection.drop(x, axis=0)
@@ -1679,19 +1679,20 @@ def MANAGE_BOOKINGS():
             for i in range(len(a)):
                 a.loc[i, "ARRIVAL TIME"] = (str(a.loc[i, "ARRIVAL TIME"]))[-8:]
                 a.loc[i, "DURATION"] = (str(a.loc[i, "DURATION"]))[-8:]
-            query="select DISTINCT CUSTOMER_ID from BOOKINGS WHERE BOOKING_ID={}".format(booking_id)
+            query = "select DISTINCT CUSTOMER_ID from BOOKINGS WHERE BOOKING_ID={}".format(
+                booking_id)
             mycursor.execute(query)
             customer_id = []
             for i in mycursor.fetchall():
                 for j in i:
                     customer_id.append(j)
-            return a,customer_id
+            return a, customer_id
 
     def m_main():
         booking_id = FLIGHT_STATUS(1)
         aa = details(booking_id)
-        detail=aa[0]
-        customer_id=aa[1][0]
+        detail = aa[0]
+        customer_id = aa[1][0]
         opt = []
         print("\n")
         while True:
@@ -1986,7 +1987,7 @@ def STAFF_LOGIN():
         mycursor.execute(query)
         pass
 
-    def VIUSALIZE_DATA():
+    def VISUALIZE_DATA():
         data = ANALYZE_DATA(2)
         if data != None:
 
@@ -2028,7 +2029,8 @@ def STAFF_LOGIN():
                 ToPlot.append(df)
             for i in range(len(titles)):
                 if res == "1":
-                    ToPlot[i].plot(x="x axis", y="y axis", kind="bar", color="y", label="FLIGHTS")
+                    ToPlot[i].plot(x="x axis", y="y axis", kind="bar",
+                                   color="orange", label="FLIGHTS")
                     plt.xlabel("DATES")
                     plt.ylabel("NO. OF FLIGHTS")
                     # plt.xticks(rotation=30)
@@ -2142,7 +2144,6 @@ def STAFF_LOGIN():
         df.to_csv(r'{}'.format(os.getcwd()+PAT))
         print("TABLE EXPORTED TO DB FOLDER")
         time.sleep(3)
-        main()
         pass
     while True:
         USERNAME = input("\nENTER USERNAME: ")
@@ -2180,7 +2181,6 @@ def STAFF_LOGIN():
     print("\n", "="*4, "WELCOME BACK {}".format(NAME), "="*4, "\n")
 
     while True:
-        print("\n")
         print("OPTION 1: ANALYZE DATA")
         print("OPTION 2: ADD DELAY")
         print("OPTION 3: VISUALIZE DATA")
@@ -2197,9 +2197,11 @@ def STAFF_LOGIN():
                 break
 
         if int(res) == 1:
+            print("\n", "="*4, "ANALYZE DATA", "="*4, "\n")
             ANALYZE_DATA(1)
             continue
         elif int(res) == 2:
+            print("\n", "="*4, "ADD DELAY", "="*4, "\n")
             while True:
                 flight_no = input("ENTER FLIGHT NUMBER: ")
                 depature_date = input("ENTER DEPATURE DATE AND TIME (YYYY-MM-DD HH:MM:SS): ")
@@ -2229,11 +2231,13 @@ def STAFF_LOGIN():
             continue
 
         elif int(res) == 4:
+            print("\n", "="*4, "VIEW DB", "="*4, "\n")
             VIEW_DB()
             continue
 
         elif int(res) == 3:
-            VIUSALIZE_DATA()
+            print("\n", "="*4, "VISUALIZE DATA", "="*4, "\n")
+            VISUALIZE_DATA()
             continue
         else:
             main()
