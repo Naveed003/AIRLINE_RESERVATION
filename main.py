@@ -1836,7 +1836,6 @@ def MANAGE_BOOKINGS():
                 for i in range(len(detail)):
                     seat_id = str(detail.loc[i, "SEAT ID"])
                     seat_no = str(detail.loc[i, "SEAT NO"])
-                    print(seat_no)
                     with open(os.getcwd()+'/SEATS/{}.txt'.format(seat_id), 'r') as f:
                         seat_list = json.loads(f.read())
                     indexx = [0, 1, 2, 3, 4, 5, 0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0, 16, 17, 18, 19, 20, 21,
