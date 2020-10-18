@@ -2202,7 +2202,7 @@ def STAFF_LOGIN():
         elif int(res) == 2:
             while True:
                 flight_no = input("ENTER FLIGHT NUMBER: ")
-                depature_date = input("ENTER DATE AND TIME (YYYY-MM-DD HH:MM:SS): ")
+                depature_date = input("ENTER DEPATURE DATE AND TIME (YYYY-MM-DD HH:MM:SS): ")
                 query = "select SEAT_ID from SCHEDULE where FLIGHT_NO='{}' AND DEPATURE_TIME='{}'".format(
                     flight_no, depature_date)
                 mycursor.execute(query)
