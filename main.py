@@ -1282,8 +1282,8 @@ gihs.airline@gmail.com
                             query = "select * from SCHEDULE WHERE FLIGHT_NO='{}' AND ORIGIN='{}' AND DESTINATION='{}' AND DEPATURE_TIME='{}'".format(
                                 flight_no, origin, destination, dep_time)
                             mycursor.execute(query)
-
-                            for i in mycursor.fetchall():
+                            naveed=mycursor.fetchall()
+                            for i in naveed:
                                 res.append(i)
                 except Exception:
                     pass
@@ -1299,7 +1299,6 @@ gihs.airline@gmail.com
                 selection = selection.drop("index", axis=1)
                 selection = selection.rename(columns={"flight_no": "FLIGHT NO", "origin": "ORIGIN",
                                                       "dest": "DESTINATION", "dep_time": "DEPARTURE_TIME", "arr_time": "ARRIVAL_TIME", "duration": "DURATION"})
-
                 if res != []:
                     if len(res) == 1:
                         if details == []:
@@ -1381,10 +1380,8 @@ gihs.airline@gmail.com
                             for i in zzz.columns:
                                 columns.append(i)
                             selection1 = pd.DataFrame(columns=columns)
-
-                            Flight_no = zzz.iloc[0]["FLIGHT NO"]
-                            x = selection[selection["FLIGHT NO"]
-                                          == Flight_no].index.values
+                            ORIGIN = zzz.iloc[0]["ORIGIN"]
+                            x = selection[selection["ORIGIN"]== ORIGIN].index.values
                             selection1 = pd.concat([selection1, zzz], axis=0)
                             selection1 = selection1.drop("SEAT_ID", axis=1)
                             selection = selection.drop(x, axis=0)
