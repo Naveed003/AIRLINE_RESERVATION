@@ -2234,6 +2234,9 @@ def STAFF_LOGIN():
                             info = mycursor.fetchall()
                             info = pd.DataFrame(info, columns=[
                                                 'FLIGHT NO', 'ORIGIN', 'DESTINATION', 'DEPATURE TIME', 'ARRIVAL TIME', 'DURATION', 'DELAY'])
+                            for i in range(len(info)):
+                                info.loc[i,"ARRIVAL TIME"]=(str(info.loc[i,"ARRIVAL TIME"]))[-8:]
+                                info.loc[i,"DURATION"]=(str(info.loc[i,"DURATION"]))[-8:]
                             for i in customer_id:
                                 for j in i:
                                     query = "select CUSTOMER_EMAIL, CUSTOMER_NAME from CUSTOMERS where CUSTOMER_ID ='{}'".format(
@@ -2242,6 +2245,7 @@ def STAFF_LOGIN():
                                     email = mycursor.fetchall()
                                     name = email[0][1]
                                     email = email[0][0]
+                                    
                                     message = """
 DEAR {},
 
@@ -2252,13 +2256,19 @@ FLIGHT DETALS:
 
     *THE MENTIONED DEPATURE TIME AND ARRIVAL TIME DO NOT ACCOUNT FOR DELAY*
 
-    {}
+    FLIGHT NO: {}
+    ORIGIN: {}
+    DESTINATION: {}
+    DEPARTURE TIME: {}
+    ARRIVAL TIME: {}
+    DURATION: {}
+    DELAY: {}
 
 
 For any queries:
 email us at: gihs.airlines@gmail.com
 call us at:  04-0000000
-""".format(name, info)
+""".format(name, info.loc[0,"FLIGHT NO"], info.loc[0,"ORIGIN"],info.loc[0,"DESTINATION"],info.loc[0,"DEPATURE TIME"], info.loc[0,"ARRIVAL TIME"],info.loc[0,"DURATION"],info.loc[0,"DELAY"])
                                     mail(email, message)
                             print(
                                 "\n", "="*4, "DELAY ADDED SUCCESSFULLY AND EMAIL SEND TO RESPECTIVE PASSENGERS", "="*4, "\n")
