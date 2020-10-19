@@ -1863,7 +1863,7 @@ def MANAGE_BOOKINGS():
                 continue
 
             elif res == '5':
-                if opt != []:
+                if opt != [] and opt != ['5']:
                     query = "select CUSTOMER_NAME,CUSTOMER_EMAIL FROM CUSTOMERS WHERE  CUSTOMER_ID={}".format(
                         customer_id)
                     mycursor.execute(query)
@@ -1873,6 +1873,7 @@ def MANAGE_BOOKINGS():
                     taskdone = {1: "SEAT CHANGED", 2: "PHONE NUMBER UPDATED",
                                 3: "EMAIL ADDRESS UPDATED", 4: "BOOKING CANCELLED"}
                     m = ""
+
                     for i in opt:
                         if int(i) in taskdone.keys():
                             m = m + "\n"+taskdone[int(i)]
@@ -1985,6 +1986,7 @@ def STAFF_LOGIN():
     def ADD_DELAY(delay, seat_id):
         query = "UPDATE DELAY SET DELAY={} WHERE SEAT_ID={}".format(res, seat_id)
         mycursor.execute(query)
+
         pass
 
     def VISUALIZE_DATA():
@@ -2121,7 +2123,6 @@ def STAFF_LOGIN():
                 continue
 
         query = "show COLUMNS FROM {}".format(tables[res])
-        print(query)
         mycursor.execute(query)
         df = pd.DataFrame(mycursor.fetchall())
         cols = []
@@ -2218,6 +2219,44 @@ def STAFF_LOGIN():
                             res = int(res)
                             ADD_DELAY(res, seat_id)
                             mydb.commit()
+                            query = "select CUSTOMER_ID from BOOKINGS where SEAT_ID ='{}'".format(
+                                seat_id)
+                            mycursor.execute(query)
+                            customer_id = mycursor.fetchall()
+                            query = "select FLIGHT_NO, ORIGIN, DESTINATION, DEPATURE_TIME,ARRIVAL_TIME , DURATION, DELAY  from DELAY where SEAT_ID ='{}'".format(
+                                seat_id)
+                            mycursor.execute(query)
+                            info = mycursor.fetchall()
+                            info = pd.DataFrame(info, columns=[
+                                                'FLIGHT NO', 'ORIGIN', 'DESTINATION', 'DEPATURE TIME', 'ARRIVAL TIME', 'DURATION', 'DELAY'])
+                            for i in customer_id:
+                                for j in i:
+                                    query = "select CUSTOMER_EMAIL, CUSTOMER_NAME from CUSTOMERS where CUSTOMER_ID ='{}'".format(
+                                        j)
+                                    mycursor.execute(query)
+                                    email = mycursor.fetchall()
+                                    name = email[0][1]
+                                    email = email[0][0]
+                                    message = """
+DEAR {},
+
+This is to inform that your
+flight have been delayed.
+
+FLIGHT DETALS:
+
+    *THE MENTIONED DEPATURE TIME AND ARRIVAL TIME DO NOT ACCOUNT FOR DELAY*
+
+    {}
+
+
+For any queries:
+email us at: gihs.airlines@gmail.com
+call us at:  04-0000000
+""".format(name, info)
+                                    mail(email, message)
+                            print(
+                                "\n", "="*4, "DELAY ADDED SUCCESSFULLY AND EMAIL SEND TO RESPECTIVE PASSENGERS", "="*4, "\n")
                             break
                         except Exception:
                             print("\n", "="*4, "ENTER ONLY NUMBERS", "="*4, "\n")
