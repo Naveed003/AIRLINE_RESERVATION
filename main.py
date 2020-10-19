@@ -2113,6 +2113,7 @@ def STAFF_LOGIN():
             try:
                 res = int(res)
                 if res in opt:
+                    nxveed=res
                     res = res-1
                     break
                 else:
@@ -2140,12 +2141,16 @@ def STAFF_LOGIN():
             data.append(temp)
             temp = []
         df = pd.DataFrame(data[1:], columns=data[0])
+        if nxveed in [1,2,5,6,7,9,10,11,12,13,15,16,18,19]:
+            for i in range(len(df)):
+                df.loc[i,"DEPATURE_TIME"]=(str(df.loc[i,"DEPATURE_TIME"]))[-8:]
+                df.loc[i,"ARRIVAL_TIME"]=(str(df.loc[i,"ARRIVAL_TIME"]))[-8:]
+                df.loc[i,"DURATION"]=(str(df.loc[i,"DURATION"]))[-8:]
         print("\n")
         PAT = "/DB/{}.csv".format(tables[res])
         df.to_csv(r'{}'.format(os.getcwd()+PAT))
         print("TABLE EXPORTED TO DB FOLDER")
-        time.sleep(3)
-        pass
+        #time.sleep(3)
     while True:
         USERNAME = input("\nENTER USERNAME: ")
         USERNAME = USERNAME.strip()
