@@ -2077,7 +2077,7 @@ def STAFF_LOGIN():
                     plt.subplots_adjust(bottom=0.20)
 
                     plt.title(titles[i])
-
+                    plt.show()
                 elif res == "2":
                     ToPlot[i].plot(x="x axis", y="y axis",
                                    kind="bar", color="r", label="BOOKINGS")
