@@ -2149,7 +2149,7 @@ def STAFF_LOGIN():
         for i in range(1, len(res)+1):
             MESSAGE = "OPTION {}: {} ".format(i, res[i-1])
             print(MESSAGE)
-           
+            opt.append(i)
         tables = res
         print
         while True:
