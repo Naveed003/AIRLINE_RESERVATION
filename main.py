@@ -22,8 +22,8 @@ pd.set_option('display.max_rows', 500)
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
 # my sql connction
-mydb = mysql.connector.connect(host="remotemysql.com", user="QxKi8MQlUR",
-                               passwd="YicMABk9k7", port=3306, database="QxKi8MQlUR")
+mydb = mysql.connector.connect(host="localhost", user="root",
+                               passwd="logon@123", port=3306, database="AIRLINE_RESERVATION")
 mycursor = mydb.cursor()
 date1 = datetime.now()
 datee1 = str(date1)
@@ -83,20 +83,23 @@ def main():
 
 
 def mail(email, message):
-    import smtplib
-    from email.message import EmailMessage
-    msg = EmailMessage()
-    msg['Subject'] = "AIRLINE BOOKING CONFIRMATION"
-    msg['From'] = "gihs.airline@gmail.com"
-    msg['To'] = email
-    msg.set_content(message)
-    with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
-        smtp.ehlo()
-        smtp.starttls()
-        smtp.ehlo()
-        smtp.login("gihs.airline@gmail.com", "gelronfuifxcyheb")
+    try:
+        import smtplib
+        from email.message import EmailMessage
+        msg = EmailMessage()
+        msg['Subject'] = "AIRLINE BOOKING CONFIRMATION"
+        msg['From'] = "gihs.airline@gmail.com"
+        msg['To'] = email
+        msg.set_content(message)
+        with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
+            smtp.ehlo()
+            smtp.starttls()
+            smtp.ehlo()
+            smtp.login("gihs.airline@gmail.com", "gelronfuifxcyheb")
 
-        smtp.send_message(msg)
+            smtp.send_message(msg)
+    except Exception:
+        pass
 
 
 def NEW_BOOKING():
@@ -642,7 +645,8 @@ def NEW_BOOKING():
                     continue
                 break
             while True:  # taking input and valiation for phone number
-                customer_phone = input("\nENTER PASSENGER PHONE NUMBER ((COUNTRY CODE)-########): ")
+                customer_phone = input(
+                    "\nENTER PASSENGER PHONE NUMBER ((COUNTRY CODE)-########): ")
                 try:
                     z = phonenumbers.parse(customer_phone)
                     if phonenumbers.is_valid_number(z) == False:
@@ -681,7 +685,8 @@ def NEW_BOOKING():
                     break
             while True:  # taking input and valiation for DOB
                 import datetime
-                customer_dob = input("\nENTER PASSENGER DATE OF BIRTH (YYYY-MM-DD): ")
+                customer_dob = input(
+                    "\nENTER PASSENGER DATE OF BIRTH (YYYY-MM-DD): ")
                 try:
                     date_of_birth = datetime.datetime.strptime(
                         customer_dob, "%Y-%m-%d")
@@ -713,7 +718,8 @@ def NEW_BOOKING():
                     continue
 
             while True:
-                customer_pp_num = input("\nENTER PASSPORT NUMBER OF PASSENGER: ")
+                customer_pp_num = input(
+                    "\nENTER PASSPORT NUMBER OF PASSENGER: ")
                 query = "select P_NUMBER,P_NAME,P_EXPIRY FROM PASSPORT WHERE P_NUMBER='{}'".format(
                     customer_pp_num)
                 mycursor.execute(query)
@@ -1166,6 +1172,8 @@ Best regards
                     "\n", "="*8, 'TO CONFIRM YOUR BOOKING PLEASE PAY THE MENTIONED AMOUNT', "="*8, "\n")
                 print(
                     "\n", "="*8, 'PLEASE CHECK YOUR MAIL FOR FURTHER PROCEDURES', "="*8, "\n")
+                time.sleep(3)
+
             except Exception:
                 print("\n", "="*8, 'ERROR WHILE BOOKING FLIGHTS', "="*8, "\n")
                 message = """
@@ -1202,8 +1210,10 @@ gihs.airline@gmail.com
                 meow = dep1
                 meow = meow.rename(columns={'flight_no': 'FLIGHT NO.', 'origin': 'ORIGIN',
                                             'dest': 'DESTINATION', 'dep_time': 'DEPARTURE TIME', 'arr_time': 'ARRIVAL TIME'})
-                meow.loc[0, "DEPARTURE TIME"] = (str(meow.loc[0, "DEPARTURE TIME"]))[-8:]
-                meow.loc[0, "ARRIVAL TIME"] = (str(meow.loc[0, "ARRIVAL TIME"]))[-8:]
+                meow.loc[0, "DEPARTURE TIME"] = (
+                    str(meow.loc[0, "DEPARTURE TIME"]))[-8:]
+                meow.loc[0, "ARRIVAL TIME"] = (
+                    str(meow.loc[0, "ARRIVAL TIME"]))[-8:]
                 meow.loc[0, "DURATION"] = (str(meow.loc[0, "DURATION"]))[-8:]
                 print(meow)
                 OPTION.append(str(option))
@@ -1229,9 +1239,12 @@ gihs.airline@gmail.com
                     for z in range(len(meow)):
                         meow = meow.rename(columns={'flight_no': 'FLIGHT NO.', 'origin': 'ORIGIN',
                                                     'dest': 'DESTINATION', 'dep_time': 'DEPARTURE TIME', 'arr_time': 'ARRIVAL TIME', 'duration': 'DURATION'})
-                        meow.loc[z, "DEPARTURE TIME"] = (str(meow.loc[z, "DEPARTURE TIME"]))[-8:]
-                        meow.loc[z, "ARRIVAL TIME"] = (str(meow.loc[z, "ARRIVAL TIME"]))[-8:]
-                        meow.loc[z, "DURATION"] = (str(meow.loc[z, "DURATION"]))[-8:]
+                        meow.loc[z, "DEPARTURE TIME"] = (
+                            str(meow.loc[z, "DEPARTURE TIME"]))[-8:]
+                        meow.loc[z, "ARRIVAL TIME"] = (
+                            str(meow.loc[z, "ARRIVAL TIME"]))[-8:]
+                        meow.loc[z, "DURATION"] = (
+                            str(meow.loc[z, "DURATION"]))[-8:]
                     print(meow)
                     FLIGHTS.append(df)
                     OPTION.append(str(option))
@@ -1381,7 +1394,8 @@ gihs.airline@gmail.com
                                 columns.append(i)
                             selection1 = pd.DataFrame(columns=columns)
                             ORIGIN = zzz.iloc[0]["ORIGIN"]
-                            x = selection[selection["ORIGIN"] == ORIGIN].index.values
+                            x = selection[selection["ORIGIN"]
+                                          == ORIGIN].index.values
                             selection1 = pd.concat([selection1, zzz], axis=0)
                             selection1 = selection1.drop("SEAT_ID", axis=1)
                             selection = selection.drop(x, axis=0)
@@ -1586,7 +1600,8 @@ def FLIGHT_STATUS(xyz):
     def data_check(value, table, column):
         try:
             if type(value) == int:
-                query = "select * from {} where {}={}".format(table, column, value)
+                query = "select * from {} where {}={}".format(
+                    table, column, value)
                 mycursor.execute(query)
                 res = mycursor.fetchall()
                 if res != []:
@@ -1594,7 +1609,8 @@ def FLIGHT_STATUS(xyz):
                 else:
                     return False
             else:
-                query = "select * from {} where {}='{}'".format(table, column, value)
+                query = "select * from {} where {}='{}'".format(
+                    table, column, value)
                 mycursor.execute(query)
                 res = mycursor.fetchall()
                 if res != []:
@@ -1653,6 +1669,7 @@ def FLIGHT_STATUS(xyz):
             df.loc[i, "DELAY"] = str(df.loc[i, "DELAY"]) + " MINUTES"
     print("\n", "="*4, "*THE MENTIONED DEPATURE TIME AND ARRIVAL TIME DO NOT ACCOUNT FOR DELAY*", "="*4, "\n")
     print("\n", df)
+    time.sleep(3)
     if xyz == 0:
         main()
     else:
@@ -1713,7 +1730,8 @@ def MANAGE_BOOKINGS():
 
                 if len(detail) == 2:
                     while True:
-                        z = input("DO YOU WANT TO CHANGE FOR BOTH FLIGHTS (Y/N): ")
+                        z = input(
+                            "DO YOU WANT TO CHANGE FOR BOTH FLIGHTS (Y/N): ")
                         z = z.upper()
                         z = z.strip()
                         if z not in ["Y", "N"]:
@@ -1722,7 +1740,8 @@ def MANAGE_BOOKINGS():
                             break
                         elif z == "N":
                             while True:
-                                index = input("WHICH FLIGHT DO YOU WANT CHANGE SEAT FOR (1/2): ")
+                                index = input(
+                                    "WHICH FLIGHT DO YOU WANT CHANGE SEAT FOR (1/2): ")
                                 if index == "1":
                                     detail = detail.drop(1, axis=0)
                                     break
@@ -1730,7 +1749,8 @@ def MANAGE_BOOKINGS():
                                     detail = detail.drop(0, axis=0)
                                     break
                                 else:
-                                    print("\n", "="*4, "ENTER VALID OPTION", "="*4, "\n")
+                                    print("\n", "="*4,
+                                          "ENTER VALID OPTION", "="*4, "\n")
                                     continue
                             break
 
@@ -1777,7 +1797,8 @@ def MANAGE_BOOKINGS():
                                     seat_no, seat_id)
                                 mycursor.execute(query)
                                 mydb.commit()
-                                print("\n", "="*4, "SEAT CHANGED SUCCESSFULLY", "="*4, "\n")
+                                print("\n", "="*4,
+                                      "SEAT CHANGED SUCCESSFULLY", "="*4, "\n")
 
                                 break
                 continue
@@ -1801,7 +1822,8 @@ def MANAGE_BOOKINGS():
 
                         continue
 
-                query = "select CUSTOMER_ID from BOOKINGS WHERE BOOKING_ID={}".format(booking_id)
+                query = "select CUSTOMER_ID from BOOKINGS WHERE BOOKING_ID={}".format(
+                    booking_id)
                 mycursor.execute(query)
                 res = mycursor.fetchall()
                 customer_id = res[0][0]
@@ -1816,7 +1838,8 @@ def MANAGE_BOOKINGS():
 
                 seat_id = detail.loc[0, 'SEAT NO']
                 while True:  # taking input and valiation for EMAIL
-                    customer_email = input("\nENTER NEW PASSENGER EMAIL ADDRESS: ")
+                    customer_email = input(
+                        "\nENTER NEW PASSENGER EMAIL ADDRESS: ")
                     customer_email = customer_email.strip()
                     customer_email = customer_email.lower()
                     regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
@@ -1828,7 +1851,8 @@ def MANAGE_BOOKINGS():
                               'PLEASE ENTER VALID EMAIL ID', "="*4, "\n")
                         continue
 
-                query = "select CUSTOMER_ID from BOOKINGS WHERE BOOKING_ID={}".format(booking_id)
+                query = "select CUSTOMER_ID from BOOKINGS WHERE BOOKING_ID={}".format(
+                    booking_id)
                 mycursor.execute(query)
                 res = mycursor.fetchall()
                 customer_id = res[0][0]
@@ -1855,7 +1879,8 @@ def MANAGE_BOOKINGS():
                         df.values.tolist()
                     with open('seats/{}.txt'.format(seat_id), 'w') as f:
                         f.write(json.dumps(seats))
-                query = "delete from BOOKINGS where BOOKING_ID={}".format(booking_id)
+                query = "delete from BOOKINGS where BOOKING_ID={}".format(
+                    booking_id)
                 mycursor.reset()
                 mycursor.execute(query)
                 mydb.commit()
@@ -1927,28 +1952,35 @@ def STAFF_LOGIN():
                 query = "SELECT DISTINCT YEAR(DEPATURE_TIME) as YEAR, MONTH(DEPATURE_TIME) AS MONTH , COUNT(DISTINCT SEAT_ID) FROM SCHEDULE GROUP BY YEAR(DEPATURE_TIME) , MONTH(DEPATURE_TIME) ORDER BY YEAR(DEPATURE_TIME) , MONTH(DEPATURE_TIME)"
                 mycursor.execute(query)
                 data = mycursor.fetchall()
-                df = pd.DataFrame(data, columns=['YEAR', 'MONTH', 'NO. OF FLIGHTS'])
+                df = pd.DataFrame(
+                    data, columns=['YEAR', 'MONTH', 'NO. OF FLIGHTS'])
                 query = "SELECT DISTINCT YEAR(DEPATURE_TIME) as YEAR, MONTH(DEPATURE_TIME) AS MONTH , COUNT(DISTINCT SEAT_ID) FROM E_SCHEDULE GROUP BY YEAR(DEPATURE_TIME) , MONTH(DEPATURE_TIME) ORDER BY YEAR(DEPATURE_TIME) , MONTH(DEPATURE_TIME)"
                 mycursor.execute(query)
                 data = mycursor.fetchall()
-                df1 = pd.DataFrame(data, columns=['YEAR', 'MONTH', 'NO. OF FLIGHTS'])
+                df1 = pd.DataFrame(
+                    data, columns=['YEAR', 'MONTH', 'NO. OF FLIGHTS'])
                 temp1 = str(df)
                 temp2 = str(df1)
-                temp = "\nNUMBER OF PENDING FLIGHTS\n\n" + temp1+"\n\nNUMBER OF FLIGHTS FLOWN \n\n"+temp2+"\n"
-                title = ["NUMBER OF PENDING FLIGHTS", "NUMBER OF FLIGHTS FLOWN"]
+                temp = "\nNUMBER OF PENDING FLIGHTS\n\n" + temp1 + \
+                    "\n\nNUMBER OF FLIGHTS FLOWN \n\n"+temp2+"\n"
+                title = ["NUMBER OF PENDING FLIGHTS",
+                         "NUMBER OF FLIGHTS FLOWN"]
             elif res == '2':
                 query = "SELECT DISTINCT YEAR(DATE_OF_BOOKING) as YEAR, MONTH(DATE_OF_BOOKING) AS MONTH , COUNT(DISTINCT BOOKING_ID) FROM BOOKINGS GROUP BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING) ORDER BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING)"
                 mycursor.execute(query)
                 data = mycursor.fetchall()
-                df = pd.DataFrame(data, columns=['YEAR', 'MONTH', 'NO. OF BOOKINGS'])
+                df = pd.DataFrame(
+                    data, columns=['YEAR', 'MONTH', 'NO. OF BOOKINGS'])
                 query = "SELECT DISTINCT YEAR(DATE_OF_BOOKING) as YEAR, MONTH(DATE_OF_BOOKING) AS MONTH , COUNT(DISTINCT BOOKING_ID) FROM E_BOOKINGS GROUP BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING) ORDER BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING)"
                 mycursor.execute(query)
                 data = mycursor.fetchall()
-                df1 = pd.DataFrame(data, columns=['YEAR', 'MONTH', 'NO. OF BOOKINGS'])
+                df1 = pd.DataFrame(
+                    data, columns=['YEAR', 'MONTH', 'NO. OF BOOKINGS'])
                 temp1 = str(df)
                 temp2 = str(df1)
                 temp = "\nNUMBER OF BOOKINGS DONE IN EACH MONTH\n\n" + temp1 + \
-                    "\n\nNUMBER OF BOOKINGS DONE IN EACH MONTH (EXPIRED FLIGHTS) \n\n"+temp2+"\n"
+                    "\n\nNUMBER OF BOOKINGS DONE IN EACH MONTH (EXPIRED FLIGHTS) \n\n" + \
+                    temp2+"\n"
                 title = ["NUMBER OF IN BOOKINGS DONE EACH MONTH",
                          "NUMBER OF  BOOKINGS DONE IN EACH MONTH (EXPIRED FLIGHTS)"]
 
@@ -1956,7 +1988,8 @@ def STAFF_LOGIN():
                 query = "SELECT DISTINCT ORIGIN, DESTINATION, COUNT(DISTINCT SEAT_ID) AS 'NO. OF  FLIGHTS' from SCHEDULE GROUP BY ORIGIN,DESTINATION ORDER BY COUNT(DISTINCT SEAT_ID) DESC"
                 mycursor.execute(query)
                 data = mycursor.fetchall()
-                df = pd.DataFrame(data, columns=["ORIGIN", "DESTINATION", "NO. OF FLIGHTS"])
+                df = pd.DataFrame(
+                    data, columns=["ORIGIN", "DESTINATION", "NO. OF FLIGHTS"])
                 title = ["NUMBER OF FLIGHTS BOOKED IN EACH ROUTES"]
             elif res == "4":
                 query = "SELECT DISTINCT YEAR(DATE_OF_BOOKING) as YEAR, MONTH(DATE_OF_BOOKING) AS MONTH , SUM(AMOUNT_USD) FROM BOOKINGS GROUP BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING) ORDER BY YEAR(DATE_OF_BOOKING) , MONTH(DATE_OF_BOOKING)"
@@ -1969,8 +2002,10 @@ def STAFF_LOGIN():
                 df1 = pd.DataFrame(data, columns=["YEAR", "MONTH", "INCOME"])
                 temp1 = str(df)
                 temp2 = str(df1)
-                temp = "\nINCOME FROM PENDING FLIGHTS\n\n" + temp1+"\n\nINCOME FROM FLIGHTS FLOWN\n\n"+temp2+"\n"
-                title = ["INCOME FROM PENDING FLIGHTS", "INCOME FROM FLIGHTS FLOWN"]
+                temp = "\nINCOME FROM PENDING FLIGHTS\n\n" + temp1 + \
+                    "\n\nINCOME FROM FLIGHTS FLOWN\n\n"+temp2+"\n"
+                title = ["INCOME FROM PENDING FLIGHTS",
+                         "INCOME FROM FLIGHTS FLOWN"]
             elif res == "5":
                 break
             if x == 1:
@@ -1979,12 +2014,14 @@ def STAFF_LOGIN():
                     temp = ""
                 else:
                     print(df)
+                    time.sleep(2)
                 continue
             else:
                 return df, df1, title, res
 
     def ADD_DELAY(delay, seat_id):
-        query = "UPDATE DELAY SET DELAY={} WHERE SEAT_ID={}".format(res, seat_id)
+        query = "UPDATE DELAY SET DELAY={} WHERE SEAT_ID={}".format(
+            res, seat_id)
         mycursor.execute(query)
 
         pass
@@ -2015,7 +2052,8 @@ def STAFF_LOGIN():
                 col_y = cols[-1]
                 if res == "3":
                     for i in range(len(df)):
-                        b = str(df.loc[i, "ORIGIN"])+"-"+str(df.loc[i, "DESTINATION"])
+                        b = str(df.loc[i, "ORIGIN"])+"-" + \
+                            str(df.loc[i, "DESTINATION"])
                         temp.append(b)
                     df.insert(2, "x axis", temp)
                     df = df.drop(["ORIGIN", "DESTINATION"], axis=1)
@@ -2041,7 +2079,8 @@ def STAFF_LOGIN():
                     plt.title(titles[i])
                     plt.show()
                 elif res == "2":
-                    ToPlot[i].plot(x="x axis", y="y axis", kind="bar", color="r", label="BOOKINGS")
+                    ToPlot[i].plot(x="x axis", y="y axis",
+                                   kind="bar", color="r", label="BOOKINGS")
                     plt.xlabel("DATES")
                     plt.ylabel("NO. OF BOOKINGS")
                     # plt.xticks(rotation=30)
@@ -2049,7 +2088,8 @@ def STAFF_LOGIN():
                     plt.title(titles[i])
                     plt.show()
                 elif res == "3":
-                    ToPlot[i].plot(x="x axis", y="y axis", kind="bar", color="g", label="FLIGHTS")
+                    ToPlot[i].plot(x="x axis", y="y axis",
+                                   kind="bar", color="g", label="FLIGHTS")
                     plt.xlabel("ROUTES")
                     plt.ylabel("NO. OF FLIGHTS")
                     # plt.xticks(rotation=30)
@@ -2060,11 +2100,13 @@ def STAFF_LOGIN():
                 elif res == "4":
                     warnings.filterwarnings(
                         "ignore")
-                    warnings.warn("FixedFormatter should only be used together with FixedLocator")
+                    warnings.warn(
+                        "FixedFormatter should only be used together with FixedLocator")
                     a = ToPlot[i]
                     for b in range(len(a)):
                         a.loc[b, "y axis"] = int(a.loc[b, "y axis"])
-                    a.plot(x="x axis", y="y axis", kind="line", color="#5c281d", label="INCOME")
+                    a.plot(x="x axis", y="y axis", kind="line",
+                           color="#5c281d", label="INCOME")
                     plt.xlabel("DATES")
                     plt.ylabel("INCOME")
                     plt.subplots_adjust(bottom=0.20)
@@ -2074,7 +2116,8 @@ def STAFF_LOGIN():
     def data_check(value, table, column):
         try:
             if type(value) == int:
-                query = "select * from {} where {}={}".format(table, column, value)
+                query = "select * from {} where {}={}".format(
+                    table, column, value)
                 mycursor.execute(query)
                 res = mycursor.fetchall()
                 if res != []:
@@ -2082,7 +2125,8 @@ def STAFF_LOGIN():
                 else:
                     return False
             else:
-                query = "select * from {} where {}='{}'".format(table, column, value)
+                query = "select * from {} where {}='{}'".format(
+                    table, column, value)
                 mycursor.execute(query)
                 res = mycursor.fetchall()
                 if res != []:
@@ -2113,7 +2157,7 @@ def STAFF_LOGIN():
             try:
                 res = int(res)
                 if res in opt:
-                    nxveed=res
+                    nxveed = res
                     res = res-1
                     break
                 else:
@@ -2141,16 +2185,18 @@ def STAFF_LOGIN():
             data.append(temp)
             temp = []
         df = pd.DataFrame(data[1:], columns=data[0])
-        if nxveed in [1,2,5,6,7,9,10,11,12,13,15,16,18,19]:
+        if nxveed in [1, 2, 5, 6, 7, 9, 10, 11, 12, 13, 15, 16, 18, 19]:
             for i in range(len(df)):
-                df.loc[i,"DEPATURE_TIME"]=(str(df.loc[i,"DEPATURE_TIME"]))[-8:]
-                df.loc[i,"ARRIVAL_TIME"]=(str(df.loc[i,"ARRIVAL_TIME"]))[-8:]
-                df.loc[i,"DURATION"]=(str(df.loc[i,"DURATION"]))[-8:]
+                df.loc[i, "DEPATURE_TIME"] = (
+                    str(df.loc[i, "DEPATURE_TIME"]))[-8:]
+                df.loc[i, "ARRIVAL_TIME"] = (
+                    str(df.loc[i, "ARRIVAL_TIME"]))[-8:]
+                df.loc[i, "DURATION"] = (str(df.loc[i, "DURATION"]))[-8:]
         print("\n")
         PAT = "/DB/{}.csv".format(tables[res])
         df.to_csv(r'{}'.format(os.getcwd()+PAT))
         print("TABLE EXPORTED TO DB FOLDER")
-        #time.sleep(3)
+        # time.sleep(3)
     while True:
         USERNAME = input("\nENTER USERNAME: ")
         USERNAME = USERNAME.strip()
@@ -2187,6 +2233,7 @@ def STAFF_LOGIN():
     print("\n", "="*4, "WELCOME BACK {}".format(NAME), "="*4, "\n")
 
     while True:
+        print("\n")
         print("OPTION 1: ANALYZE DATA")
         print("OPTION 2: ADD DELAY")
         print("OPTION 3: VISUALIZE DATA")
@@ -2210,7 +2257,8 @@ def STAFF_LOGIN():
             print("\n", "="*4, "ADD DELAY", "="*4, "\n")
             while True:
                 flight_no = input("ENTER FLIGHT NUMBER: ")
-                depature_date = input("ENTER DEPATURE DATE AND TIME (YYYY-MM-DD HH:MM:SS): ")
+                depature_date = input(
+                    "ENTER DEPATURE DATE AND TIME (YYYY-MM-DD HH:MM:SS): ")
                 query = "select SEAT_ID from SCHEDULE where FLIGHT_NO='{}' AND DEPATURE_TIME='{}'".format(
                     flight_no, depature_date)
                 mycursor.execute(query)
@@ -2235,8 +2283,10 @@ def STAFF_LOGIN():
                             info = pd.DataFrame(info, columns=[
                                                 'FLIGHT NO', 'ORIGIN', 'DESTINATION', 'DEPATURE TIME', 'ARRIVAL TIME', 'DURATION', 'DELAY'])
                             for i in range(len(info)):
-                                info.loc[i,"ARRIVAL TIME"]=(str(info.loc[i,"ARRIVAL TIME"]))[-8:]
-                                info.loc[i,"DURATION"]=(str(info.loc[i,"DURATION"]))[-8:]
+                                info.loc[i, "ARRIVAL TIME"] = (
+                                    str(info.loc[i, "ARRIVAL TIME"]))[-8:]
+                                info.loc[i, "DURATION"] = (
+                                    str(info.loc[i, "DURATION"]))[-8:]
                             for i in customer_id:
                                 for j in i:
                                     query = "select CUSTOMER_EMAIL, CUSTOMER_NAME from CUSTOMERS where CUSTOMER_ID ='{}'".format(
@@ -2245,7 +2295,7 @@ def STAFF_LOGIN():
                                     email = mycursor.fetchall()
                                     name = email[0][1]
                                     email = email[0][0]
-                                    
+
                                     message = """
 DEAR {},
 
@@ -2268,7 +2318,7 @@ FLIGHT DETALS:
 For any queries:
 email us at: gihs.airlines@gmail.com
 call us at:  04-0000000
-""".format(name, info.loc[0,"FLIGHT NO"], info.loc[0,"ORIGIN"],info.loc[0,"DESTINATION"],info.loc[0,"DEPATURE TIME"], info.loc[0,"ARRIVAL TIME"],info.loc[0,"DURATION"],info.loc[0,"DELAY"])
+""".format(name, info.loc[0, "FLIGHT NO"], info.loc[0, "ORIGIN"], info.loc[0, "DESTINATION"], info.loc[0, "DEPATURE TIME"], info.loc[0, "ARRIVAL TIME"], info.loc[0, "DURATION"], info.loc[0, "DELAY"])
                                     mail(email, message)
                             print(
                                 "\n", "="*4, "DELAY ADDED SUCCESSFULLY AND EMAIL SEND TO RESPECTIVE PASSENGERS", "="*4, "\n")
